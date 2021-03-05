@@ -1,17 +1,37 @@
 import React, { useState, useEffect, createContext } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import { NavigationContainer } from '@react-navigation/native'
-import { SignIn } from './src/screens'
 import auth from '@react-native-firebase/auth'
 
-console.log(auth)
+import AuthStack from './src/navigation/AuthStack'
+import VendorStack from './src/navigation/VendorStack'
+
+export const AuthContext = createContext(null)
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <StatusBar style='auto' />
-      <SignIn />
-    </NavigationContainer>
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState(null)
+
+  // Handle user state changes
+  function onAuthStateChanged(result) {
+    setUser(result)
+    if (initializing) setInitializing(false)
+  }
+
+  useEffect(() => {
+    const authSubscriber = auth().onAuthStateChanged(onAuthStateChanged)
+
+    // unsubscribe on unmount
+    return authSubscriber
+  }, [])
+
+  if (initializing) {
+    return null
+  }
+
+  return user ? (
+    <AuthContext.Provider value={user}>
+      <VendorStack />
+    </AuthContext.Provider>
+  ) : (
+    <AuthStack />
   )
 }

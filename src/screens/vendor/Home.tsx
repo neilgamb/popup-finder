@@ -1,14 +1,31 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import auth from '@react-native-firebase/auth'
+import { AuthContext } from '../../../App'
 
 export default function Home() {
-  // TODO: add firebase sign-out and user info function later
+  const user = useContext(AuthContext)
+
+  const signOut = async () => {
+    try {
+      await auth().signInAnonymously()
+    } catch (e) {
+      switch (e.code) {
+        case 'auth/operation-not-allowed':
+          console.log('Enable anonymous in your firebase console.')
+          break
+        default:
+          console.error(e)
+          break
+      }
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome user!</Text>
-      <TouchableOpacity style={styles.button} onPress={() => alert('Sign out')}>
-        <Text style={styles.buttonText}>Sign out 🤷</Text>
+      <Text style={styles.title}>Welcome {user.uid}!</Text>
+      <TouchableOpacity style={styles.button} onPress={signOut}>
+        <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </View>
   )
@@ -19,28 +36,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffe2ff',
   },
   title: {
     marginTop: 20,
     marginBottom: 30,
     fontSize: 28,
     fontWeight: '500',
-    color: '#7f78d2',
+    textAlign: 'center',
   },
   button: {
     flexDirection: 'row',
     borderRadius: 30,
     marginTop: 10,
     marginBottom: 10,
-    width: 160,
+    width: 300,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#481380',
+    backgroundColor: 'blue',
   },
   buttonText: {
-    color: '#ffe2ff',
+    color: 'white',
     fontSize: 24,
     marginRight: 5,
   },
