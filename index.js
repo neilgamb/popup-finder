@@ -1,11 +1,8 @@
 import { registerRootComponent } from 'expo'
-
-// needed for react-navigation
-import 'react-native-gesture-handler'
+import { LogBox } from 'react-native'
+import 'react-native-gesture-handler' // needed for react-navigation
 
 import App from './App'
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in the Expo client or in a native build,
-// the environment is set up appropriately
 registerRootComponent(App)
+LogBox.ignoreAllLogs()

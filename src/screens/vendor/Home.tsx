@@ -8,16 +8,9 @@ export default function Home() {
 
   const signOut = async () => {
     try {
-      await auth().signInAnonymously()
+      await auth().signOut()
     } catch (e) {
-      switch (e.code) {
-        case 'auth/operation-not-allowed':
-          console.log('Enable anonymous in your firebase console.')
-          break
-        default:
-          console.error(e)
-          break
-      }
+      console.error(e)
     }
   }
 
