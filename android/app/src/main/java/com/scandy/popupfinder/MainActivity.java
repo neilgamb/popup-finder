@@ -1,4 +1,4 @@
-package com.neilgamb.popupfinder;
+package com.neilgamb.popup-finder;
 
 import android.os.Bundle;
 

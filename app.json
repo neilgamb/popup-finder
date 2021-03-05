@@ -16,14 +16,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.neilgamb.popupfinder"
+      "bundleIdentifier": "com.neilgamb.popup-finder"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.neilgamb.popupfinder"
+      "package": "com.neilgamb.popup-finder"
     },
     "web": {
       "favicon": "./assets/favicon.png"
