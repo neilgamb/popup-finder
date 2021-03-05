@@ -1,4 +1,4 @@
-package com.scandy.popupfinder;
+package com.neilgamb.popupfinder;
 
 import android.os.Bundle;
 

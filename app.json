@@ -13,19 +13,17 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.scandy.popupfinder"
+      "bundleIdentifier": "com.neilgamb.popupfinder"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.scandy.popupfinder"
+      "package": "com.neilgamb.popupfinder"
     },
     "web": {
       "favicon": "./assets/favicon.png"
