@@ -6,6 +6,6 @@ import VendorStack from './src/navigation/VendorStack'
 import { useAuth } from './src/hooks/useAuth'
 
 export default function App() {
-  const { user } = useAuth()
+  const user = useAuth()
   return user ? <VendorStack /> : <AuthStack />
 }

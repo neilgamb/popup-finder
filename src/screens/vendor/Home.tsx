@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import auth from '@react-native-firebase/auth'
-import { AuthContext } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function Home() {
-  const user = useContext(AuthContext)
+  const user = useAuth()
 
   const signOut = async () => {
     try {
