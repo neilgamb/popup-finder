@@ -2,7 +2,7 @@ import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useAuth } from '../../hooks/useAuth'
 
-export default function SignIn() {
+export default function PatronSignIn() {
   const { signInAnonymously, signInWithGoogle } = useAuth()
   return (
     <View style={styles.container}>
@@ -13,13 +13,7 @@ export default function SignIn() {
         style={styles.button}
         onPress={() => signInWithGoogle(true)}
       >
-        <Text style={styles.buttonText}>Login with Google (Vendor)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => signInWithGoogle(false)}
-      >
-        <Text style={styles.buttonText}>Login with Google (Patron)</Text>
+        <Text style={styles.buttonText}>Login as Patron with Google</Text>
       </TouchableOpacity>
     </View>
   )
@@ -31,12 +25,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-  },
-  title: {
-    marginTop: 20,
-    marginBottom: 30,
-    fontSize: 28,
-    fontWeight: '500',
   },
   button: {
     flexDirection: 'row',
