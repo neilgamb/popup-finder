@@ -6,9 +6,11 @@ import React, {
   ReactNode,
 } from 'react'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
-import { WEB_CLIENT_ID } from '@env'
+import { GoogleSignin } from '@react-native-community/google-signin'
 
-console.log(WEB_CLIENT_ID)
+GoogleSignin.configure({
+  webClientId: '',
+})
 
 interface AuthProps {
   children: ReactNode
@@ -18,6 +20,7 @@ interface AuthContextProps {
   userInfo: FirebaseAuthTypes.User | null
   userIsAuthenticated: Boolean
   signInAnonymously: () => void
+  signInWithGoogle: () => void
 }
 
 export const AuthContext = createContext<AuthContextProps>(null)
@@ -48,6 +51,16 @@ function useAuthProvider() {
     }
   }
 
+  const signInWithGoogle = async () => {
+    try {
+      const { idToken } = await GoogleSignin.signIn()
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken)
+      const userCredential = await auth().signInWithCredential(googleCredential)
+    } catch (e) {
+      handleAuthErrors(e)
+    }
+  }
+
   const handleAuthErrors = (e) => {
     switch (e.code) {
       case 'auth/operation-not-allowed':
@@ -70,5 +83,6 @@ function useAuthProvider() {
     userInfo,
     userIsAuthenticated,
     signInAnonymously,
+    signInWithGoogle,
   }
 }

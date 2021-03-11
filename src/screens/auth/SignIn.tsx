@@ -3,11 +3,14 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useAuth } from '../../hooks/useAuth'
 
 export default function SignIn() {
-  const { signInAnonymously } = useAuth()
+  const { signInAnonymously, signInWithGoogle } = useAuth()
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={signInAnonymously}>
         <Text style={styles.buttonText}>Login Anonymously</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
+        <Text style={styles.buttonText}>Login with Google</Text>
       </TouchableOpacity>
     </View>
   )
