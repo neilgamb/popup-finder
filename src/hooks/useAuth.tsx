@@ -11,15 +11,17 @@ interface AuthProps {
   children: ReactNode
 }
 
-export const AuthContext = createContext<FirebaseAuthTypes.User | null>(null)
+interface AuthContextProps {
+  userInfo: FirebaseAuthTypes.User | null
+  userIsAuthenticated: Boolean
+  signInAnonymously: () => void
+}
+
+export const AuthContext = createContext<AuthContextProps>(null)
 
 export function AuthProvider({ children }: AuthProps) {
-  const user = useAuthProvider()
-  return (
-    <AuthContext.Provider value={user.userInfo}>
-      {children}
-    </AuthContext.Provider>
-  )
+  const auth = useAuthProvider()
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {
@@ -28,9 +30,31 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User | null>(null)
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState<Boolean>(false)
 
-  const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) =>
+  const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) => {
     setUserInfo(result)
+    setUserIsAuthenticated(!!result)
+  }
+
+  const signInAnonymously = async () => {
+    try {
+      await auth().signInAnonymously()
+    } catch (e) {
+      handleAuthErrors(e)
+    }
+  }
+
+  const handleAuthErrors = (e) => {
+    switch (e.code) {
+      case 'auth/operation-not-allowed':
+        console.log('Enable anonymous in your firebase console.')
+        break
+      default:
+        console.error(e)
+        break
+    }
+  }
 
   useEffect(() => {
     const authSubscriber = auth().onAuthStateChanged(onAuthStateChanged)
@@ -41,5 +65,7 @@ function useAuthProvider() {
 
   return {
     userInfo,
+    userIsAuthenticated,
+    signInAnonymously,
   }
 }
