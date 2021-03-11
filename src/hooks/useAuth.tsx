@@ -6,6 +6,9 @@ import React, {
   ReactNode,
 } from 'react'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import { WEB_CLIENT_ID } from '@env'
+
+console.log(WEB_CLIENT_ID)
 
 interface AuthProps {
   children: ReactNode
