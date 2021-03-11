@@ -1,25 +1,24 @@
 import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import auth from '@react-native-firebase/auth'
 import { useAuth } from '../../hooks/useAuth'
 
-export default function SignIn() {
-  const { signInAnonymously, signInWithGoogle } = useAuth()
+export default function PatronHome() {
+  const user = useAuth()
+
+  const signOut = async () => {
+    try {
+      await auth().signOut()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={signInAnonymously}>
-        <Text style={styles.buttonText}>Login Anonymously</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => signInWithGoogle(true)}
-      >
-        <Text style={styles.buttonText}>Login with Google (Vendor)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => signInWithGoogle(false)}
-      >
-        <Text style={styles.buttonText}>Login with Google (Patron)</Text>
+      <Text style={styles.title}>Welcome Patron {user.uid}!</Text>
+      <TouchableOpacity style={styles.button} onPress={signOut}>
+        <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </View>
   )
@@ -37,13 +36,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 28,
     fontWeight: '500',
+    textAlign: 'center',
   },
   button: {
     flexDirection: 'row',
     borderRadius: 30,
     marginTop: 10,
     marginBottom: 10,
-    width: '100%',
+    width: 300,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',

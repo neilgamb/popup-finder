@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import { useAuth } from '../../hooks/useAuth'
 
-export default function Home() {
+export default function VendorHome() {
   const user = useAuth()
 
   const signOut = async () => {
@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome {user.uid}!</Text>
+      <Text style={styles.title}>Welcome Vendor {user.uid}!</Text>
       <TouchableOpacity style={styles.button} onPress={signOut}>
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
