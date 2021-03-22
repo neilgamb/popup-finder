@@ -22,6 +22,7 @@ interface AuthContextProps {
   userIsAuthenticated: Boolean
   signInAnonymously: () => void
   signInWithGoogle: (isVender: Boolean) => void
+  verifyVendorInvite: (email: String) => Boolean
 }
 
 export const AuthContext = createContext<AuthContextProps>(null)
@@ -57,15 +58,18 @@ function useAuthProvider() {
     try {
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = auth.GoogleAuthProvider.credential(idToken)
-      const userCredential = await auth().signInWithCredential(googleCredential)
-      syncUserWithFirestoreUsers(userCredential.user, isVendor)
+      const { user } = await auth().signInWithCredential(googleCredential)
+      syncUserWithFirestoreUsers(user, isVendor)
       setIsVendor(isVendor)
     } catch (e) {
       handleAuthErrors(e)
     }
   }
 
-  const syncUserWithFirestoreUsers = async (user, isVendor) => {
+  const syncUserWithFirestoreUsers = async (
+    user: FirebaseAuthTypes.User,
+    isVendor: Boolean
+  ) => {
     const userDoc = firestore().collection('users').doc(user.uid)
     try {
       // check if user exists in firestore
@@ -82,7 +86,31 @@ function useAuthProvider() {
         })
         console.log('User added to firestore')
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const verifyVendorInvite = (email: String) => {
+    return new Promise((resolve, reject) => {
+      const invitedVendors = firestore().collection('invitedVendors')
+      invitedVendors
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const result = doc.data()
+            if (email.toLowerCase() === result.email) {
+              resolve(true)
+            } else {
+              reject('You are not yet invited')
+            }
+          })
+        })
+        .catch((error) => {
+          console.log('Error getting documents: ', error)
+          reject('Something went wrong')
+        })
+    })
   }
 
   const handleAuthErrors = (e) => {
@@ -109,5 +137,6 @@ function useAuthProvider() {
     isVendor,
     signInAnonymously,
     signInWithGoogle,
+    verifyVendorInvite,
   }
 }
