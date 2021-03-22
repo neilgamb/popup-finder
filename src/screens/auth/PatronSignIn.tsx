@@ -29,13 +29,12 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     borderRadius: 30,
-    marginTop: 10,
-    marginBottom: 10,
     width: '100%',
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'blue',
+    marginTop: 16,
   },
   buttonText: {
     color: 'white',
