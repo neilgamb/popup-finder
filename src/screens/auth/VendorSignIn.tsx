@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useAuth } from '../../hooks/useAuth'
-import { Button, TextInput } from '../../components'
+import { Button, TextInput, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
@@ -33,37 +33,39 @@ const VendorSignIn = ({ theme }: any) => {
   const { presets, spacing } = theme
 
   return (
-    <SafeAreaView style={presets.screenContainer}>
-      <View style={{ ...presets.screenContent, paddingTop: 200 }}>
-        {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
-        {!isVendorInviteValid && (
-          <>
-            <Title style={{ marginLeft: spacing.xxs }}>
-              Enter Email from Invite
-            </Title>
-            <TextInput
-              label='Email'
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-          </>
-        )}
-      </View>
-      <View style={presets.screenActions}>
-        {!isVendorInviteValid ? (
-          <>
-            <Button onPress={() => handleVerifyVendorInvite(email)}>
-              Submit
-            </Button>
-            <Button mode='text' onPress={goBack}>
-              Back
-            </Button>
-          </>
-        ) : (
-          <Button onPress={() => signInWithGoogle(true)}>Login</Button>
-        )}
-      </View>
-    </SafeAreaView>
+    <DismissKeyboard>
+      <SafeAreaView style={presets.screenContainer}>
+        <View style={{ ...presets.screenContent, paddingTop: 200 }}>
+          {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
+          {!isVendorInviteValid && (
+            <>
+              <Title style={{ marginLeft: spacing.xxs }}>
+                Enter Email from Invite
+              </Title>
+              <TextInput
+                label='Email'
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+            </>
+          )}
+        </View>
+        <View style={presets.screenActions}>
+          {!isVendorInviteValid ? (
+            <>
+              <Button onPress={() => handleVerifyVendorInvite(email)}>
+                Submit
+              </Button>
+              <Button mode='text' onPress={goBack}>
+                Back
+              </Button>
+            </>
+          ) : (
+            <Button onPress={() => signInWithGoogle(true)}>Login</Button>
+          )}
+        </View>
+      </SafeAreaView>
+    </DismissKeyboard>
   )
 }
 
