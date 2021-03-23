@@ -1,10 +1,19 @@
 import React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import auth from '@react-native-firebase/auth'
+
 import { useAuth } from '../../hooks/useAuth'
+import { presets } from '../../style/theme'
 
 export default function VendorHome() {
-  const user = useAuth()
+  let { userInfo } = useAuth()
 
   const signOut = async () => {
     try {
@@ -14,43 +23,43 @@ export default function VendorHome() {
     }
   }
 
+  const displayName = userInfo?.displayName?.split(' ')[0]
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome {user.userInfo?.displayName}!</Text>
-      <TouchableOpacity style={styles.button} onPress={signOut}>
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={presets.screenContainer}>
+      <View style={presets.screenContent}>
+        <View style={styles.header}>
+          <Text style={[presets.title, overrides.title]}>
+            Welcome {displayName}!
+          </Text>
+          <Image
+            source={{ uri: userInfo?.photoURL }}
+            height={35}
+            width={35}
+            style={{ height: 35, width: 35 }}
+          />
+        </View>
+      </View>
+      {/* <View style={presets.screenActions}>
+        <TouchableOpacity style={presets.button} onPress={signOut}>
+          <Text style={presets.buttonText}>Sign out</Text>
+        </TouchableOpacity>
+      </View> */}
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
+const overrides = StyleSheet.create({
   title: {
-    marginTop: 20,
-    marginBottom: 30,
-    fontSize: 28,
-    fontWeight: '500',
-    textAlign: 'center',
+    marginTop: 0,
   },
-  button: {
+})
+
+const styles = StyleSheet.create({
+  header: {
     flexDirection: 'row',
-    borderRadius: 30,
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    justifyContent: 'space-between',
     marginTop: 16,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 24,
-    marginRight: 5,
   },
 })

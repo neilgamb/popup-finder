@@ -2,40 +2,31 @@
 
 var SCREEN = `
 import React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+
+import { presets } from '../../style/theme'
 
 export default function [screen]() {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={()=>console.log('hi from new screen')}>
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={[presets.screenContainer, overrides.screenContainer]}>
+      <View style={presets.screenContent}>
+        <Text style={presets.title}>New Screen</Text>
+      </View>
+      <View style={presets.screenActions}>
+
+      </View>
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  button: {
-    flexDirection: 'row',
-    borderRadius: 30,
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 24,
-    marginRight: 5,
-  },
+const overrides = StyleSheet.create({
+  
 })
 `
 
