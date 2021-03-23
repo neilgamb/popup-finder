@@ -4,7 +4,7 @@ var SCREEN = `
 import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 
-export default function [comp]() {
+export default function [screen]() {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={()=>console.log('hi from new screen')}>
