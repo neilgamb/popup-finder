@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { View, SafeAreaView } from 'react-native'
-import { TextInput, Title, withTheme } from 'react-native-paper'
+import { Title, withTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useAuth } from '../../hooks/useAuth'
-import { Button } from '../../components'
+import { Button, TextInput } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
@@ -30,7 +30,7 @@ const VendorSignIn = ({ theme }: any) => {
     }
   }
 
-  const { presets } = theme
+  const { presets, spacing } = theme
 
   return (
     <SafeAreaView style={presets.screenContainer}>
@@ -38,9 +38,10 @@ const VendorSignIn = ({ theme }: any) => {
         {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
         {!isVendorInviteValid && (
           <>
-            <Title>Enter Email from Invite</Title>
+            <Title style={{ marginLeft: spacing.xxs }}>
+              Enter Email from Invite
+            </Title>
             <TextInput
-              mode='outlined'
               label='Email'
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -51,19 +52,15 @@ const VendorSignIn = ({ theme }: any) => {
       <View style={presets.screenActions}>
         {!isVendorInviteValid ? (
           <>
-            <Button
-              dark
-              mode='contained'
-              onPress={() => handleVerifyVendorInvite(email)}
-            >
+            <Button onPress={() => handleVerifyVendorInvite(email)}>
               Submit
             </Button>
-            <Button onPress={goBack}>Back</Button>
+            <Button mode='text' onPress={goBack}>
+              Back
+            </Button>
           </>
         ) : (
-          <Button mode='contained' onPress={() => signInWithGoogle(true)}>
-            Login
-          </Button>
+          <Button onPress={() => signInWithGoogle(true)}>Login</Button>
         )}
       </View>
     </SafeAreaView>

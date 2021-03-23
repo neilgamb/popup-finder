@@ -5,7 +5,9 @@ const Button = (props) => {
   const { fonts, spacing } = props.theme
   return (
     <PaperButton
-      style={{ marginTop: spacing.sm }}
+      dark
+      mode='contained'
+      style={{ marginTop: spacing.xs }}
       contentStyle={{ paddingVertical: 8 }}
       labelStyle={fonts.button}
       {...props}

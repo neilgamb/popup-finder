@@ -12,6 +12,7 @@ const SPACING = {
   md: 24,
   sm: 16,
   xs: 8,
+  xxs: 4,
 }
 
 const fontConfig = {
@@ -31,7 +32,12 @@ const fontConfig = {
     button: {
       fontFamily: 'Arial',
       fontWeight: 'normal',
-      fontSize: 18,
+      fontSize: 20,
+    },
+    input: {
+      fontFamily: 'Arial',
+      fontWeight: 'normal',
+      fontSize: 20,
     },
   },
 }
