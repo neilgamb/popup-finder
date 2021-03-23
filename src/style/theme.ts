@@ -1,8 +1,68 @@
 import { StyleSheet } from 'react-native'
+import { DefaultTheme, configureFonts } from 'react-native-paper'
 
 export const withBorder = {
   borderWidth: 1,
   borderColor: 'black',
+}
+
+const SPACING = {
+  xl: 64,
+  lg: 32,
+  md: 24,
+  sm: 16,
+  xs: 8,
+}
+
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: 'Arial',
+      fontWeight: 'normal',
+    },
+    medium: {
+      fontFamily: 'Arial',
+      fontWeight: 'normal',
+    },
+    light: {
+      fontFamily: 'Arial',
+      fontWeight: 'normal',
+    },
+    button: {
+      fontFamily: 'Arial',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
+  },
+}
+
+fontConfig.ios = fontConfig.default
+
+export const theme = {
+  ...DefaultTheme,
+  roundness: 8,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#3498db',
+    accent: '#f1c40f',
+  },
+  fonts: configureFonts(fontConfig),
+  spacing: {
+    ...SPACING,
+  },
+  presets: StyleSheet.create({
+    screenContainer: {
+      flex: 1,
+    },
+    screenContent: {
+      flex: 1,
+      paddingHorizontal: SPACING.md,
+    },
+    screenActions: {
+      paddingHorizontal: SPACING.sm,
+      paddingVertical: SPACING.md,
+    },
+  }),
 }
 
 export const presets = StyleSheet.create({

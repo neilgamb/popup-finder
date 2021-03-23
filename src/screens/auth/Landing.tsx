@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { withTheme } from 'react-native-paper'
 
-export default function Landing() {
+const Landing = ({ theme }) => {
   const { navigate } = useNavigation()
+  console.log(theme)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -30,6 +32,8 @@ export default function Landing() {
     </SafeAreaView>
   )
 }
+
+export default withTheme(Landing)
 
 const styles = StyleSheet.create({
   container: {

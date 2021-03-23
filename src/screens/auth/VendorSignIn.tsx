@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native'
+import { View, SafeAreaView } from 'react-native'
+import { TextInput, Title, withTheme } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useAuth } from '../../hooks/useAuth'
+import { Button } from '../../components'
 
-export default function VendorSignIn() {
+const VendorSignIn = ({ theme }: any) => {
+  const { goBack } = useNavigation()
   const [email, setEmail] = useState('')
   const [error, setError] = useState(null)
   const {
@@ -22,7 +20,7 @@ export default function VendorSignIn() {
 
   const handleVerifyVendorInvite = async (email: String) => {
     try {
-      const vendorInviteVerified = await verifyVendorInvite(email)
+      const vendorInviteVerified = verifyVendorInvite(email)
       if (vendorInviteVerified) {
         setIsVendorInviteValid(true)
         await AsyncStorage.setItem('@isVendorInviteValid', JSON.stringify(true))
@@ -32,70 +30,44 @@ export default function VendorSignIn() {
     }
   }
 
+  const { presets } = theme
+
   return (
-    <View style={styles.container}>
-      {!!error && <Text style={styles.error}>{error}</Text>}
-      {!isVendorInviteValid ? (
-        <>
-          <TextInput
-            style={styles.input}
-            onChangeText={setEmail}
-            value={email}
-            placeholder='Enter email from invite'
-            placeholderTextColor='#999'
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => handleVerifyVendorInvite(email)}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => signInWithGoogle(true)}
-        >
-          <Text style={styles.buttonText}>Login as Vendor with Google</Text>
-        </TouchableOpacity>
-      )}
-    </View>
+    <SafeAreaView style={presets.screenContainer}>
+      <View style={{ ...presets.screenContent, paddingTop: 200 }}>
+        {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
+        {!isVendorInviteValid && (
+          <>
+            <Title>Enter Email from Invite</Title>
+            <TextInput
+              mode='outlined'
+              label='Email'
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </>
+        )}
+      </View>
+      <View style={presets.screenActions}>
+        {!isVendorInviteValid ? (
+          <>
+            <Button
+              dark
+              mode='contained'
+              onPress={() => handleVerifyVendorInvite(email)}
+            >
+              Submit
+            </Button>
+            <Button onPress={goBack}>Back</Button>
+          </>
+        ) : (
+          <Button mode='contained' onPress={() => signInWithGoogle(true)}>
+            Login
+          </Button>
+        )}
+      </View>
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  input: {
-    height: 60,
-    borderWidth: 1,
-    width: '100%',
-    borderRadius: 30,
-    fontSize: 24,
-    paddingHorizontal: 24,
-  },
-  button: {
-    flexDirection: 'row',
-    borderRadius: 30,
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 24,
-    marginRight: 5,
-  },
-  error: {
-    fontSize: 24,
-    color: 'red',
-    marginBottom: 16,
-  },
-})
+export default withTheme(VendorSignIn)

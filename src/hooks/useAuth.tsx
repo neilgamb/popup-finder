@@ -21,6 +21,7 @@ interface AuthProps {
 interface AuthContextProps {
   userInfo: FirebaseAuthTypes.User | null
   userIsAuthenticated: Boolean
+  isVendor: Boolean
   isVendorInviteValid: Boolean
   signInAnonymously: () => void
   signInWithGoogle: (isVender: Boolean) => void
@@ -134,7 +135,8 @@ function useAuthProvider() {
       const isVendorInviteValid = await AsyncStorage.getItem(
         '@isVendorInviteValid'
       )
-      setIsVendorInviteValid(!!isVendorInviteValid)
+      // setIsVendorInviteValid(!!isVendorInviteValid)
+      setIsVendorInviteValid(false)
     }
     checkIsVendorInviteVerified()
     // unsubscribe on unmount
