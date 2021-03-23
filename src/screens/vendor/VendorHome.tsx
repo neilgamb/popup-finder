@@ -16,7 +16,7 @@ export default function VendorHome() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Vendor {user.uid}!</Text>
+      <Text style={styles.title}>Welcome {user.userInfo?.displayName}!</Text>
       <TouchableOpacity style={styles.button} onPress={signOut}>
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
