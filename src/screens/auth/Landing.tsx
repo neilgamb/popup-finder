@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 
 export default function Landing() {
   const { navigate } = useNavigation()
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>

@@ -4,13 +4,15 @@ import { LogBox } from 'react-native'
 import 'react-native-gesture-handler' // needed for react-navigation
 
 import App from './App'
-import { AuthProvider } from './src/hooks/useAuth'
+import { AuthProvider, VendorProvider } from './src/hooks'
 
-const AppContainer = () => (
-  <AuthProvider>
-    <App />
-  </AuthProvider>
-)
+const composeProviders = (...Providers) => (Child) => (props) =>
+  Providers.reduce(
+    (acc, Provider) => <Provider>{acc}</Provider>,
+    <Child {...props} />
+  )
+
+const AppContainer = composeProviders(AuthProvider, VendorProvider)(App)
 
 registerRootComponent(AppContainer)
 LogBox.ignoreAllLogs()

@@ -39,27 +39,30 @@ const generateFromTemplate = (name, component, category) => {
   let itemWeAreCreating = process.argv[2]
   let dir
   let fileDir
+  let indexPath
+  let indexNewLine
 
   if (itemWeAreCreating === 'screen') {
     name = capitalize(name)
     dir = `./${rootDir}/${itemWeAreCreating}s/${category}`
     fileDir = `${dir}/${name}.tsx`
+    indexPath = `./${rootDir}/screens/${category}/index.ts`
+    indexNewLine = `export { default as ${name} } from "./${name}";`
   } else if (itemWeAreCreating === 'hook') {
+    let useName = `use${capitalize(name)}`
     dir = `./${rootDir}/${itemWeAreCreating}s`
-    fileDir = `${dir}/use${name}.tsx`
+    fileDir = `${dir}/${useName}.tsx`
+    indexPath = `./${rootDir}/hooks/index.ts`
+    indexNewLine = `export { ${capitalize(name)}Provider } from "./${useName}";`
   }
   console.log(`Creating ${category} ${itemWeAreCreating}: ${name}`)
   createFile(fileDir, component)
 
-  // update index file if necessary
-  if (itemWeAreCreating == 'screen') {
-    const indexPath = `./${rootDir}/screens/${category}/index.ts`
-    let newline = `export { default as ${name} } from "./${name}";`
-    fs.appendFile(indexPath, newline, (err) => {
-      if (err) return console.log(err)
-      console.log('successfully appended "' + newline + '"')
-    })
-  }
+  // update index file
+  fs.appendFile(indexPath, indexNewLine, (err) => {
+    if (err) return console.log(err)
+    console.log('successfully appended "' + indexNewLine + '"')
+  })
 }
 
 commander
