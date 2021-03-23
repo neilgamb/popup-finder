@@ -8,6 +8,7 @@
     "create": "node scripts/create.js"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/google-signin": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/app": "^11.0.0",

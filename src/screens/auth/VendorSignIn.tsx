@@ -6,19 +6,26 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { useAuth } from '../../hooks/useAuth'
 
 export default function VendorSignIn() {
   const [email, setEmail] = useState('')
-  const [isVerified, setIsVerified] = useState<Boolean>(false)
   const [error, setError] = useState(null)
-  const { signInWithGoogle, verifyVendorInvite } = useAuth()
+  const {
+    isVendorInviteValid,
+    setIsVendorInviteValid,
+    signInWithGoogle,
+    verifyVendorInvite,
+  } = useAuth()
 
   const handleVerifyVendorInvite = async (email: String) => {
     try {
       const vendorInviteVerified = await verifyVendorInvite(email)
       if (vendorInviteVerified) {
-        setIsVerified(true)
+        setIsVendorInviteValid(true)
+        await AsyncStorage.setItem('@isVendorInviteValid', JSON.stringify(true))
       }
     } catch (error) {
       setError(error)
@@ -28,7 +35,7 @@ export default function VendorSignIn() {
   return (
     <View style={styles.container}>
       {!!error && <Text style={styles.error}>{error}</Text>}
-      {!isVerified ? (
+      {!isVendorInviteValid ? (
         <>
           <TextInput
             style={styles.input}

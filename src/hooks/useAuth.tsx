@@ -8,6 +8,7 @@ import React, {
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-community/google-signin'
 import firestore from '@react-native-firebase/firestore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 GoogleSignin.configure({
   webClientId: '',
@@ -20,9 +21,11 @@ interface AuthProps {
 interface AuthContextProps {
   userInfo: FirebaseAuthTypes.User | null
   userIsAuthenticated: Boolean
+  isVendorInviteValid: Boolean
   signInAnonymously: () => void
   signInWithGoogle: (isVender: Boolean) => void
   verifyVendorInvite: (email: String) => Boolean
+  setIsVendorInviteValid: (isVendorInviteValid: Boolean) => void
 }
 
 export const AuthContext = createContext<AuthContextProps>(null)
@@ -40,6 +43,7 @@ function useAuthProvider() {
   const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User | null>(null)
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<Boolean>(false)
   const [isVendor, setIsVendor] = useState<Boolean | null>(null)
+  const [isVendorInviteValid, setIsVendorInviteValid] = useState<Boolean>(false)
 
   const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) => {
     setUserInfo(result)
@@ -126,7 +130,13 @@ function useAuthProvider() {
 
   useEffect(() => {
     const authSubscriber = auth().onAuthStateChanged(onAuthStateChanged)
-
+    const checkIsVendorInviteVerified = async () => {
+      const isVendorInviteValid = await AsyncStorage.getItem(
+        '@isVendorInviteValid'
+      )
+      setIsVendorInviteValid(!!isVendorInviteValid)
+    }
+    checkIsVendorInviteVerified()
     // unsubscribe on unmount
     return authSubscriber
   }, [])
@@ -135,8 +145,10 @@ function useAuthProvider() {
     userInfo,
     userIsAuthenticated,
     isVendor,
+    isVendorInviteValid,
     signInAnonymously,
     signInWithGoogle,
     verifyVendorInvite,
+    setIsVendorInviteValid,
   }
 }
