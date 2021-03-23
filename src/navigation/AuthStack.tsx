@@ -11,7 +11,11 @@ export default function AuthStack() {
       <Stack.Navigator
       // headerMode='none'
       >
-        <Stack.Screen name='Landing' component={Landing} />
+        <Stack.Screen
+          name='Landing'
+          component={Landing}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name='VendorSignIn' component={VendorSignIn} />
         <Stack.Screen name='PatronSignIn' component={PatronSignIn} />
       </Stack.Navigator>

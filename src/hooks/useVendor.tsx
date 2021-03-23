@@ -26,17 +26,17 @@ export const useVendor = () => {
 }
 
 function useVendorProvider() {
-  const [isMounted, setIsMounted] = useState<Boolean>(false)
+  const [isVendorSetup, setIsVendorSetup] = useState<Boolean>(false)
 
   useEffect(() => {
-    setIsMounted(true)
+    // setIsMounted(true)
 
     return () => {
-      setIsMounted(true)
+      // setIsMounted(true)
     }
   }, [])
 
   return {
-    isMounted,
+    isVendorSetup,
   }
 }

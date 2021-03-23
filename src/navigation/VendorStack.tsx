@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { VendorHome, VendorEvents } from '../screens'
+import { useVendor } from '../hooks/useVendor'
 
 const Tab = createBottomTabNavigator()
 
@@ -48,6 +49,7 @@ function TabBar({ state, descriptors, navigation }) {
 
         return (
           <TouchableOpacity
+            key={index}
             accessibilityRole='button'
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -56,8 +58,6 @@ function TabBar({ state, descriptors, navigation }) {
             onLongPress={onLongPress}
             style={{
               flex: 1,
-              borderColor: 'blue',
-              borderTopWidth: 1,
               justifyContent: 'center',
               alignItems: 'center',
               paddingBottom: 48,
@@ -77,9 +77,14 @@ function TabBar({ state, descriptors, navigation }) {
 }
 
 export default function VendorStack() {
+  const { isVendorSetup } = useVendor()
+
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+      <Tab.Navigator
+        initialRouteName={isVendorSetup ? 'VendorEvents' : 'VendorHome'}
+        tabBar={(props) => <TabBar {...props} />}
+      >
         <Tab.Screen name='VendorHome' component={VendorHome} />
         <Tab.Screen name='VendorEvents' component={VendorEvents} />
       </Tab.Navigator>

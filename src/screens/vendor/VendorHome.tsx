@@ -40,11 +40,11 @@ export default function VendorHome() {
           />
         </View>
       </View>
-      {/* <View style={presets.screenActions}>
+      <View style={presets.screenActions}>
         <TouchableOpacity style={presets.button} onPress={signOut}>
           <Text style={presets.buttonText}>Sign out</Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
     </SafeAreaView>
   )
 }
