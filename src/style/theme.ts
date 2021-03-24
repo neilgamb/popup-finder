@@ -46,7 +46,7 @@ fontConfig.ios = fontConfig.default
 
 export const theme = {
   ...DefaultTheme,
-  roundness: 8,
+  roundness: 16,
   colors: {
     ...DefaultTheme.colors,
     primary: '#3498db',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, SafeAreaView } from 'react-native'
-import { Title, withTheme } from 'react-native-paper'
+import { Title, withTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -11,6 +11,7 @@ const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
   const [email, setEmail] = useState('')
   const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     isVendorInviteValid,
     setIsVendorInviteValid,
@@ -18,15 +19,25 @@ const VendorSignIn = ({ theme }: any) => {
     verifyVendorInvite,
   } = useAuth()
 
-  const handleVerifyVendorInvite = async (email: String) => {
+  const handleEmailSubmit = async (email: String) => {
     try {
-      const vendorInviteVerified = verifyVendorInvite(email)
+      setIsLoading(true)
+      validateEmail(email)
+      const vendorInviteVerified = await verifyVendorInvite(email)
       if (vendorInviteVerified) {
         setIsVendorInviteValid(true)
         await AsyncStorage.setItem('@isVendorInviteValid', JSON.stringify(true))
       }
     } catch (error) {
       setError(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const validateEmail = (email: String) => {
+    if (!email.includes('@')) {
+      throw 'Invalid Email'
     }
   }
 
@@ -39,7 +50,7 @@ const VendorSignIn = ({ theme }: any) => {
           {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
           {!isVendorInviteValid && (
             <>
-              <Title style={{ marginLeft: spacing.xxs }}>
+              <Title style={{ marginLeft: spacing.xs }}>
                 Enter Email from Invite
               </Title>
               <TextInput
@@ -47,13 +58,23 @@ const VendorSignIn = ({ theme }: any) => {
                 value={email}
                 onChangeText={(text) => setEmail(text)}
               />
+              <HelperText
+                style={{ marginTop: spacing.xs, fontSize: 14 }}
+                type='error'
+                visible={!!error}
+              >
+                {error}
+              </HelperText>
             </>
           )}
         </View>
         <View style={presets.screenActions}>
           {!isVendorInviteValid ? (
             <>
-              <Button onPress={() => handleVerifyVendorInvite(email)}>
+              <Button
+                loading={isLoading}
+                onPress={() => handleEmailSubmit(email)}
+              >
                 Submit
               </Button>
               <Button mode='text' onPress={goBack}>
@@ -61,7 +82,12 @@ const VendorSignIn = ({ theme }: any) => {
               </Button>
             </>
           ) : (
-            <Button onPress={() => signInWithGoogle(true)}>Login</Button>
+            <>
+              <Button onPress={() => signInWithGoogle(true)}>Login</Button>
+              <Button mode='text' onPress={goBack}>
+                Back
+              </Button>
+            </>
           )}
         </View>
       </SafeAreaView>

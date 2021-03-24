@@ -11,7 +11,6 @@ import { withTheme } from 'react-native-paper'
 
 const Landing = ({ theme }) => {
   const { navigate } = useNavigation()
-  console.log(theme)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

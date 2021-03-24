@@ -20,13 +20,13 @@ interface AuthProps {
 
 interface AuthContextProps {
   userInfo: FirebaseAuthTypes.User | null
-  userIsAuthenticated: Boolean
-  isVendor: Boolean
-  isVendorInviteValid: Boolean
+  userIsAuthenticated: boolean
+  isVendor: boolean
+  isVendorInviteValid: boolean
   signInAnonymously: () => void
-  signInWithGoogle: (isVender: Boolean) => void
-  verifyVendorInvite: (email: String) => Boolean
-  setIsVendorInviteValid: (isVendorInviteValid: Boolean) => void
+  signInWithGoogle: (isVender: boolean) => void
+  verifyVendorInvite: (email: String) => boolean
+  setIsVendorInviteValid: (isVendorInviteValid: boolean) => void
 }
 
 export const AuthContext = createContext<AuthContextProps>(null)
@@ -42,9 +42,9 @@ export const useAuth = () => {
 
 function useAuthProvider() {
   const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User | null>(null)
-  const [userIsAuthenticated, setUserIsAuthenticated] = useState<Boolean>(false)
-  const [isVendor, setIsVendor] = useState<Boolean | null>(null)
-  const [isVendorInviteValid, setIsVendorInviteValid] = useState<Boolean>(false)
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false)
+  const [isVendor, setIsVendor] = useState<boolean | null>(null)
+  const [isVendorInviteValid, setIsVendorInviteValid] = useState<boolean>(false)
 
   const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) => {
     setUserInfo(result)
@@ -59,7 +59,7 @@ function useAuthProvider() {
     }
   }
 
-  const signInWithGoogle = async (isVendor: Boolean) => {
+  const signInWithGoogle = async (isVendor: boolean) => {
     try {
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = auth.GoogleAuthProvider.credential(idToken)
@@ -73,7 +73,7 @@ function useAuthProvider() {
 
   const syncUserWithFirestoreUsers = async (
     user: FirebaseAuthTypes.User,
-    isVendor: Boolean
+    isVendor: boolean
   ) => {
     const userDoc = firestore().collection('users').doc(user.uid)
     try {

@@ -29,7 +29,7 @@ export const use[hook] = () => {
 }
 
 function use[hook]Provider() {
-  const [isMounted, setIsMounted] = useState<Boolean>(false)  
+  const [isMounted, setIsMounted] = useState<boolean>(false)  
 
   useEffect(() => {
     setIsMounted(true)
