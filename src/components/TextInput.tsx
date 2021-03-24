@@ -1,13 +1,19 @@
 import React from 'react'
 import { TextInput as PaperTextInput, withTheme } from 'react-native-paper'
 
-const TextInput = (props) => {
+type PaperTextInputProps = React.ComponentProps<typeof PaperTextInput>
+
+type TextInputProps = PaperTextInputProps & {
+  theme: any
+}
+
+const TextInput = (props: TextInputProps) => {
   const { fonts, spacing } = props.theme
   return (
     <PaperTextInput
       mode='outlined'
-      {...props}
       style={{ ...fonts.input, marginTop: spacing.xs }}
+      {...props}
     />
   )
 }

@@ -47,7 +47,6 @@ const VendorSignIn = ({ theme }: any) => {
     <DismissKeyboard>
       <SafeAreaView style={presets.screenContainer}>
         <View style={{ ...presets.screenContent, paddingTop: 200 }}>
-          {/* {!!error && <Text style={styles.error}>{error}</Text>} */}
           {!isVendorInviteValid && (
             <>
               <Title style={{ marginLeft: spacing.xs }}>
