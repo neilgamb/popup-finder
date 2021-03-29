@@ -135,8 +135,8 @@ function useAuthProvider() {
       const isVendorInviteValid = await AsyncStorage.getItem(
         '@isVendorInviteValid'
       )
-      // setIsVendorInviteValid(!!isVendorInviteValid)
-      setIsVendorInviteValid(false)
+      setIsVendorInviteValid(!!isVendorInviteValid)
+      // setIsVendorInviteValid(false)
     }
     checkIsVendorInviteVerified()
     // unsubscribe on unmount

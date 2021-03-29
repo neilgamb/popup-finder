@@ -1,27 +1,19 @@
 import React from 'react'
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { SafeAreaView, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
 
-import { presets } from '../../style/theme'
+import { ScreenHeader } from '../../components'
 
-export default function VendorHome() {
+const VendorEvents = () => {
+  const { presets } = useTheme()
+
   return (
-    <SafeAreaView style={[presets.screenContainer, overrides.screenContainer]}>
+    <SafeAreaView style={presets.screenContainer}>
       <View style={presets.screenContent}>
-        <Text style={presets.title}>Events</Text>
-      </View>
-      <View style={presets.screenActions}>
-        {/* <TouchableOpacity style={presets.button} onPress={signOut}>
-          <Text style={presets.buttonText}>Sign out</Text>
-        </TouchableOpacity> */}
+        <ScreenHeader />
       </View>
     </SafeAreaView>
   )
 }
 
-const overrides = StyleSheet.create({})
+export default VendorEvents
