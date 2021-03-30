@@ -11,7 +11,6 @@ const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
   const [email, setEmail] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
-  // const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     isVendorInviteValid,
     isLoading,

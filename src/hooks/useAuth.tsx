@@ -24,7 +24,7 @@ interface AuthContextProps {
   isVendor: boolean
   isVendorInviteValid: boolean
   isLoading: boolean
-  signInAnonymously: () => void
+  signInAnonymously: (isVendor: boolean) => void
   signInWithGoogle: (isVender: boolean) => void
   verifyVendorInvite: (email: String) => boolean
   setIsVendorInviteValid: (isVendorInviteValid: boolean) => void
@@ -54,10 +54,11 @@ function useAuthProvider() {
     setUserIsAuthenticated(!!result)
   }
 
-  const signInAnonymously = async () => {
+  const signInAnonymously = async (isVendor: boolean) => {
     try {
       setIsLoading(true)
       await auth().signInAnonymously()
+      setIsVendor(isVendor)
     } catch (e) {
       handleAuthErrors(e)
     } finally {
