@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, Image, TouchableOpacity, View } from 'react-native'
 import { useNavigationState } from '@react-navigation/native'
-import { Menu, Provider, Title } from 'react-native-paper'
+import { Menu, Title } from 'react-native-paper'
 import auth from '@react-native-firebase/auth'
 
 import { useAuth } from '../hooks/useAuth'
@@ -34,28 +34,27 @@ const ScreenHeader = () => {
   }
 
   return (
-    <Provider>
-      <View style={styles.container}>
-        <Title style={styles.title}>{routeName}</Title>
-        <Menu
-          visible={visible}
-          theme={{ dark: false }}
-          onDismiss={closeMenu}
-          anchor={
-            <TouchableOpacity style={styles.avatarContainer} onPress={openMenu}>
-              <Image
-                source={{ uri: userInfo?.photoURL }}
-                height={35}
-                width={35}
-                style={{ height: 35, width: 35 }}
-              />
-            </TouchableOpacity>
-          }
-        >
-          <Menu.Item onPress={signOut} title='Sign Out' />
-        </Menu>
-      </View>
-    </Provider>
+    <View style={styles.container}>
+      <Title style={styles.title}>{routeName}</Title>
+      <Menu
+        visible={visible}
+        theme={{ dark: false }}
+        onDismiss={closeMenu}
+        contentStyle={styles.menuContainer}
+        anchor={
+          <TouchableOpacity style={styles.avatarContainer} onPress={openMenu}>
+            <Image
+              source={{ uri: userInfo?.photoURL }}
+              height={35}
+              width={35}
+              style={{ height: 35, width: 35 }}
+            />
+          </TouchableOpacity>
+        }
+      >
+        <Menu.Item onPress={signOut} title='Sign Out' icon='logout' />
+      </Menu>
+    </View>
   )
 }
 
@@ -78,5 +77,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
+  },
+  menuContainer: {
+    top: 60,
+    right: theme.spacing.md,
+    paddingLeft: theme.spacing.sm,
   },
 })

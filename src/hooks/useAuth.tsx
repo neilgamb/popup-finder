@@ -23,10 +23,12 @@ interface AuthContextProps {
   userIsAuthenticated: boolean
   isVendor: boolean
   isVendorInviteValid: boolean
+  isLoading: boolean
   signInAnonymously: () => void
   signInWithGoogle: (isVender: boolean) => void
   verifyVendorInvite: (email: String) => boolean
   setIsVendorInviteValid: (isVendorInviteValid: boolean) => void
+  setIsLoading: (isLoading: boolean) => void
 }
 
 export const AuthContext = createContext<AuthContextProps>(null)
@@ -45,6 +47,7 @@ function useAuthProvider() {
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false)
   const [isVendor, setIsVendor] = useState<boolean | null>(null)
   const [isVendorInviteValid, setIsVendorInviteValid] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) => {
     setUserInfo(result)
@@ -53,14 +56,18 @@ function useAuthProvider() {
 
   const signInAnonymously = async () => {
     try {
+      setIsLoading(true)
       await auth().signInAnonymously()
     } catch (e) {
       handleAuthErrors(e)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const signInWithGoogle = async (isVendor: boolean) => {
     try {
+      setIsLoading(true)
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = auth.GoogleAuthProvider.credential(idToken)
       const { user } = await auth().signInWithCredential(googleCredential)
@@ -68,6 +75,8 @@ function useAuthProvider() {
       setIsVendor(isVendor)
     } catch (e) {
       handleAuthErrors(e)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -148,9 +157,11 @@ function useAuthProvider() {
     userIsAuthenticated,
     isVendor,
     isVendorInviteValid,
+    isLoading,
     signInAnonymously,
     signInWithGoogle,
     verifyVendorInvite,
     setIsVendorInviteValid,
+    setIsLoading,
   }
 }

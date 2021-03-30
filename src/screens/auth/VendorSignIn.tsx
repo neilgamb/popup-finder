@@ -9,14 +9,16 @@ import { Button, TextInput, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+  // const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     isVendorInviteValid,
+    isLoading,
     setIsVendorInviteValid,
     signInWithGoogle,
     verifyVendorInvite,
+    setIsLoading,
   } = useAuth()
 
   const handleEmailSubmit = async (email: String) => {
@@ -82,7 +84,12 @@ const VendorSignIn = ({ theme }: any) => {
             </>
           ) : (
             <>
-              <Button onPress={() => signInWithGoogle(true)}>Login</Button>
+              <Button
+                loading={isLoading}
+                onPress={() => signInWithGoogle(true)}
+              >
+                Login
+              </Button>
               <Button mode='text' onPress={goBack}>
                 Back
               </Button>
