@@ -8,7 +8,7 @@ import { Button, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
-  const { isLoading, signInAnonymously, signInWithGoogle } = useAuth()
+  const { signingIn, signInAnonymously, signInWithGoogle } = useAuth()
 
   const { presets } = theme
 
@@ -17,10 +17,16 @@ const VendorSignIn = ({ theme }: any) => {
       <SafeAreaView style={presets.screenContainer}>
         <View style={{ ...presets.screenContent, paddingTop: 200 }}></View>
         <View style={presets.screenActions}>
-          <Button loading={isLoading} onPress={() => signInAnonymously(false)}>
+          <Button
+            loading={signingIn === 'anon'}
+            onPress={() => signInAnonymously(false)}
+          >
             Sign In Anonymously
           </Button>
-          <Button loading={isLoading} onPress={() => signInWithGoogle(false)}>
+          <Button
+            loading={signingIn === 'goog'}
+            onPress={() => signInWithGoogle(false)}
+          >
             Sign In With Google
           </Button>
           <Button mode='text' onPress={goBack}>

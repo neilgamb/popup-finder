@@ -11,18 +11,18 @@ const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
   const [email, setEmail] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
+  const [isVerifying, setIsVerifying] = useState<boolean>(false)
   const {
     isVendorInviteValid,
-    isLoading,
+    signingIn,
     setIsVendorInviteValid,
     signInWithGoogle,
     verifyVendorInvite,
-    setIsLoading,
   } = useAuth()
 
   const handleEmailSubmit = async (email: String) => {
     try {
-      setIsLoading(true)
+      setIsVerifying(true)
       validateEmail(email)
       const vendorInviteVerified = await verifyVendorInvite(email)
       if (vendorInviteVerified) {
@@ -32,7 +32,7 @@ const VendorSignIn = ({ theme }: any) => {
     } catch (error) {
       setError(error)
     } finally {
-      setIsLoading(false)
+      setIsVerifying(false)
     }
   }
 
@@ -72,7 +72,7 @@ const VendorSignIn = ({ theme }: any) => {
           {!isVendorInviteValid ? (
             <>
               <Button
-                loading={isLoading}
+                loading={isVerifying}
                 onPress={() => handleEmailSubmit(email)}
               >
                 Submit
@@ -84,7 +84,7 @@ const VendorSignIn = ({ theme }: any) => {
           ) : (
             <>
               <Button
-                loading={isLoading}
+                loading={signingIn}
                 onPress={() => signInWithGoogle(true)}
               >
                 Login
