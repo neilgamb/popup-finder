@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, SafeAreaView } from 'react-native'
 import { withTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
@@ -10,7 +10,7 @@ const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
   const { isLoading, signInAnonymously, signInWithGoogle } = useAuth()
 
-  const { presets, spacing } = theme
+  const { presets } = theme
 
   return (
     <DismissKeyboard>

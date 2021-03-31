@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { StyleSheet, Image, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigationState } from '@react-navigation/native'
-import { Menu, Title } from 'react-native-paper'
+import { Avatar, Menu, Title } from 'react-native-paper'
 import auth from '@react-native-firebase/auth'
 
 import { useAuth } from '../hooks/useAuth'
@@ -43,12 +43,19 @@ const ScreenHeader = () => {
         contentStyle={styles.menuContainer}
         anchor={
           <TouchableOpacity style={styles.avatarContainer} onPress={openMenu}>
-            <Image
-              source={{ uri: userInfo?.photoURL }}
-              height={35}
-              width={35}
-              style={{ height: 35, width: 35 }}
-            />
+            {userInfo?.isAnonymous ? (
+              <Avatar.Icon
+                icon='menu'
+                style={{ backgroundColor: '#f0f0f0' }}
+                size={60}
+              />
+            ) : (
+              <Avatar.Image
+                style={{ backgroundColor: '#f0f0f0' }}
+                size={40}
+                source={{ uri: userInfo?.photoURL }}
+              />
+            )}
           </TouchableOpacity>
         }
       >

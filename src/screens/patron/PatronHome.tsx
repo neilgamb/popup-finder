@@ -1,56 +1,19 @@
 import React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import auth from '@react-native-firebase/auth'
-import { useAuth } from '../../hooks/useAuth'
+import { SafeAreaView, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
 
-export default function PatronHome() {
-  const user = useAuth()
+import { ScreenHeader } from '../../components'
 
-  const signOut = async () => {
-    try {
-      await auth().signOut()
-    } catch (e) {
-      console.error(e)
-    }
-  }
+const PatronHome = () => {
+  const { presets } = useTheme()
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome Patron {user.uid}!</Text>
-      <TouchableOpacity style={styles.button} onPress={signOut}>
-        <Text style={styles.buttonText}>Sign out</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView style={presets.screenContainer}>
+      <View style={presets.screenContent}>
+        <ScreenHeader />
+      </View>
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  title: {
-    marginTop: 20,
-    marginBottom: 30,
-    fontSize: 28,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  button: {
-    flexDirection: 'row',
-    borderRadius: 30,
-    width: '100%',
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 24,
-    marginRight: 5,
-  },
-})
+export default PatronHome
