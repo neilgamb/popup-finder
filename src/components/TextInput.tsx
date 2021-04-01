@@ -9,11 +9,12 @@ type TextInputProps = PaperTextInputProps & {
 
 const TextInput = (props: TextInputProps) => {
   const { fonts, spacing } = props.theme
+  const { style: styleOverrides } = props
   return (
     <PaperTextInput
-      mode='outlined'
-      style={{ ...fonts.input, marginTop: spacing.xs }}
       {...props}
+      mode='outlined'
+      style={{ ...fonts.input, marginTop: spacing.sm, ...styleOverrides }}
     />
   )
 }

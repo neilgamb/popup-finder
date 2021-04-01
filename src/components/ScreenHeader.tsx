@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
   },
   title: {
     marginRight: theme.spacing.md,
