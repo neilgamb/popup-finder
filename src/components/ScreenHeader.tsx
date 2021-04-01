@@ -12,7 +12,7 @@ type ScreenHeaderProps = {
 }
 
 const ScreenHeader = () => {
-  let { userInfo } = useAuth()
+  const { userInfo } = useAuth()
   // const displayName = userInfo?.displayName?.split(' ')[0]
 
   const routeName = useNavigationState(
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginRight: theme.spacing.md,
+    color: '#999',
   },
   avatarContainer: {
     width: 50,
