@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
-import { Headline, Title, useTheme } from 'react-native-paper'
+import { Headline, Title, List, useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import MapView from 'react-native-maps'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
@@ -18,24 +18,34 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { userInfo } = useAuth()
 
-  // temp
-  const [latitude, setLatitude] = useState(12.840575)
-  const [longitude, setLongitude] = useState(77.651787)
-  const [latitudeDelta, setLatitudeDelta] = useState(0.025)
-  const [longitudeDelta, setLongitudeDelta] = useState(0.025)
+  const [locationQuery, setLocationQuery] = useState('')
+  const [locationResults, setLocationResults] = useState([])
 
-  const getAddress = () => {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${latitude},${longitude}&key=${GOOGLE_PLACES_API_KEY}`
+  const getAddress = (locationQuery: string) => {
+    // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&types=(cities)&key=${GOOGLE_PLACES_API_KEY}`
     fetch(url)
       .then((response) => response.json())
-      .then((json) => console.log(JSON.stringify(json)))
+      .then(({ predictions }) => {
+        // console.log('---------')
+        console.log(predictions)
+        setLocationResults(predictions)
+        predictions.forEach((result) => {
+          console.log(result.description)
+          // console.log(result.address_components[0].long_name)
+        })
+      })
   }
 
   //todo: follow this tut for fully custom auto complete — https://medium.com/debugger-off/how-to-use-google-autocomplete-api-s-and-react-native-maps-in-react-native-to-fetch-user-location-20d3f65af48b
 
+  // useEffect(() => {
+  //   getAddress()
+  // }, [])
+
   useEffect(() => {
-    getAddress()
-  }, [])
+    getAddress(locationQuery)
+  }, [locationQuery])
 
   return (
     <DismissKeyboard>
@@ -49,7 +59,7 @@ const VendorHome = () => {
           }}
           onSubmit={(values) => console.log(values)}
         >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
+          {({ handleChange, handleBlur, handleSubmit, setValues, values }) => (
             <>
               <ScreenHeader />
               <ScrollView style={presets.screenContent}>
@@ -68,11 +78,26 @@ const VendorHome = () => {
                 />
                 <TextInput
                   label='Location'
-                  onChangeText={handleChange('location')}
+                  onChangeText={(text) => {
+                    setLocationQuery(text)
+                    setValues({ ...values, location: text })
+                  }}
                   onBlur={handleBlur('location')}
                   value={values.location}
                 />
-                <View
+                {locationResults?.map((result) => (
+                  <List.Item
+                    title={result.description}
+                    onPress={() => {
+                      setValues({
+                        ...values,
+                        location: result.description,
+                      })
+                      setLocationResults([])
+                    }}
+                  />
+                ))}
+                {/* <View
                   style={{
                     flex: 1,
                     backgroundColor: 'white',
@@ -91,7 +116,7 @@ const VendorHome = () => {
                       longitudeDelta,
                     }}
                   />
-                </View>
+                </View> */}
               </ScrollView>
               <View style={presets.screenActions}>
                 <Button onPress={handleSubmit}>Submit</Button>
