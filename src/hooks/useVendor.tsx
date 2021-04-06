@@ -5,12 +5,15 @@ import React, {
   createContext,
   ReactNode,
 } from 'react'
+import firestore from '@react-native-firebase/firestore'
 
 interface VendorProps {
   children: ReactNode
 }
 
-interface VendorContextProps {}
+interface VendorContextProps {
+  addPopUp: (popUpInfo: object) => void
+}
 
 export const VendorContext = createContext<VendorContextProps>(null)
 
@@ -28,15 +31,22 @@ export const useVendor = () => {
 function useVendorProvider() {
   const [isVendorSetup, setIsVendorSetup] = useState<boolean>(false)
 
-  useEffect(() => {
-    // setIsMounted(true)
+  const addPopUp = (popUpInfo) => {
+    const ref = firestore().collection('popUps')
+    const docId = ref.doc().id
+    const dateAdded = firestore.Timestamp.now()
 
-    return () => {
-      // setIsMounted(true)
-    }
-  }, [])
+    ref
+      .doc(docId)
+      .set({
+        ...popUpInfo,
+        dateAdded,
+      })
+      .catch((error) => console.log(error))
+  }
 
   return {
     isVendorSetup,
+    addPopUp,
   }
 }
