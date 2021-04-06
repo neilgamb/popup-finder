@@ -36,17 +36,21 @@ function useVendorProvider() {
     const docId = ref.doc().id
     const dateAdded = firestore.Timestamp.now()
 
-    ref
-      .doc(docId)
-      .set({
-        ...popUpInfo,
-        dateAdded,
-      })
-      .catch((error) => console.log(error))
+    return new Promise((resolve, reject) => {
+      ref
+        .doc(docId)
+        .set({
+          ...popUpInfo,
+          dateAdded,
+        })
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
   }
 
   return {
     isVendorSetup,
+    setIsVendorSetup,
     addPopUp,
   }
 }

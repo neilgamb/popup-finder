@@ -14,7 +14,7 @@ export default function App() {
   const { userIsAuthenticated, isVendor } = useAuth()
 
   const renderApp = () => {
-    if ((userIsAuthenticated && isVendor) || __DEV__) {
+    if (userIsAuthenticated && isVendor) {
       return <VendorStack />
     } else if (userIsAuthenticated && !isVendor) {
       return <PatronStack />
