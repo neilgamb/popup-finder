@@ -12,6 +12,7 @@ import {
   TextInput,
   Button,
   DismissKeyboard,
+  FormInputError,
 } from '../../components'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
@@ -20,7 +21,9 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { userInfo } = useAuth()
-  const { addPopUp } = useVendor()
+  const { addPopUp, addPopUpToVender } = useVendor()
+
+  console.log(userInfo)
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
@@ -37,7 +40,8 @@ const VendorHome = () => {
   const handleAddPopUp = async (values) => {
     try {
       setIsSaving(true)
-      await addPopUp(values)
+      const popUpId = await addPopUp(values, userInfo?.uid)
+      addPopUpToVender(userInfo?.uid, popUpId, values)
       // navigate('VendorEvents')
     } catch (error) {
       console.log(error)
@@ -79,15 +83,15 @@ const VendorHome = () => {
                   Before you get started, tell us a little more about your pop
                   up...
                 </Title>
+
                 <TextInput
                   label='Pop Up Name'
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                   value={values.name}
                 />
-                <HelperText type='error' visible={errors.name && touched.name}>
-                  {touched.name && errors.name}
-                </HelperText>
+                <FormInputError error={errors.name} touched={touched.name} />
+
                 <TextInput
                   label='Location'
                   onChangeText={(text) => {
@@ -97,12 +101,10 @@ const VendorHome = () => {
                   onBlur={handleBlur('location')}
                   value={values.location}
                 />
-                <HelperText
-                  type='error'
-                  visible={errors.location && touched.location}
-                >
-                  {touched.location && errors.location}
-                </HelperText>
+                <FormInputError
+                  error={errors.location}
+                  touched={touched.location}
+                />
                 {locationResults?.map((result) => (
                   <List.Item
                     title={result.description}
@@ -116,31 +118,28 @@ const VendorHome = () => {
                     }}
                   />
                 ))}
+
                 <TextInput
                   label='Food Type'
                   onChangeText={handleChange('foodType')}
                   onBlur={handleBlur('foodType')}
                   value={values.foodType}
                 />
+                <FormInputError
+                  error={errors.foodType}
+                  touched={touched.foodType}
+                />
 
-                <HelperText
-                  type='error'
-                  visible={errors.foodType && touched.foodType}
-                >
-                  {touched.foodType && errors.foodType}
-                </HelperText>
                 <TextInput
                   label='Description'
                   onChangeText={handleChange('description')}
                   onBlur={handleBlur('description')}
                   value={values.description}
                 />
-                <HelperText
-                  type='error'
-                  visible={errors.description && touched.description}
-                >
-                  {touched.description && errors.description}
-                </HelperText>
+                <FormInputError
+                  error={errors.description}
+                  touched={touched.description}
+                />
               </ScrollView>
               <View style={presets.screenActions}>
                 <Button

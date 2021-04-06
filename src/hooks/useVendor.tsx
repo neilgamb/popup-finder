@@ -31,18 +31,33 @@ export const useVendor = () => {
 function useVendorProvider() {
   const [isVendorSetup, setIsVendorSetup] = useState<boolean>(false)
 
-  const addPopUp = (popUpInfo) => {
-    const ref = firestore().collection('popUps')
-    const docId = ref.doc().id
+  const addPopUp = (popUpInfo, userUid) => {
+    const popUpCollection = firestore().collection('popUps')
+    const docId = popUpCollection.doc().id
     const dateAdded = firestore.Timestamp.now()
 
     return new Promise((resolve, reject) => {
-      ref
+      popUpCollection
         .doc(docId)
         .set({
           ...popUpInfo,
           dateAdded,
+          user: userUid,
         })
+        .then(() => resolve(docId))
+        .catch((error) => reject(error))
+    })
+  }
+
+  const addPopUpToVender = (userUid, popUpId, popUpInfo) => {
+    const userCollection = firestore().collection('users')
+
+    return new Promise((resolve, reject) => {
+      userCollection
+        .doc(userUid)
+        .collection('popUps')
+        .add({ uid: popUpId, name: popUpInfo.name })
+        // .set({ uid: popUpInfo.uid, name: popUpInfo.name })
         .then(() => resolve(true))
         .catch((error) => reject(error))
     })
@@ -52,5 +67,6 @@ function useVendorProvider() {
     isVendorSetup,
     setIsVendorSetup,
     addPopUp,
+    addPopUpToVender,
   }
 }
