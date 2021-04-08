@@ -21,9 +21,7 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { userInfo } = useAuth()
-  const { addPopUp, addPopUpToVender } = useVendor()
-
-  console.log(userInfo)
+  const { addPopUp, addPopUpToVender, isVendorSetup } = useVendor()
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
@@ -42,7 +40,6 @@ const VendorHome = () => {
       setIsSaving(true)
       const popUpId = await addPopUp(values, userInfo?.uid)
       addPopUpToVender(userInfo?.uid, popUpId, values)
-      // navigate('VendorEvents')
     } catch (error) {
       console.log(error)
     } finally {
@@ -76,80 +73,107 @@ const VendorHome = () => {
             <>
               <ScreenHeader />
               <ScrollView style={presets.screenContent}>
-                <Headline>
-                  Welcome, {userInfo?.displayName.split(' ')[0]}
-                </Headline>
-                <Title style={{ marginTop: spacing.sm }}>
-                  Before you get started, tell us a little more about your pop
-                  up...
-                </Title>
+                {isVendorSetup ? (
+                  <>
+                    <Headline>
+                      Hey, {userInfo?.displayName.split(' ')[0]}
+                    </Headline>
+                    <Title style={{ marginTop: spacing.sm }}>
+                      Here's your Pop Up information:
+                    </Title>
+                  </>
+                ) : (
+                  <>
+                    <Headline>
+                      Welcome, {userInfo?.displayName.split(' ')[0]}
+                    </Headline>
+                    <Title style={{ marginTop: spacing.sm }}>
+                      Before you get started, tell us a little more about your
+                      pop up...
+                    </Title>
 
-                <TextInput
-                  label='Pop Up Name'
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                />
-                <FormInputError error={errors.name} touched={touched.name} />
+                    <TextInput
+                      label='Pop Up Name'
+                      onChangeText={handleChange('name')}
+                      onBlur={handleBlur('name')}
+                      value={values.name}
+                    />
+                    <FormInputError
+                      error={errors.name}
+                      touched={touched.name}
+                    />
 
-                <TextInput
-                  label='Location'
-                  onChangeText={(text) => {
-                    setLocationQuery(text)
-                    setValues({ ...values, location: text })
-                  }}
-                  onBlur={handleBlur('location')}
-                  value={values.location}
-                />
-                <FormInputError
-                  error={errors.location}
-                  touched={touched.location}
-                />
-                {locationResults?.map((result) => (
-                  <List.Item
-                    title={result.description}
-                    onPress={() => {
-                      setValues({
-                        ...values,
-                        location: result.description,
-                      })
-                      setLocationResults([])
-                      setLocationQuery('')
-                    }}
-                  />
-                ))}
+                    <TextInput
+                      label='Location'
+                      onChangeText={(text) => {
+                        setLocationQuery(text)
+                        setValues({ ...values, location: text })
+                      }}
+                      onBlur={handleBlur('location')}
+                      value={values.location}
+                    />
+                    <FormInputError
+                      error={errors.location}
+                      touched={touched.location}
+                    />
+                    {locationResults?.map((result) => (
+                      <List.Item
+                        title={result.description}
+                        onPress={() => {
+                          setValues({
+                            ...values,
+                            location: result.description,
+                          })
+                          setLocationResults([])
+                          setLocationQuery('')
+                        }}
+                      />
+                    ))}
 
-                <TextInput
-                  label='Food Type'
-                  onChangeText={handleChange('foodType')}
-                  onBlur={handleBlur('foodType')}
-                  value={values.foodType}
-                />
-                <FormInputError
-                  error={errors.foodType}
-                  touched={touched.foodType}
-                />
+                    <TextInput
+                      label='Food Type'
+                      onChangeText={handleChange('foodType')}
+                      onBlur={handleBlur('foodType')}
+                      value={values.foodType}
+                    />
+                    <FormInputError
+                      error={errors.foodType}
+                      touched={touched.foodType}
+                    />
 
-                <TextInput
-                  label='Description'
-                  onChangeText={handleChange('description')}
-                  onBlur={handleBlur('description')}
-                  value={values.description}
-                />
-                <FormInputError
-                  error={errors.description}
-                  touched={touched.description}
-                />
+                    <TextInput
+                      label='Description'
+                      onChangeText={handleChange('description')}
+                      onBlur={handleBlur('description')}
+                      value={values.description}
+                    />
+                    <FormInputError
+                      error={errors.description}
+                      touched={touched.description}
+                    />
+                  </>
+                )}
               </ScrollView>
               <View style={presets.screenActions}>
-                <Button
-                  disabled={!isValid}
-                  // disabled={!(isValid && dirty)}
-                  loading={isSaving}
-                  onPress={handleSubmit}
-                >
-                  Submit
-                </Button>
+                {isVendorSetup ? (
+                  <Button
+                    disabled={!isValid}
+                    // disabled={!(isValid && dirty)}
+                    loading={isSaving}
+                    onPress={() => console.log('handle edit')}
+                  >
+                    Edit
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={!isValid}
+                    // disabled={!(isValid && dirty)}
+                    loading={isSaving}
+                    onPress={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                )}
               </View>
             </>
           )}

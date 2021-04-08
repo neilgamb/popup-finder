@@ -12,8 +12,17 @@ interface VendorProps {
 }
 
 interface VendorContextProps {
-  addPopUp: (popUpInfo: object) => void
+  isVendorSetup: boolean
+  addPopUp: (popUpInfo: object, userUid: string) => void
+  addPopUpToVender: (
+    userUid: string,
+    popUpId: string,
+    popUpInfo: object
+  ) => void
+  getVendorPopUps: () => void
 }
+
+interface PopUp {}
 
 export const VendorContext = createContext<VendorContextProps>(null)
 
@@ -30,6 +39,7 @@ export const useVendor = () => {
 
 function useVendorProvider() {
   const [isVendorSetup, setIsVendorSetup] = useState<boolean>(false)
+  const [vendorPopUps, setVendorPopUps] = useState<PopUp[]>([])
 
   const addPopUp = (popUpInfo, userUid) => {
     const popUpCollection = firestore().collection('popUps')
@@ -49,7 +59,11 @@ function useVendorProvider() {
     })
   }
 
-  const addPopUpToVender = (userUid, popUpId, popUpInfo) => {
+  const addPopUpToVender = (
+    userUid: string,
+    popUpId: string,
+    popUpInfo: object
+  ) => {
     const userCollection = firestore().collection('users')
 
     return new Promise((resolve, reject) => {
@@ -57,11 +71,40 @@ function useVendorProvider() {
         .doc(userUid)
         .collection('popUps')
         .add({ uid: popUpId, name: popUpInfo.name })
-        // .set({ uid: popUpInfo.uid, name: popUpInfo.name })
         .then(() => resolve(true))
         .catch((error) => reject(error))
     })
   }
+
+  const getVendorPopUps = async () => {
+    const popUpCollection = firestore().collection('popUps')
+    let popUps = [] as PopUp[]
+
+    return new Promise((resolve, reject) => {
+      popUpCollection
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            popUps.push(doc.data())
+          })
+          return popUps
+        })
+        .then((popUps) => {
+          resolve(popUps)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+  const populateVendorPopUps = async () => {
+    const popUps = await getVendorPopUps()
+    setVendorPopUps(popUps)
+    if (popUps.length) setIsVendorSetup(true)
+  }
+
+  useEffect(() => {
+    populateVendorPopUps()
+  }, [])
 
   return {
     isVendorSetup,
