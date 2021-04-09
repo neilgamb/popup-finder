@@ -21,13 +21,14 @@ interface VendorContextProps {
     popUpUid: string,
     popUpInfo: object
   ) => void
+  editPopUp: (popUpInfo: object) => void
   getVendorPopUps: () => void
   setIsVendorSetup: (isVendorSetup: boolean) => void
 }
 
 interface PopUp {
   dateAdded?: admin.firestore.Timestamp
-  uid: string
+  popUpUid: string
   name: string
   location: string
   foodType: string
@@ -55,28 +56,28 @@ function useVendorProvider() {
 
   const addPopUp = (popUpInfo: PopUp, userUid: string) => {
     const popUpCollection = firestore().collection('popUps')
-    const popUpUid = popUpCollection.doc().id
+    const uid = popUpCollection.doc().id
     const dateAdded = firestore.Timestamp.now()
 
     return new Promise((resolve, reject) => {
       popUpCollection
-        .doc(popUpUid)
+        .doc(uid)
         .set({
-          dateAdded,
-          popUpUid,
-          userUid,
           ...popUpInfo,
+          dateAdded,
+          userUid,
+          popUpUid: uid,
         })
-        .then(() => resolve(popUpUid))
+        .then(async () => {
+          await addPopUpToVender(userUid, uid)
+          populateVendorPopUps()
+          resolve(uid)
+        })
         .catch((error) => reject(error))
     })
   }
 
-  const addPopUpToVender = (
-    userUid: string,
-    popUpUid: string,
-    popUpInfo: PopUp
-  ) => {
+  const addPopUpToVender = (userUid: string, popUpUid: string) => {
     const userCollection = firestore().collection('users')
 
     return new Promise((resolve, reject) => {
@@ -84,16 +85,27 @@ function useVendorProvider() {
         .doc(userUid)
         .collection('popUps')
         .doc(popUpUid)
-        .set({ ...popUpInfo, popUpUid })
-        .then(() => {
+        .set({ popUpUid })
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
+  }
+
+  const editPopUp = (popUpInfo: PopUp) => {
+    const popUpCollection = firestore().collection('popUps')
+    console.log(popUpInfo)
+
+    return new Promise((resolve, reject) => {
+      popUpCollection
+        .doc(popUpInfo.popUpUid)
+        .set(popUpInfo)
+        .then(async () => {
           populateVendorPopUps()
           resolve(true)
         })
         .catch((error) => reject(error))
     })
   }
-
-  const editPopUp = (popUpInfo: PopUp) => {}
 
   const deletePopUp = (popUpUid) => {}
 
@@ -136,5 +148,6 @@ function useVendorProvider() {
     setIsVendorSetup,
     addPopUp,
     addPopUpToVender,
+    editPopUp,
   }
 }

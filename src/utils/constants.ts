@@ -2,14 +2,14 @@ import * as Yup from 'yup'
 
 export const INIT_POP_VALUES = __DEV__
   ? {
-      name: "Neil's",
-      location: 'New Orleans, LA',
-      foodType: 'Sushi',
-      description: 'its good',
-      // name: '',
-      // location: '',
-      // foodType: '',
-      // description: '',
+      // name: "Neil's",
+      // location: 'New Orleans, LA',
+      // foodType: 'Sushi',
+      // description: 'its good',
+      name: '',
+      location: '',
+      foodType: '',
+      description: '',
     }
   : {
       name: '',

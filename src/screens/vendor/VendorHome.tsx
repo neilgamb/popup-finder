@@ -21,7 +21,7 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { userInfo } = useAuth()
-  const { addPopUp, addPopUpToVender, isVendorSetup, activePopUp } = useVendor()
+  const { addPopUp, editPopUp, isVendorSetup, activePopUp } = useVendor()
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
@@ -39,8 +39,19 @@ const VendorHome = () => {
   const handleAddPopUp = async (values) => {
     try {
       setIsSaving(true)
-      const popUpUid = await addPopUp(values, userInfo?.uid)
-      addPopUpToVender(userInfo?.uid, popUpUid, values)
+      await addPopUp(values, userInfo?.uid)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleEditPopUp = async (values) => {
+    try {
+      setIsSaving(true)
+      await editPopUp(values)
+      setIsEditing(false)
     } catch (error) {
       console.log(error)
     } finally {
@@ -56,9 +67,12 @@ const VendorHome = () => {
     <DismissKeyboard>
       <SafeAreaView style={presets.screenContainer}>
         <Formik
-          initialValues={INIT_POP_VALUES}
+          enableReinitialize
+          initialValues={isEditing ? activePopUp : INIT_POP_VALUES}
           validationSchema={POP_UP_SCHEMA}
-          onSubmit={(values) => handleAddPopUp(values)}
+          onSubmit={(values) =>
+            isEditing ? handleEditPopUp(values) : handleAddPopUp(values)
+          }
         >
           {({
             handleChange,
@@ -142,8 +156,9 @@ const VendorHome = () => {
                       error={errors.location}
                       touched={touched.location}
                     />
-                    {locationResults?.map((result) => (
+                    {locationResults?.map((result, i) => (
                       <List.Item
+                        key={i}
                         title={result.description}
                         onPress={() => {
                           setValues({
@@ -182,23 +197,36 @@ const VendorHome = () => {
               </ScrollView>
               <View style={presets.screenActions}>
                 {isVendorSetup && !isEditing ? (
-                  <Button
-                    disabled={!isValid}
-                    // disabled={!(isValid && dirty)}
-                    loading={isSaving}
-                    onPress={() => setIsEditing(true)}
-                  >
-                    Edit
-                  </Button>
+                  <>
+                    <Button
+                      // disabled={!isValid}
+                      // disabled={!(isValid && dirty)}
+                      loading={isSaving}
+                      onPress={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </Button>
+                  </>
                 ) : (
-                  <Button
-                    disabled={!isValid}
-                    // disabled={!(isValid && dirty)}
-                    loading={isSaving}
-                    onPress={handleSubmit}
-                  >
-                    Submit
-                  </Button>
+                  <>
+                    <Button
+                      disabled={!isValid}
+                      // disabled={!(isValid && dirty)}
+                      loading={isSaving}
+                      onPress={handleSubmit}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      mode='text'
+                      // disabled={!isValid}
+                      // disabled={!(isValid && dirty)}
+                      // loading={isSaving}
+                      onPress={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
                 )}
               </View>
             </>
