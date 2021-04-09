@@ -21,6 +21,7 @@ interface VendorContextProps {
     popUpUid: string,
     popUpInfo: object
   ) => void
+  deletePopUp: (userUid: string, popUpUid: string) => void
   editPopUp: (popUpInfo: object) => void
   getVendorPopUps: () => void
   setIsVendorSetup: (isVendorSetup: boolean) => void
@@ -93,7 +94,6 @@ function useVendorProvider() {
 
   const editPopUp = (popUpInfo: PopUp) => {
     const popUpCollection = firestore().collection('popUps')
-    console.log(popUpInfo)
 
     return new Promise((resolve, reject) => {
       popUpCollection
@@ -107,7 +107,35 @@ function useVendorProvider() {
     })
   }
 
-  const deletePopUp = (popUpUid) => {}
+  const deletePopUp = (userUid: string, popUpUid: string) => {
+    const popUpCollection = firestore().collection('popUps')
+
+    return new Promise((resolve, reject) => {
+      popUpCollection
+        .doc(popUpUid)
+        .delete()
+        .then(async () => {
+          await removePopUpFromVender(userUid, popUpUid)
+          populateVendorPopUps()
+          resolve(true)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+  const removePopUpFromVender = (userUid: string, popUpUid: string) => {
+    const userCollection = firestore().collection('users')
+
+    return new Promise((resolve, reject) => {
+      userCollection
+        .doc(userUid)
+        .collection('popUps')
+        .doc(popUpUid)
+        .delete()
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
+  }
 
   const getVendorPopUps = async () => {
     const popUpCollection = firestore().collection('popUps')
@@ -135,6 +163,8 @@ function useVendorProvider() {
     if (popUps.length) {
       setActivePopUp(popUps[0])
       setIsVendorSetup(true)
+    } else {
+      setIsVendorSetup(false)
     }
   }
 
@@ -145,9 +175,8 @@ function useVendorProvider() {
   return {
     isVendorSetup,
     activePopUp,
-    setIsVendorSetup,
     addPopUp,
-    addPopUpToVender,
     editPopUp,
+    deletePopUp,
   }
 }

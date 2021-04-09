@@ -21,7 +21,13 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { userInfo } = useAuth()
-  const { addPopUp, editPopUp, isVendorSetup, activePopUp } = useVendor()
+  const {
+    addPopUp,
+    editPopUp,
+    deletePopUp,
+    isVendorSetup,
+    activePopUp,
+  } = useVendor()
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
@@ -52,6 +58,17 @@ const VendorHome = () => {
       setIsSaving(true)
       await editPopUp(values)
       setIsEditing(false)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDeletePopUp = async () => {
+    try {
+      setIsSaving(true)
+      await deletePopUp(userInfo?.uid, activePopUp.popUpUid)
     } catch (error) {
       console.log(error)
     } finally {
@@ -90,12 +107,6 @@ const VendorHome = () => {
               <ScrollView style={presets.screenContent}>
                 {isVendorSetup && !isEditing ? (
                   <>
-                    <Headline>
-                      Hey, {userInfo?.displayName.split(' ')[0]}
-                    </Headline>
-                    <Title style={{ marginTop: spacing.lg }}>
-                      Here's your Pop Up information:
-                    </Title>
                     <List.Item
                       title={activePopUp.name}
                       description='Pop Up Name'
@@ -124,13 +135,16 @@ const VendorHome = () => {
                   </>
                 ) : (
                   <>
-                    <Headline>
-                      Welcome, {userInfo?.displayName.split(' ')[0]}
-                    </Headline>
-                    <Title style={{ marginTop: spacing.sm }}>
-                      Before you get started, tell us a little more about your
-                      pop up...
-                    </Title>
+                    {!isVendorSetup && (
+                      <>
+                        <Headline>
+                          Welcome, {userInfo?.displayName.split(' ')[0]}
+                        </Headline>
+                        <Title style={{ marginTop: spacing.sm }}>
+                          Please set up your Pop Up profile:
+                        </Title>
+                      </>
+                    )}
 
                     <TextInput
                       label='Pop Up Name'
@@ -206,6 +220,14 @@ const VendorHome = () => {
                     >
                       Edit
                     </Button>
+                    <Button
+                      // disabled={!isValid}
+                      // disabled={!(isValid && dirty)}
+                      loading={isSaving}
+                      onPress={handleDeletePopUp}
+                    >
+                      Delete
+                    </Button>
                   </>
                 ) : (
                   <>
@@ -217,15 +239,17 @@ const VendorHome = () => {
                     >
                       Submit
                     </Button>
-                    <Button
-                      mode='text'
-                      // disabled={!isValid}
-                      // disabled={!(isValid && dirty)}
-                      // loading={isSaving}
-                      onPress={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
+                    {isVendorSetup && (
+                      <Button
+                        mode='text'
+                        // disabled={!isValid}
+                        // disabled={!(isValid && dirty)}
+                        // loading={isSaving}
+                        onPress={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </Button>
+                    )}
                   </>
                 )}
               </View>
