@@ -6,6 +6,10 @@ export const INIT_POP_VALUES = __DEV__
       location: 'New Orleans, LA',
       foodType: 'Sushi',
       description: 'its good',
+      // name: '',
+      // location: '',
+      // foodType: '',
+      // description: '',
     }
   : {
       name: '',

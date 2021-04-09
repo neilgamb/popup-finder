@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     top: 60,
-    right: theme.spacing.md,
     paddingLeft: theme.spacing.sm,
   },
 })

@@ -21,10 +21,11 @@ const VendorHome = () => {
   const { presets, spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { userInfo } = useAuth()
-  const { addPopUp, addPopUpToVender, isVendorSetup } = useVendor()
+  const { addPopUp, addPopUpToVender, isVendorSetup, activePopUp } = useVendor()
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
+  const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
   const handleLocationSearch = (locationQuery: string) => {
@@ -38,8 +39,8 @@ const VendorHome = () => {
   const handleAddPopUp = async (values) => {
     try {
       setIsSaving(true)
-      const popUpId = await addPopUp(values, userInfo?.uid)
-      addPopUpToVender(userInfo?.uid, popUpId, values)
+      const popUpUid = await addPopUp(values, userInfo?.uid)
+      addPopUpToVender(userInfo?.uid, popUpUid, values)
     } catch (error) {
       console.log(error)
     } finally {
@@ -73,14 +74,39 @@ const VendorHome = () => {
             <>
               <ScreenHeader />
               <ScrollView style={presets.screenContent}>
-                {isVendorSetup ? (
+                {isVendorSetup && !isEditing ? (
                   <>
                     <Headline>
                       Hey, {userInfo?.displayName.split(' ')[0]}
                     </Headline>
-                    <Title style={{ marginTop: spacing.sm }}>
+                    <Title style={{ marginTop: spacing.lg }}>
                       Here's your Pop Up information:
                     </Title>
+                    <List.Item
+                      title={activePopUp.name}
+                      description='Pop Up Name'
+                      left={(props) => (
+                        <List.Icon {...props} icon='hamburger' />
+                      )}
+                      style={{ marginTop: spacing.md }}
+                    />
+                    <List.Item
+                      title={activePopUp.location}
+                      description='Location'
+                      left={(props) => (
+                        <List.Icon {...props} icon='map-marker' />
+                      )}
+                    />
+                    <List.Item
+                      title={activePopUp.foodType}
+                      description='Food Type'
+                      left={(props) => <List.Icon {...props} icon='earth' />}
+                    />
+                    <List.Item
+                      title={activePopUp.description}
+                      description='Description'
+                      left={(props) => <List.Icon {...props} icon='note' />}
+                    />
                   </>
                 ) : (
                   <>
@@ -155,12 +181,12 @@ const VendorHome = () => {
                 )}
               </ScrollView>
               <View style={presets.screenActions}>
-                {isVendorSetup ? (
+                {isVendorSetup && !isEditing ? (
                   <Button
                     disabled={!isValid}
                     // disabled={!(isValid && dirty)}
                     loading={isSaving}
-                    onPress={() => console.log('handle edit')}
+                    onPress={() => setIsEditing(true)}
                   >
                     Edit
                   </Button>

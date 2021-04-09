@@ -9,9 +9,8 @@ const VendorEvents = () => {
 
   return (
     <SafeAreaView style={presets.screenContainer}>
-      <View style={presets.screenContent}>
-        <ScreenHeader />
-      </View>
+      <ScreenHeader />
+      <View style={presets.screenContent}></View>
     </SafeAreaView>
   )
 }

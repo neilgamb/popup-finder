@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from 'react'
 import firestore from '@react-native-firebase/firestore'
+import * as admin from 'firebase-admin'
 
 interface VendorProps {
   children: ReactNode
@@ -13,16 +14,26 @@ interface VendorProps {
 
 interface VendorContextProps {
   isVendorSetup: boolean
+  activePopUp: PopUp
   addPopUp: (popUpInfo: object, userUid: string) => void
   addPopUpToVender: (
     userUid: string,
-    popUpId: string,
+    popUpUid: string,
     popUpInfo: object
   ) => void
   getVendorPopUps: () => void
+  setIsVendorSetup: (isVendorSetup: boolean) => void
 }
 
-interface PopUp {}
+interface PopUp {
+  dateAdded?: admin.firestore.Timestamp
+  uid: string
+  name: string
+  location: string
+  foodType: string
+  description: string
+  user: string
+}
 
 export const VendorContext = createContext<VendorContextProps>(null)
 
@@ -40,29 +51,31 @@ export const useVendor = () => {
 function useVendorProvider() {
   const [isVendorSetup, setIsVendorSetup] = useState<boolean>(false)
   const [vendorPopUps, setVendorPopUps] = useState<PopUp[]>([])
+  const [activePopUp, setActivePopUp] = useState<PopUp | null>(null)
 
-  const addPopUp = (popUpInfo, userUid) => {
+  const addPopUp = (popUpInfo: PopUp, userUid: string) => {
     const popUpCollection = firestore().collection('popUps')
-    const docId = popUpCollection.doc().id
+    const popUpUid = popUpCollection.doc().id
     const dateAdded = firestore.Timestamp.now()
 
     return new Promise((resolve, reject) => {
       popUpCollection
-        .doc(docId)
+        .doc(popUpUid)
         .set({
-          ...popUpInfo,
           dateAdded,
-          user: userUid,
+          popUpUid,
+          userUid,
+          ...popUpInfo,
         })
-        .then(() => resolve(docId))
+        .then(() => resolve(popUpUid))
         .catch((error) => reject(error))
     })
   }
 
   const addPopUpToVender = (
     userUid: string,
-    popUpId: string,
-    popUpInfo: object
+    popUpUid: string,
+    popUpInfo: PopUp
   ) => {
     const userCollection = firestore().collection('users')
 
@@ -70,17 +83,25 @@ function useVendorProvider() {
       userCollection
         .doc(userUid)
         .collection('popUps')
-        .add({ uid: popUpId, name: popUpInfo.name })
-        .then(() => resolve(true))
+        .doc(popUpUid)
+        .set({ ...popUpInfo, popUpUid })
+        .then(() => {
+          populateVendorPopUps()
+          resolve(true)
+        })
         .catch((error) => reject(error))
     })
   }
+
+  const editPopUp = (popUpInfo: PopUp) => {}
+
+  const deletePopUp = (popUpUid) => {}
 
   const getVendorPopUps = async () => {
     const popUpCollection = firestore().collection('popUps')
     let popUps = [] as PopUp[]
 
-    return new Promise((resolve, reject) => {
+    return new Promise<PopUp[]>((resolve, reject) => {
       popUpCollection
         .get()
         .then((querySnapshot) => {
@@ -99,7 +120,10 @@ function useVendorProvider() {
   const populateVendorPopUps = async () => {
     const popUps = await getVendorPopUps()
     setVendorPopUps(popUps)
-    if (popUps.length) setIsVendorSetup(true)
+    if (popUps.length) {
+      setActivePopUp(popUps[0])
+      setIsVendorSetup(true)
+    }
   }
 
   useEffect(() => {
@@ -108,6 +132,7 @@ function useVendorProvider() {
 
   return {
     isVendorSetup,
+    activePopUp,
     setIsVendorSetup,
     addPopUp,
     addPopUpToVender,
