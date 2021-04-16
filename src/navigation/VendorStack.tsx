@@ -18,6 +18,7 @@ export default function VendorStack() {
         initialRouteName={isVendorSetup ? 'VendorEvents' : 'VendorHome'}
       >
         <Stack.Screen name='VendorEvents' component={VendorEvents} />
+
         <Stack.Screen name='VendorHome' component={VendorHome} />
       </Stack.Navigator>
     </NavigationContainer>
