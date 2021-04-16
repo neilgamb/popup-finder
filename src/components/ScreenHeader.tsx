@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useNavigationState } from '@react-navigation/native'
+import { useNavigationState, useNavigation } from '@react-navigation/native'
 import { Avatar, Menu, Title } from 'react-native-paper'
 import auth from '@react-native-firebase/auth'
 
@@ -12,8 +12,8 @@ type ScreenHeaderProps = {
 }
 
 const ScreenHeader = () => {
-  const { userInfo } = useAuth()
-  // const displayName = userInfo?.displayName?.split(' ')[0]
+  const { navigate } = useNavigation()
+  const { userInfo, isVendor } = useAuth()
 
   const routeName = useNavigationState(
     (state) => state.routes[state.index].name
@@ -60,6 +60,28 @@ const ScreenHeader = () => {
         }
       >
         <Menu.Item onPress={signOut} title='Sign Out' icon='logout' />
+        {isVendor && (
+          <>
+            <Menu.Item
+              onPress={() => {
+                navigate('VendorHome')
+                closeMenu()
+              }}
+              disabled={routeName === 'VendorHome'}
+              title='Profile'
+              icon='account'
+            />
+            <Menu.Item
+              onPress={() => {
+                navigate('VendorEvents')
+                closeMenu()
+              }}
+              disabled={routeName === 'VendorEvents'}
+              title='Events'
+              icon='calendar'
+            />
+          </>
+        )}
       </Menu>
     </View>
   )

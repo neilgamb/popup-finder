@@ -220,6 +220,7 @@ const VendorHome = () => {
                     <Button
                       // disabled={!isValid}
                       // disabled={!(isValid && dirty)}
+                      mode='text'
                       loading={isSaving}
                       onPress={() => setIsEditing(true)}
                     >
@@ -228,6 +229,7 @@ const VendorHome = () => {
                     <Button
                       // disabled={!isValid}
                       // disabled={!(isValid && dirty)}
+                      mode='text'
                       loading={isSaving}
                       onPress={handleDeletePopUp}
                     >
@@ -237,8 +239,9 @@ const VendorHome = () => {
                 ) : (
                   <>
                     <Button
-                      disabled={!isValid}
                       // disabled={!(isValid && dirty)}
+                      disabled={!isValid}
+                      mode='text'
                       loading={isSaving}
                       onPress={handleSubmit}
                     >
