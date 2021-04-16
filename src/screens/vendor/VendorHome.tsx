@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Alert, SafeAreaView, ScrollView, View } from 'react-native'
-import { Headline, Title, List, HelperText, useTheme } from 'react-native-paper'
-import { useNavigation } from '@react-navigation/native'
+import { Headline, Title, List, useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 
@@ -18,8 +17,7 @@ import {
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 
 const VendorHome = () => {
-  const { presets, spacing, colors } = useTheme()
-  const { navigate } = useNavigation()
+  const { presets, spacing } = useTheme()
   const { userInfo } = useAuth()
   const {
     addPopUp,
