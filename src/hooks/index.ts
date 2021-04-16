@@ -2,3 +2,4 @@
 
 export { AuthProvider } from './useAuth'
 export { VendorProvider } from './useVendor'
+export { EventsProvider } from "./useEvents";
