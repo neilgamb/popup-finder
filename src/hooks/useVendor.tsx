@@ -16,7 +16,7 @@ interface VendorContextProps {
   isVendorSetup: boolean
   activePopUp: PopUp
   addPopUp: (popUpInfo: object, userUid: string) => void
-  addPopUpToVender: (
+  addPopUpToVendor: (
     userUid: string,
     popUpUid: string,
     popUpInfo: object
@@ -70,7 +70,7 @@ function useVendorProvider() {
           popUpUid: uid,
         })
         .then(async () => {
-          await addPopUpToVender(userUid, uid)
+          await addPopUpToVendor(userUid, uid)
           populateVendorPopUps()
           resolve(uid)
         })
@@ -78,7 +78,7 @@ function useVendorProvider() {
     })
   }
 
-  const addPopUpToVender = (userUid: string, popUpUid: string) => {
+  const addPopUpToVendor = (userUid: string, popUpUid: string) => {
     const userCollection = firestore().collection('users')
 
     return new Promise((resolve, reject) => {
@@ -115,7 +115,7 @@ function useVendorProvider() {
         .doc(popUpUid)
         .delete()
         .then(async () => {
-          await removePopUpFromVender(userUid, popUpUid)
+          await removePopUpFromVendor(userUid, popUpUid)
           populateVendorPopUps()
           resolve(true)
         })
@@ -123,7 +123,7 @@ function useVendorProvider() {
     })
   }
 
-  const removePopUpFromVender = (userUid: string, popUpUid: string) => {
+  const removePopUpFromVendor = (userUid: string, popUpUid: string) => {
     const userCollection = firestore().collection('users')
 
     return new Promise((resolve, reject) => {

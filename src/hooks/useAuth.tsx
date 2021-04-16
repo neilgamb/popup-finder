@@ -25,7 +25,7 @@ interface AuthContextProps {
   isVendorInviteValid: boolean
   signingIn: string | null
   signInAnonymously: (isVendor: boolean) => void
-  signInWithGoogle: (isVender: boolean) => void
+  signInWithGoogle: (isVendor: boolean) => void
   verifyVendorInvite: (email: String) => boolean
   setIsVendorInviteValid: (isVendorInviteValid: boolean) => void
   setSigningIn: (signingIn: string | null) => void
