@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SafeAreaView, ScrollView, View } from 'react-native'
+import { Alert, SafeAreaView, ScrollView, View } from 'react-native'
 import { Headline, Title, List, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
@@ -66,14 +66,19 @@ const VendorHome = () => {
   }
 
   const handleDeletePopUp = async () => {
-    try {
-      setIsSaving(true)
-      await deletePopUp(userInfo?.uid, activePopUp.popUpUid)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsSaving(false)
-    }
+    Alert.alert(
+      'Temporarily Disabled',
+      'This functionality is setup, but disabled until Vendor Events are set up',
+      [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+    )
+    // try {
+    //   setIsSaving(true)
+    //   await deletePopUp(userInfo?.uid, activePopUp.popUpUid)
+    // } catch (error) {
+    //   console.log(error)
+    // } finally {
+    //   setIsSaving(false)
+    // }
   }
 
   useEffect(() => {
