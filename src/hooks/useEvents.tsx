@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useEffect,
@@ -6,20 +5,40 @@ import React, {
   createContext,
   ReactNode,
 } from 'react'
+import firestore from '@react-native-firebase/firestore'
+import * as admin from 'firebase-admin'
 
 interface EventsProps {
   children: ReactNode
 }
 
-interface EventsContextProps {
+interface EventsContextProps {}
 
+interface MenuItem {
+  menuItemUid: string
+  name: string
+  description: string
+  price: string
+}
+
+interface Event {
+  dateAdded?: admin.firestore.Timestamp
+  addedBy: string
+  eventUid: string
+  popUpUid: string
+  popUpName: string
+  location: string
+  popUpDate: admin.firestore.Timestamp
+  menu: Array<MenuItem>
 }
 
 export const EventsContext = createContext<EventsContextProps>(null)
 
 export function EventsProvider({ children }: EventsProps) {
   const events = useEventsProvider()
-  return <EventsContext.Provider value={events}>{children}</EventsContext.Provider>
+  return (
+    <EventsContext.Provider value={events}>{children}</EventsContext.Provider>
+  )
 }
 
 export const useEvents = () => {
@@ -27,17 +46,5 @@ export const useEvents = () => {
 }
 
 function useEventsProvider() {
-  const [isMounted, setIsMounted] = useState<boolean>(false)  
-
-  useEffect(() => {
-    setIsMounted(true)
-    
-    return () => {
-      setIsMounted(true)
-    }
-  }, [])
-
-  return {
-    
-  }
+  return {}
 }
