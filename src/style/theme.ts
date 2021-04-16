@@ -63,8 +63,8 @@ export const theme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
+    primary: 'blue',
+    accent: 'cyan',
   },
   fonts: configureFonts(fontConfig),
   spacing: {
