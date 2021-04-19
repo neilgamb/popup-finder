@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Alert, SafeAreaView, ScrollView, View } from 'react-native'
 import { Headline, Title, List, useTheme } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 
@@ -18,6 +19,7 @@ import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 
 const VendorHome = () => {
   const { presets, spacing } = useTheme()
+  const { navigate } = useNavigation()
   const { userInfo } = useAuth()
   const {
     addPopUp,
@@ -137,9 +139,11 @@ const VendorHome = () => {
                     />
                     <List.Item
                       title='Menu'
+                      description='Tap to Edit'
                       left={(props) => (
                         <List.Icon {...props} icon='format-list-bulleted' />
                       )}
+                      onPress={() => navigate('VendorMenu')}
                     />
                   </>
                 ) : (

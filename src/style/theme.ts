@@ -63,7 +63,7 @@ export const theme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'blue',
+    primary: '#5d6c8c',
     accent: 'cyan',
   },
   fonts: configureFonts(fontConfig),

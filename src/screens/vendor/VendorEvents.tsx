@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     transform: [{ scale: 1.2 }],
-    backgroundColor: 'blue',
+    backgroundColor: '#5d6c8c',
   },
 })

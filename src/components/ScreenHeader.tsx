@@ -59,7 +59,6 @@ const ScreenHeader = () => {
           </TouchableOpacity>
         }
       >
-        <Menu.Item onPress={signOut} title='Sign Out' icon='logout' />
         {isVendor && (
           <>
             <Menu.Item
@@ -82,6 +81,7 @@ const ScreenHeader = () => {
             />
           </>
         )}
+        <Menu.Item onPress={signOut} title='Sign Out' icon='logout' />
       </Menu>
     </View>
   )
@@ -111,6 +111,6 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     top: 60,
-    paddingLeft: theme.spacing.sm,
+    // paddingLeft: theme.spacing.sm,
   },
 })
