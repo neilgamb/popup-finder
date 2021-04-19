@@ -135,6 +135,12 @@ const VendorHome = () => {
                       description='Description'
                       left={(props) => <List.Icon {...props} icon='note' />}
                     />
+                    <List.Item
+                      title='Menu'
+                      left={(props) => (
+                        <List.Icon {...props} icon='format-list-bulleted' />
+                      )}
+                    />
                   </>
                 ) : (
                   <>
