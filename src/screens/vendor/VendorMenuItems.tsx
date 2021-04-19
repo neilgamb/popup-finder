@@ -9,7 +9,7 @@ export default function VendorMenuItems() {
 
   return (
     <SafeAreaView style={presets.screenContainer}>
-      <ScreenHeader />
+      <ScreenHeader withBackButton />
       <View style={presets.screenContent}></View>
       <FAB icon='plus' onPress={() => console.log('Pressed')} />
     </SafeAreaView>

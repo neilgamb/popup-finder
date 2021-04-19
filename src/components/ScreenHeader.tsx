@@ -1,17 +1,18 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigationState, useNavigation } from '@react-navigation/native'
-import { Avatar, Title } from 'react-native-paper'
+import { Avatar, IconButton, Title } from 'react-native-paper'
 
 import { useAuth } from '../hooks/useAuth'
 import { theme } from '../style/theme'
 
 type ScreenHeaderProps = {
-  withAvatar: boolean
+  withAvatar?: boolean
+  withBackButton?: boolean
 }
 
-const ScreenHeader = ({ withAvatar }: ScreenHeaderProps) => {
-  const { navigate } = useNavigation()
+const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
+  const { navigate, goBack } = useNavigation()
   const { userInfo } = useAuth()
 
   const routeName = useNavigationState(
@@ -20,6 +21,14 @@ const ScreenHeader = ({ withAvatar }: ScreenHeaderProps) => {
 
   return (
     <View style={styles.container}>
+      {withBackButton && (
+        <IconButton
+          icon='arrow-left'
+          size={25}
+          color={theme.colors.gray}
+          onPress={() => goBack()}
+        />
+      )}
       <Title style={styles.title}>{routeName}</Title>
       {withAvatar && (
         <TouchableOpacity
@@ -56,8 +65,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
   },
   title: {
-    marginRight: theme.spacing.md,
+    marginHorizontal: theme.spacing.sm,
     color: '#999',
+    // borderWidth: 1,
+    // borderColor: 'black',
+    flex: 1,
   },
   avatarContainer: {
     width: 50,

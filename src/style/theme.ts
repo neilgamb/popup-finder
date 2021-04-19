@@ -65,6 +65,7 @@ export const theme = {
     ...DefaultTheme.colors,
     primary: '#5d6c8c',
     accent: 'cyan',
+    gray: '#666',
   },
   fonts: configureFonts(fontConfig),
   spacing: {
