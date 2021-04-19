@@ -1,3 +1,3 @@
-export { default as VendorHome } from './VendorHome'
+export { default as VendorProfile } from './VendorProfile'
 export { default as VendorEvents } from './VendorEvents'
-export { default as VendorMenu } from './VendorMenu'
+export { default as VendorMenuItems } from './VendorMenuItems'

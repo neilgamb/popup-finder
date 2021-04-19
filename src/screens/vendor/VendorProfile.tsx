@@ -4,6 +4,7 @@ import { Headline, Title, List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
+import auth from '@react-native-firebase/auth'
 
 import { useAuth } from '../../hooks/useAuth'
 import { useVendor } from '../../hooks/useVendor'
@@ -17,9 +18,9 @@ import {
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 
-const VendorHome = () => {
+const VendorProfile = () => {
   const { presets, spacing } = useTheme()
-  const { navigate } = useNavigation()
+  const { navigate, goBack } = useNavigation()
   const { userInfo } = useAuth()
   const {
     addPopUp,
@@ -50,6 +51,7 @@ const VendorHome = () => {
       console.log(error)
     } finally {
       setIsSaving(false)
+      goBack()
     }
   }
 
@@ -79,6 +81,14 @@ const VendorHome = () => {
     // } finally {
     //   setIsSaving(false)
     // }
+  }
+
+  const signOut = async () => {
+    try {
+      await auth().signOut()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
@@ -138,12 +148,12 @@ const VendorHome = () => {
                       left={(props) => <List.Icon {...props} icon='note' />}
                     />
                     <List.Item
-                      title='Menu'
+                      title='Menu Items'
                       description='Tap to Edit'
                       left={(props) => (
                         <List.Icon {...props} icon='format-list-bulleted' />
                       )}
-                      onPress={() => navigate('VendorMenu')}
+                      onPress={() => navigate('VendorMenuItems')}
                     />
                   </>
                 ) : (
@@ -226,8 +236,6 @@ const VendorHome = () => {
                 {isVendorSetup && !isEditing ? (
                   <>
                     <Button
-                      // disabled={!isValid}
-                      // disabled={!(isValid && dirty)}
                       mode='text'
                       loading={isSaving}
                       onPress={() => setIsEditing(true)}
@@ -235,19 +243,26 @@ const VendorHome = () => {
                       Edit
                     </Button>
                     <Button
-                      // disabled={!isValid}
-                      // disabled={!(isValid && dirty)}
                       mode='text'
                       loading={isSaving}
                       onPress={handleDeletePopUp}
                     >
                       Delete
                     </Button>
+                    <Button mode='text' loading={isSaving} onPress={signOut}>
+                      Sign Out
+                    </Button>
+                    <Button
+                      mode='text'
+                      loading={isSaving}
+                      onPress={() => goBack()}
+                    >
+                      Dismiss
+                    </Button>
                   </>
                 ) : (
                   <>
                     <Button
-                      // disabled={!(isValid && dirty)}
                       disabled={!isValid}
                       mode='text'
                       loading={isSaving}
@@ -256,13 +271,7 @@ const VendorHome = () => {
                       Submit
                     </Button>
                     {isVendorSetup && (
-                      <Button
-                        mode='text'
-                        // disabled={!isValid}
-                        // disabled={!(isValid && dirty)}
-                        // loading={isSaving}
-                        onPress={() => setIsEditing(false)}
-                      >
+                      <Button mode='text' onPress={() => setIsEditing(false)}>
                         Cancel
                       </Button>
                     )}
@@ -277,4 +286,4 @@ const VendorHome = () => {
   )
 }
 
-export default VendorHome
+export default VendorProfile

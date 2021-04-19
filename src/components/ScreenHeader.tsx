@@ -1,88 +1,46 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigationState, useNavigation } from '@react-navigation/native'
-import { Avatar, Menu, Title } from 'react-native-paper'
-import auth from '@react-native-firebase/auth'
+import { Avatar, Title } from 'react-native-paper'
 
 import { useAuth } from '../hooks/useAuth'
 import { theme } from '../style/theme'
 
 type ScreenHeaderProps = {
-  // title: string
+  withAvatar: boolean
 }
 
-const ScreenHeader = () => {
+const ScreenHeader = ({ withAvatar }: ScreenHeaderProps) => {
   const { navigate } = useNavigation()
-  const { userInfo, isVendor } = useAuth()
+  const { userInfo } = useAuth()
 
   const routeName = useNavigationState(
     (state) => state.routes[state.index].name
   )
 
-  const [visible, setVisible] = useState(false)
-
-  const openMenu = () => setVisible(true)
-
-  const closeMenu = () => setVisible(false)
-
-  const signOut = async () => {
-    try {
-      await auth().signOut()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   return (
     <View style={styles.container}>
       <Title style={styles.title}>{routeName}</Title>
-      <Menu
-        visible={visible}
-        theme={{ dark: false }}
-        onDismiss={closeMenu}
-        contentStyle={styles.menuContainer}
-        anchor={
-          <TouchableOpacity style={styles.avatarContainer} onPress={openMenu}>
-            {userInfo?.isAnonymous ? (
-              <Avatar.Icon
-                icon='menu'
-                style={{ backgroundColor: '#f0f0f0' }}
-                size={60}
-              />
-            ) : (
-              <Avatar.Image
-                style={{ backgroundColor: '#f0f0f0' }}
-                size={40}
-                source={{ uri: userInfo?.photoURL }}
-              />
-            )}
-          </TouchableOpacity>
-        }
-      >
-        {isVendor && (
-          <>
-            <Menu.Item
-              onPress={() => {
-                navigate('VendorHome')
-                closeMenu()
-              }}
-              disabled={routeName === 'VendorHome'}
-              title='Profile'
-              icon='account'
+      {withAvatar && (
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={() => navigate('VendorProfile')}
+        >
+          {userInfo?.isAnonymous ? (
+            <Avatar.Icon
+              icon='menu'
+              style={{ backgroundColor: '#f0f0f0' }}
+              size={60}
             />
-            <Menu.Item
-              onPress={() => {
-                navigate('VendorEvents')
-                closeMenu()
-              }}
-              disabled={routeName === 'VendorEvents'}
-              title='Events'
-              icon='calendar'
+          ) : (
+            <Avatar.Image
+              style={{ backgroundColor: '#f0f0f0' }}
+              size={40}
+              source={{ uri: userInfo?.photoURL }}
             />
-          </>
-        )}
-        <Menu.Item onPress={signOut} title='Sign Out' icon='logout' />
-      </Menu>
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
@@ -108,9 +66,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-  },
-  menuContainer: {
-    top: 60,
-    // paddingLeft: theme.spacing.sm,
   },
 })

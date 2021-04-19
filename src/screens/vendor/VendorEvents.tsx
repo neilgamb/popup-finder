@@ -1,34 +1,27 @@
-import React from 'react'
-import { SafeAreaView, StyleSheet, View } from 'react-native'
-import { FAB, useTheme } from 'react-native-paper'
+import React, { useEffect } from 'react'
+import { SafeAreaView, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 
-import { ScreenHeader } from '../../components'
+import { FAB, ScreenHeader } from '../../components'
+import { useVendor } from '../../hooks'
 
 const VendorEvents = () => {
   const { presets } = useTheme()
+  const { navigate } = useNavigation()
+  const { isVendorSetup } = useVendor()
+
+  useEffect(() => {
+    !isVendorSetup && navigate('VendorProfile')
+  }, [])
 
   return (
     <SafeAreaView style={presets.screenContainer}>
-      <ScreenHeader />
+      <ScreenHeader withAvatar />
       <View style={presets.screenContent}></View>
-      <FAB
-        style={styles.fab}
-        icon='plus'
-        onPress={() => console.log('Pressed')}
-      />
+      <FAB icon='plus' onPress={() => console.log('Pressed')} />
     </SafeAreaView>
   )
 }
 
 export default VendorEvents
-
-const styles = StyleSheet.create({
-  fab: {
-    position: 'absolute',
-    margin: 48,
-    right: 0,
-    bottom: 0,
-    transform: [{ scale: 1.2 }],
-    backgroundColor: '#5d6c8c',
-  },
-})

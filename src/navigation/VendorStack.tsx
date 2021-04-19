@@ -1,25 +1,30 @@
 import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack'
 
-import { VendorHome, VendorEvents, VendorMenu } from '../screens'
-import { useVendor } from '../hooks/useVendor'
+import { VendorProfile, VendorEvents, VendorMenuItems } from '../screens'
 
 const Stack = createStackNavigator()
 
 export default function VendorStack() {
-  const { isVendorSetup } = useVendor()
-
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        headerMode='none'
-        initialRouteName={isVendorSetup ? 'VendorEvents' : 'VendorHome'}
-      >
+      <Stack.Navigator headerMode='none'>
         <Stack.Screen name='VendorEvents' component={VendorEvents} />
-        <Stack.Screen name='VendorHome' component={VendorHome} />
-        <Stack.Screen name='VendorMenu' component={VendorMenu} />
+        <Stack.Screen
+          name='VendorProfile'
+          options={{
+            title: 'Profile',
+            ...TransitionPresets.ModalSlideFromBottomIOS,
+          }}
+          component={VendorProfile}
+        />
+
+        <Stack.Screen name='VendorMenuItems' component={VendorMenuItems} />
       </Stack.Navigator>
     </NavigationContainer>
   )

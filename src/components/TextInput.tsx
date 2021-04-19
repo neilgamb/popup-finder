@@ -14,7 +14,7 @@ const TextInput = (props: TextInputProps) => {
     <PaperTextInput
       {...props}
       mode='outlined'
-      style={{ ...fonts.input, marginTop: spacing.sm, ...styleOverrides }}
+      style={[{ ...fonts.input, marginTop: spacing.sm }, styleOverrides]}
     />
   )
 }
