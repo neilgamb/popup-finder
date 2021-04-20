@@ -45,7 +45,7 @@ export const useVendor = () => {
 }
 
 function useVendorProvider() {
-  const [isVendorSetup, setIsVendorSetup] = useState<boolean>(false)
+  const [isVendorSetup, setIsVendorSetup] = useState<boolean>(true)
   const [vendorPopUps, setVendorPopUps] = useState<PopUp[]>([])
   const [activePopUp, setActivePopUp] = useState<PopUp | null>(null)
 
@@ -157,7 +157,6 @@ function useVendorProvider() {
   const populateVendorPopUps = async (userUid: string) => {
     const popUps = await getVendorPopUps(userUid)
     setVendorPopUps(popUps)
-    console.log(popUps)
     if (popUps.length) {
       setActivePopUp(popUps[0])
       setIsVendorSetup(true)
@@ -174,5 +173,6 @@ function useVendorProvider() {
     editPopUp,
     deletePopUp,
     populateVendorPopUps,
+    setIsVendorSetup,
   }
 }

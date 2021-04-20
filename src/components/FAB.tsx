@@ -16,7 +16,7 @@ const TextInput = (props: FABProps) => {
 
   const toggleRotation = (isOpen: boolean) => {
     Animated.timing(rotationAnim, {
-      toValue: isOpen ? 0 : 1,
+      toValue: isOpen ? 1 : 0,
       duration: 250,
       useNativeDriver: true,
     }).start()
@@ -35,7 +35,7 @@ const TextInput = (props: FABProps) => {
             {
               rotate: rotationAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: ['45deg', '0deg'],
+                outputRange: ['0deg', '45deg'],
               }),
             },
           ],
@@ -55,9 +55,10 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 110,
+    padding: 32,
+    marginBottom: 16,
   },
   fab: {
-    margin: 48,
     transform: [{ scale: 1.2 }],
     backgroundColor: '#5d6c8c',
   },

@@ -4,18 +4,21 @@ import { useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 
 import { FAB, ScreenHeader } from '../../components'
-import { useVendor } from '../../hooks'
+import { useVendor, useAuth } from '../../hooks'
 
 const VendorEvents = () => {
   const { presets } = useTheme()
   const { navigate } = useNavigation()
-  const { isVendorSetup } = useVendor()
+  const { isVendorSetup, populateVendorPopUps } = useVendor()
+  const { userInfo } = useAuth()
 
   useEffect(() => {
-    setTimeout(() => {
-      !isVendorSetup && navigate('VendorProfile')
-    }, 500)
+    !isVendorSetup && navigate('VendorProfile')
   }, [isVendorSetup])
+
+  useEffect(() => {
+    populateVendorPopUps(userInfo?.uid)
+  }, [])
 
   return (
     <SafeAreaView style={presets.screenContainer}>
