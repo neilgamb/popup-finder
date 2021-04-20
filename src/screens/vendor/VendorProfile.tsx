@@ -125,7 +125,7 @@ const VendorProfile = () => {
                 {isVendorSetup && !isEditing ? (
                   <>
                     <List.Item
-                      title={activePopUp.name}
+                      title={activePopUp?.name}
                       description='Pop Up Name'
                       left={(props) => (
                         <List.Icon {...props} icon='hamburger' />
@@ -133,19 +133,19 @@ const VendorProfile = () => {
                       style={{ marginTop: spacing.md }}
                     />
                     <List.Item
-                      title={activePopUp.location}
+                      title={activePopUp?.location}
                       description='Location'
                       left={(props) => (
                         <List.Icon {...props} icon='map-marker' />
                       )}
                     />
                     <List.Item
-                      title={activePopUp.foodType}
+                      title={activePopUp?.foodType}
                       description='Food Type'
                       left={(props) => <List.Icon {...props} icon='earth' />}
                     />
                     <List.Item
-                      title={activePopUp.description}
+                      title={activePopUp?.description}
                       description='Description'
                       left={(props) => <List.Icon {...props} icon='note' />}
                     />
