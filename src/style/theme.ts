@@ -84,4 +84,5 @@ export const theme = {
       paddingVertical: SPACING.md,
     },
   }),
+  withBorder,
 }
