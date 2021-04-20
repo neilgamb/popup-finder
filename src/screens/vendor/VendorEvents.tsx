@@ -12,14 +12,16 @@ const VendorEvents = () => {
   const { isVendorSetup } = useVendor()
 
   useEffect(() => {
-    !isVendorSetup && navigate('VendorProfile')
-  }, [])
+    setTimeout(() => {
+      !isVendorSetup && navigate('VendorProfile')
+    }, 500)
+  }, [isVendorSetup])
 
   return (
     <SafeAreaView style={presets.screenContainer}>
       <ScreenHeader withAvatar />
       <View style={presets.screenContent}></View>
-      <FAB icon='plus' onPress={() => console.log('Pressed')} />
+      <FAB isOpen={false} icon='plus' onPress={() => console.log('Pressed')} />
     </SafeAreaView>
   )
 }

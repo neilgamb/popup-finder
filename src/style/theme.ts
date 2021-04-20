@@ -51,8 +51,9 @@ declare global {
     // }
 
     interface Theme {
-      // myOwnProperty: boolean
       presets: any
+      withBorder: any
+      spacing: any
     }
   }
 }

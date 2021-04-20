@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  createContext,
-  ReactNode,
-} from 'react'
+import React, { useState, useContext, createContext, ReactNode } from 'react'
 import firestore from '@react-native-firebase/firestore'
 import * as admin from 'firebase-admin'
 
@@ -24,7 +18,7 @@ interface VendorContextProps {
   deletePopUp: (userUid: string, popUpUid: string) => void
   editPopUp: (popUpInfo: object) => void
   getVendorPopUps: () => void
-  setIsVendorSetup: (isVendorSetup: boolean) => void
+  populateVendorPopUps: (userUid: string) => void
 }
 
 interface PopUp {
@@ -71,7 +65,7 @@ function useVendorProvider() {
         })
         .then(async () => {
           await addPopUpToVendor(userUid, uid)
-          populateVendorPopUps()
+          populateVendorPopUps(userUid)
           resolve(uid)
         })
         .catch((error) => reject(error))
@@ -100,7 +94,7 @@ function useVendorProvider() {
         .doc(popUpInfo.popUpUid)
         .set(popUpInfo)
         .then(async () => {
-          populateVendorPopUps()
+          populateVendorPopUps(popUpInfo.user)
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -116,7 +110,7 @@ function useVendorProvider() {
         .delete()
         .then(async () => {
           await removePopUpFromVendor(userUid, popUpUid)
-          populateVendorPopUps()
+          populateVendorPopUps(userUid)
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -137,8 +131,11 @@ function useVendorProvider() {
     })
   }
 
-  const getVendorPopUps = async () => {
-    const popUpCollection = firestore().collection('popUps')
+  const getVendorPopUps = async (userUid: string) => {
+    const popUpCollection = firestore()
+      .collection('popUps')
+      .where('userUid', '==', userUid)
+
     let popUps = [] as PopUp[]
 
     return new Promise<PopUp[]>((resolve, reject) => {
@@ -157,20 +154,18 @@ function useVendorProvider() {
     })
   }
 
-  const populateVendorPopUps = async () => {
-    const popUps = await getVendorPopUps()
+  const populateVendorPopUps = async (userUid: string) => {
+    const popUps = await getVendorPopUps(userUid)
     setVendorPopUps(popUps)
+    console.log(popUps)
     if (popUps.length) {
       setActivePopUp(popUps[0])
       setIsVendorSetup(true)
     } else {
+      setActivePopUp(null)
       setIsVendorSetup(false)
     }
   }
-
-  useEffect(() => {
-    populateVendorPopUps()
-  }, [])
 
   return {
     isVendorSetup,
@@ -178,5 +173,6 @@ function useVendorProvider() {
     addPopUp,
     editPopUp,
     deletePopUp,
+    populateVendorPopUps,
   }
 }

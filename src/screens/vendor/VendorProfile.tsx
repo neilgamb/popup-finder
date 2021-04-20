@@ -270,6 +270,9 @@ const VendorProfile = () => {
                     >
                       Submit
                     </Button>
+                    <Button mode='text' loading={isSaving} onPress={signOut}>
+                      Sign Out
+                    </Button>
                     {isVendorSetup && (
                       <Button mode='text' onPress={() => setIsEditing(false)}>
                         Cancel

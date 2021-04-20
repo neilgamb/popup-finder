@@ -6,7 +6,7 @@ type PaperTextInputProps = React.ComponentProps<typeof PaperFAB>
 
 type FABProps = PaperTextInputProps & {
   theme: any
-  isOpen?: boolean
+  isOpen: boolean
 }
 
 const TextInput = (props: FABProps) => {

@@ -26,6 +26,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           icon='arrow-left'
           size={25}
           color={theme.colors.gray}
+          style={{ marginRight: theme.spacing.md }}
           onPress={() => goBack()}
         />
       )}
@@ -65,10 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
   },
   title: {
-    marginHorizontal: theme.spacing.sm,
     color: '#999',
-    // borderWidth: 1,
-    // borderColor: 'black',
     flex: 1,
   },
   avatarContainer: {
