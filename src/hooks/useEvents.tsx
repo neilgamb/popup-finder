@@ -32,7 +32,7 @@ interface Event {
   menu: Array<MenuItem>
 }
 
-export const EventsContext = createContext<EventsContextProps>(null)
+export const EventsContext = createContext<EventsContextProps | null>(null)
 
 export function EventsProvider({ children }: EventsProps) {
   const events = useEventsProvider()

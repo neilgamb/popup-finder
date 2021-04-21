@@ -31,7 +31,7 @@ interface AuthContextProps {
   setSigningIn: (signingIn: string | null) => void
 }
 
-export const AuthContext = createContext<AuthContextProps>(null)
+export const AuthContext = createContext<AuthContextProps | null>(null)
 
 export function AuthProvider({ children }: AuthProps) {
   const auth = useAuthProvider()
@@ -128,7 +128,7 @@ function useAuthProvider() {
     })
   }
 
-  const handleAuthErrors = (e) => {
+  const handleAuthErrors = (e: FirebaseAuthTypes.NativeFirebaseAuthError) => {
     switch (e.code) {
       case 'auth/operation-not-allowed':
         console.log('Enable anonymous in your firebase console.')

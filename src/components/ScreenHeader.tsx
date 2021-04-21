@@ -46,7 +46,10 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
             <Avatar.Image
               style={{ backgroundColor: '#f0f0f0' }}
               size={40}
-              source={{ uri: userInfo?.photoURL }}
+              source={{
+                uri:
+                  userInfo && userInfo.photoURL ? userInfo.photoURL : undefined,
+              }}
             />
           )}
         </TouchableOpacity>

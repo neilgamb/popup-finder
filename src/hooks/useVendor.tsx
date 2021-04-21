@@ -31,7 +31,7 @@ interface PopUp {
   user: string
 }
 
-export const VendorContext = createContext<VendorContextProps>(null)
+export const VendorContext = createContext<VendorContextProps | null>(null)
 
 export function VendorProvider({ children }: VendorProps) {
   const Vendor = useVendorProvider()
