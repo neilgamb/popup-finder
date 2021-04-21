@@ -1,12 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { SafeAreaView, View } from 'react-native'
+import { KeyboardAvoidingView, SafeAreaView, View } from 'react-native'
 import { Title, useTheme } from 'react-native-paper'
+import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
-import { BottomSheet, ScreenHeader, FAB } from '../../components'
+import { MENU_ITEM_SCHEMA, INIT_MENU_ITEM_VALUES } from '../../utils/constants'
+
+import {
+  BottomSheet,
+  DismissKeyboard,
+  FAB,
+  TextInput,
+  FormInputError,
+  ScreenHeader,
+} from '../../components'
 
 export default function VendorMenuItems() {
-  const { presets, withBorder, spacing } = useTheme()
+  const { presets } = useTheme()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -27,23 +37,50 @@ export default function VendorMenuItems() {
   }, [isOpen])
 
   return (
-    <>
-      <SafeAreaView style={presets.screenContainer}>
-        <ScreenHeader withBackButton />
-        <View style={presets.screenContent}></View>
-      </SafeAreaView>
-      <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
-      <BottomSheet
-        ref={sheetRef}
-        header='Add Menu Item'
-        content={
-          <View>
-            <Title>Test</Title>
-          </View>
-        }
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      />
-    </>
+    <DismissKeyboard>
+      <View style={{ flex: 1 }}>
+        <SafeAreaView style={presets.screenContainer}>
+          <ScreenHeader withBackButton />
+          <View style={presets.screenContent}></View>
+        </SafeAreaView>
+        <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
+        <BottomSheet
+          ref={sheetRef}
+          header='Add Menu Item'
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          content={
+            <Formik
+              enableReinitialize
+              initialValues={INIT_MENU_ITEM_VALUES}
+              validationSchema={MENU_ITEM_SCHEMA}
+              onSubmit={(values) => console.log(values)}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setValues,
+                values,
+                errors,
+                touched,
+                isValid,
+                dirty,
+              }) => (
+                <>
+                  <TextInput
+                    label='Item Name'
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    value={values.name}
+                  />
+                  <FormInputError error={errors.name} touched={touched.name} />
+                </>
+              )}
+            </Formik>
+          }
+        />
+      </View>
+    </DismissKeyboard>
   )
 }

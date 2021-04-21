@@ -31,7 +31,7 @@ interface AuthContextProps {
   setSigningIn: (signingIn: string | null) => void
 }
 
-export const AuthContext = createContext<AuthContextProps | null>(null)
+export const AuthContext = createContext<AuthContextProps>(null)
 
 export function AuthProvider({ children }: AuthProps) {
   const auth = useAuthProvider()

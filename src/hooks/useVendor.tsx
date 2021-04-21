@@ -2,6 +2,24 @@ import React, { useState, useContext, createContext, ReactNode } from 'react'
 import firestore from '@react-native-firebase/firestore'
 import * as admin from 'firebase-admin'
 
+export interface PopUp {
+  dateAdded?: admin.firestore.Timestamp
+  popUpUid: string
+  name: string
+  location: string
+  foodType: string
+  description: string
+  user: string
+}
+
+export interface MenuItem {
+  dateAdded?: admin.firestore.Timestamp
+  menuItemUid: string
+  name: string
+  description: string
+  price: Number
+}
+
 interface VendorProps {
   children: ReactNode
 }
@@ -19,19 +37,10 @@ interface VendorContextProps {
   editPopUp: (popUpInfo: object) => void
   getVendorPopUps: () => void
   populateVendorPopUps: (userUid: string) => void
+  setIsVendorSetup: (isVendorSetup: boolean) => void
 }
 
-interface PopUp {
-  dateAdded?: admin.firestore.Timestamp
-  popUpUid: string
-  name: string
-  location: string
-  foodType: string
-  description: string
-  user: string
-}
-
-export const VendorContext = createContext<VendorContextProps | null>(null)
+export const VendorContext = createContext<VendorContextProps>(null)
 
 export function VendorProvider({ children }: VendorProps) {
   const Vendor = useVendorProvider()

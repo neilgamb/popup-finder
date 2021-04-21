@@ -7,7 +7,7 @@ import { GOOGLE_PLACES_API_KEY } from '@env'
 import auth from '@react-native-firebase/auth'
 
 import { useAuth } from '../../hooks/useAuth'
-import { useVendor } from '../../hooks/useVendor'
+import { useVendor, PopUp } from '../../hooks/useVendor'
 import {
   ScreenHeader,
   TextInput,
@@ -44,10 +44,12 @@ const VendorProfile = () => {
       .then(({ predictions }) => setLocationResults(predictions))
   }
 
-  const handleAddPopUp = async (values) => {
+  const handleAddPopUp = async (values: any) => {
     try {
       setIsSaving(true)
-      await addPopUp(values, userInfo?.uid)
+      if (userInfo) {
+        await addPopUp(values, userInfo.uid)
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -56,7 +58,7 @@ const VendorProfile = () => {
     }
   }
 
-  const handleEditPopUp = async (values) => {
+  const handleEditPopUp = async (values: any) => {
     try {
       setIsSaving(true)
       await editPopUp(values)
@@ -163,7 +165,7 @@ const VendorProfile = () => {
                     {!isVendorSetup && (
                       <>
                         <Headline>
-                          Welcome, {userInfo?.displayName.split(' ')[0]}
+                          Welcome, {userInfo?.displayName?.split(' ')[0]}
                         </Headline>
                         <Title style={{ marginTop: spacing.sm }}>
                           Please set up your Pop Up profile:
@@ -195,7 +197,7 @@ const VendorProfile = () => {
                       error={errors.location}
                       touched={touched.location}
                     />
-                    {locationResults?.map((result, i) => (
+                    {locationResults?.map((result: PopUp, i) => (
                       <List.Item
                         key={i}
                         title={result.description}

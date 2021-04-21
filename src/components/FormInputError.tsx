@@ -2,8 +2,8 @@ import React from 'react'
 import { HelperText } from 'react-native-paper'
 
 interface Props {
-  error: string
-  touched: boolean
+  error?: string
+  touched?: boolean
 }
 
 const FormInputError = ({ error, touched }: Props) => {

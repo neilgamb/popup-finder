@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useRef, useEffect } from 'react'
-import { Animated, Dimensions, StyleSheet, View } from 'react-native'
+import { Animated, Dimensions, Keyboard, StyleSheet, View } from 'react-native'
 import { Title } from 'react-native-paper'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
@@ -20,6 +20,7 @@ const BottomSheet = forwardRef(
     const bgOpacityAnim = useRef(new Animated.Value(0)).current
 
     const [showBg, setShowBg] = useState(false)
+    const [bsHeight, setBsHeight] = useState('50%')
 
     const toggleBgColor = (isOpen: boolean) => {
       Animated.timing(bgOpacityAnim, {
@@ -40,12 +41,34 @@ const BottomSheet = forwardRef(
       toggleBgColor(isOpen)
     }, [isOpen])
 
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        () => {
+          // setKeyboardVisible(true); // or some other action
+          setBsHeight('90%')
+        }
+      )
+      const keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        () => {
+          // setKeyboardVisible(false); // or some other action
+          setBsHeight('50%')
+        }
+      )
+
+      return () => {
+        keyboardDidHideListener.remove()
+        keyboardDidShowListener.remove()
+      }
+    }, [])
+
     return (
       <>
         <ReanimatedBottomSheet
           {...props}
           ref={ref}
-          snapPoints={['50%', 0]}
+          snapPoints={[bsHeight, 0]}
           initialSnap={1}
           onCloseStart={onClose}
           renderHeader={() => (
