@@ -4,7 +4,7 @@ import { Title, withTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth, useVendor } from '../../hooks'
 import { Button, TextInput, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
@@ -19,6 +19,8 @@ const VendorSignIn = ({ theme }: any) => {
     signInWithGoogle,
     verifyVendorInvite,
   } = useAuth()
+
+  const { setActiveUserUid } = useVendor()
 
   const handleEmailSubmit = async (email: String) => {
     try {
@@ -85,7 +87,7 @@ const VendorSignIn = ({ theme }: any) => {
             <>
               <Button
                 loading={signingIn}
-                onPress={() => signInWithGoogle(true)}
+                onPress={() => signInWithGoogle(true, setActiveUserUid)}
               >
                 Login
               </Button>

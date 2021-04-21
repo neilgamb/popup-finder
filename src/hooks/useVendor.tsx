@@ -1,4 +1,10 @@
-import React, { useState, useContext, createContext, ReactNode } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  ReactNode,
+} from 'react'
 import firestore from '@react-native-firebase/firestore'
 import * as admin from 'firebase-admin'
 
@@ -27,6 +33,9 @@ interface VendorProps {
 interface VendorContextProps {
   isVendorSetup: boolean
   activePopUp: PopUp
+  menuItems: Array<MenuItem>
+  setActiveUserUid: (userUid: string) => void
+  setIsVendorSetup: (isVendorSetup: boolean) => void
   addPopUp: (popUpInfo: object, userUid: string) => void
   addPopUpToVendor: (
     userUid: string,
@@ -35,11 +44,9 @@ interface VendorContextProps {
   ) => void
   deletePopUp: (userUid: string, popUpUid: string) => void
   editPopUp: (popUpInfo: object) => void
-  getVendorPopUps: () => void
-  populateVendorPopUps: (userUid: string) => void
-  setIsVendorSetup: (isVendorSetup: boolean) => void
   addMenuItemToPopUp: (menuItemInfo: MenuItem) => void
-  getMenuItems: (userUid: string) => void
+  populateVendorPopUps: () => void
+  populateMenuItems: () => void
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -56,8 +63,10 @@ export const useVendor = () => {
 }
 
 function useVendorProvider() {
+  const [activeUserUid, setActiveUserUid] = useState('')
   const [isVendorSetup, setIsVendorSetup] = useState<boolean>(true)
   const [vendorPopUps, setVendorPopUps] = useState<PopUp[]>([])
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [activePopUp, setActivePopUp] = useState<PopUp | null>(null)
 
   const addPopUp = (popUpInfo: PopUp, userUid: string) => {
@@ -76,7 +85,7 @@ function useVendorProvider() {
         })
         .then(async () => {
           await addPopUpToVendor(userUid, uid)
-          populateVendorPopUps(userUid)
+          populateVendorPopUps()
           resolve(uid)
         })
         .catch((error) => reject(error))
@@ -105,7 +114,7 @@ function useVendorProvider() {
         .doc(popUpInfo.popUpUid)
         .set(popUpInfo)
         .then(async () => {
-          populateVendorPopUps(popUpInfo.user)
+          populateVendorPopUps()
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -121,7 +130,7 @@ function useVendorProvider() {
         .delete()
         .then(async () => {
           await removePopUpFromVendor(userUid, popUpUid)
-          populateVendorPopUps(userUid)
+          populateVendorPopUps()
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -155,10 +164,10 @@ function useVendorProvider() {
     })
   }
 
-  const getVendorPopUps = async (userUid: string) => {
+  const getVendorPopUps = async () => {
     const popUpCollection = firestore()
       .collection('popUps')
-      .where('userUid', '==', userUid)
+      .where('userUid', '==', activeUserUid)
 
     let popUps = [] as PopUp[]
 
@@ -178,10 +187,10 @@ function useVendorProvider() {
     })
   }
 
-  const getMenuItems = async (userUid: string) => {
+  const getMenuItems = async () => {
     const popUpCollection = firestore()
       .collection('popUps')
-      .where('userUid', '==', userUid)
+      .where('userUid', '==', activeUserUid)
 
     let menuItems = [] as MenuItem[]
 
@@ -206,8 +215,8 @@ function useVendorProvider() {
     })
   }
 
-  const populateVendorPopUps = async (userUid: string) => {
-    const popUps = await getVendorPopUps(userUid)
+  const populateVendorPopUps = async () => {
+    const popUps = await getVendorPopUps()
     setVendorPopUps(popUps)
     if (popUps.length) {
       setActivePopUp(popUps[0])
@@ -218,15 +227,31 @@ function useVendorProvider() {
     }
   }
 
+  const populateMenuItems = async () => {
+    try {
+      const menuItems = await getMenuItems()
+      setMenuItems(menuItems)
+      console.log(menuItems)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    console.log(activeUserUid)
+  }, [activeUserUid])
+
   return {
     isVendorSetup,
     activePopUp,
+    menuItems,
+    setActiveUserUid,
+    setIsVendorSetup,
     addPopUp,
     editPopUp,
     deletePopUp,
-    populateVendorPopUps,
-    setIsVendorSetup,
     addMenuItemToPopUp,
-    getMenuItems,
+    populateVendorPopUps,
+    populateMenuItems,
   }
 }

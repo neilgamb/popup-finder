@@ -19,7 +19,7 @@ import {
 
 export default function VendorMenuItems() {
   const { presets, spacing } = useTheme()
-  const { addMenuItemToPopUp } = useVendor()
+  const { addMenuItemToPopUp, menuItems } = useVendor()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -45,6 +45,7 @@ export default function VendorMenuItems() {
   }
 
   useEffect(() => {
+    console.log(menuItems)
     if (isOpen) {
       sheetRef?.current?.snapTo(0)
     } else {

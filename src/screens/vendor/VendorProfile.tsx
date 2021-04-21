@@ -27,6 +27,7 @@ const VendorProfile = () => {
     editPopUp,
     deletePopUp,
     setIsVendorSetup,
+    setActiveUserUid,
     isVendorSetup,
     activePopUp,
   } = useVendor()
@@ -90,6 +91,7 @@ const VendorProfile = () => {
     try {
       await auth().signOut()
       setIsVendorSetup(true)
+      setActiveUserUid('')
     } catch (e) {
       console.error(e)
     }

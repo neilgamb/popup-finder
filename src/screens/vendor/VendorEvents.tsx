@@ -4,20 +4,20 @@ import { useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 
 import { FAB, ScreenHeader } from '../../components'
-import { useVendor, useAuth } from '../../hooks'
+import { useVendor } from '../../hooks'
 
 const VendorEvents = () => {
   const { presets } = useTheme()
   const { navigate } = useNavigation()
-  const { isVendorSetup, populateVendorPopUps } = useVendor()
-  const { userInfo } = useAuth()
+  const { isVendorSetup, populateVendorPopUps, populateMenuItems } = useVendor()
 
   useEffect(() => {
     !isVendorSetup && navigate('VendorProfile')
   }, [isVendorSetup])
 
   useEffect(() => {
-    populateVendorPopUps(userInfo?.uid)
+    populateVendorPopUps()
+    populateMenuItems()
   }, [])
 
   return (
