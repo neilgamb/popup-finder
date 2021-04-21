@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { SafeAreaView, View } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { List, useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
@@ -45,7 +45,6 @@ export default function VendorMenuItems() {
   }
 
   useEffect(() => {
-    console.log(menuItems)
     if (isOpen) {
       sheetRef?.current?.snapTo(0)
     } else {
@@ -58,7 +57,15 @@ export default function VendorMenuItems() {
       <View style={{ flex: 1 }}>
         <SafeAreaView style={presets.screenContainer}>
           <ScreenHeader withBackButton />
-          <View style={presets.screenContent}></View>
+          <View style={presets.screenContent}>
+            {menuItems.map((menuItem) => (
+              <List.Item
+                title={`${menuItem.name} $${menuItem.price}`}
+                description={menuItem.description}
+                // left={(props) => <List.Icon {...props} icon='note' />}
+              />
+            ))}
+          </View>
         </SafeAreaView>
         <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
         <BottomSheet

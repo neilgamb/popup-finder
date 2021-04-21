@@ -78,7 +78,7 @@ export const theme = {
     },
     screenContent: {
       flex: 1,
-      // paddingHorizontal: SPACING.md,
+      paddingHorizontal: SPACING.md,
     },
     screenActions: {
       paddingHorizontal: SPACING.sm,

@@ -48,9 +48,7 @@ const VendorProfile = () => {
   const handleAddPopUp = async (values: any) => {
     try {
       setIsSaving(true)
-      if (userInfo) {
-        await addPopUp(values, userInfo.uid)
-      }
+      await addPopUp(values)
     } catch (error) {
       console.log(error)
     } finally {
@@ -79,7 +77,7 @@ const VendorProfile = () => {
     )
     // try {
     //   setIsSaving(true)
-    //   await deletePopUp(userInfo?.uid, activePopUp.popUpUid)
+    //   await deletePopUp(activePopUp.popUpUid)
     // } catch (error) {
     //   console.log(error)
     // } finally {
