@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, View } from 'react-native'
-import { Title, useTheme } from 'react-native-paper'
+import { SafeAreaView, View } from 'react-native'
+import { useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
 import { MENU_ITEM_SCHEMA, INIT_MENU_ITEM_VALUES } from '../../utils/constants'
 
 import {
+  Button,
   BottomSheet,
   DismissKeyboard,
   FAB,
@@ -16,7 +17,7 @@ import {
 } from '../../components'
 
 export default function VendorMenuItems() {
-  const { presets } = useTheme()
+  const { presets, spacing } = useTheme()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -75,6 +76,38 @@ export default function VendorMenuItems() {
                     value={values.name}
                   />
                   <FormInputError error={errors.name} touched={touched.name} />
+
+                  <TextInput
+                    label='Price ( $ )'
+                    // keyboardType='decimal-pad'
+                    onChangeText={handleChange('price')}
+                    onBlur={handleBlur('price')}
+                    value={values.price}
+                  />
+                  <FormInputError
+                    error={errors.price}
+                    touched={touched.price}
+                  />
+
+                  <TextInput
+                    label='Item Description'
+                    onChangeText={handleChange('description')}
+                    onBlur={handleBlur('description')}
+                    value={values.description}
+                  />
+                  <FormInputError
+                    error={errors.description}
+                    touched={touched.description}
+                  />
+
+                  <Button
+                    mode='text'
+                    // loading={isSaving}
+                    onPress={handleSubmit}
+                    style={{ marginTop: spacing.lg }}
+                  >
+                    SUBMIT
+                  </Button>
                 </>
               )}
             </Formik>

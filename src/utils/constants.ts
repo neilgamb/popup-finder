@@ -31,20 +31,18 @@ export const INIT_MENU_ITEM_VALUES = __DEV__
   ? {
       name: 'Burger',
       description: 'Juicy smash burger with all the fixings',
-      price: 1000,
+      price: '1.99',
     }
   : {
       name: '',
       description: '',
-      price: null,
+      price: '',
     }
 
 export const MENU_ITEM_SCHEMA = Yup.object().shape({
   name: Yup.string()
     // .matches(/^[a-zA-z][a-zA-z ]*$/, 'Please do not include special characters')
     .required(),
-  description: Yup.string()
-    // .matches(/^[a-zA-z][a-zA-z ]*$/, 'Please do not include special characters')
-    .required(),
-  price: Yup.number().required(),
+  description: Yup.string().required(),
+  price: Yup.string().required(),
 })

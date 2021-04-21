@@ -20,7 +20,7 @@ const BottomSheet = forwardRef(
     const bgOpacityAnim = useRef(new Animated.Value(0)).current
 
     const [showBg, setShowBg] = useState(false)
-    const [bsHeight, setBsHeight] = useState('50%')
+    const [bsHeight, setBsHeight] = useState('70%')
 
     const toggleBgColor = (isOpen: boolean) => {
       Animated.timing(bgOpacityAnim, {
@@ -44,17 +44,11 @@ const BottomSheet = forwardRef(
     useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener(
         'keyboardDidShow',
-        () => {
-          // setKeyboardVisible(true); // or some other action
-          setBsHeight('90%')
-        }
+        () => setBsHeight('85%')
       )
       const keyboardDidHideListener = Keyboard.addListener(
         'keyboardDidHide',
-        () => {
-          // setKeyboardVisible(false); // or some other action
-          setBsHeight('50%')
-        }
+        () => setBsHeight('70%')
       )
 
       return () => {
@@ -70,7 +64,10 @@ const BottomSheet = forwardRef(
           ref={ref}
           snapPoints={[bsHeight, 0]}
           initialSnap={1}
-          onCloseStart={onClose}
+          onCloseStart={() => {
+            Keyboard.dismiss()
+            onClose()
+          }}
           renderHeader={() => (
             <View style={styles.headerContainer}>
               <View style={styles.handleContainer}>
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.lg,
-    paddingBottom: theme.spacing.xs,
+    // paddingBottom: theme.spacing.xs,
     zIndex: 9,
     borderBottomWidth: 0,
     borderTopLeftRadius: theme.roundness,
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'white',
-    padding: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
     height: screenHeight,
     zIndex: 9,
   },
