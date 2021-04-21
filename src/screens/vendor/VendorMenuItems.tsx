@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { SafeAreaView, View } from 'react-native'
-import { useTheme } from 'react-native-paper'
+import { Title, useTheme } from 'react-native-paper'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
 import { BottomSheet, ScreenHeader, FAB } from '../../components'
@@ -36,6 +36,11 @@ export default function VendorMenuItems() {
       <BottomSheet
         ref={sheetRef}
         header='Add Menu Item'
+        content={
+          <View>
+            <Title>Test</Title>
+          </View>
+        }
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />

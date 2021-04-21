@@ -7,6 +7,7 @@ import { theme } from '../style/theme'
 
 type BottomSheetProps = {
   header: string
+  content: React.ReactNode
   isOpen: boolean
   onClose: () => void
 }
@@ -15,7 +16,7 @@ const screenHeight = Dimensions.get('window').height
 
 const BottomSheet = forwardRef(
   (props: BottomSheetProps, ref: React.Ref<ReanimatedBottomSheet>) => {
-    const { header, onClose, isOpen } = props
+    const { header, content, onClose, isOpen } = props
     const bgOpacityAnim = useRef(new Animated.Value(0)).current
 
     const [showBg, setShowBg] = useState(false)
@@ -56,9 +57,7 @@ const BottomSheet = forwardRef(
             </View>
           )}
           renderContent={() => (
-            <View style={styles.contentContainer}>
-              {/* <Title>{header}</Title> */}
-            </View>
+            <View style={styles.contentContainer}>{content}</View>
           )}
         />
         {showBg && (
@@ -79,8 +78,9 @@ export default BottomSheet
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: 'white',
-    padding: theme.spacing.md,
-    paddingTop: 32,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.xs,
     zIndex: 9,
     borderBottomWidth: 0,
     borderTopLeftRadius: theme.roundness,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'white',
-    padding: theme.spacing.lg,
+    padding: theme.spacing.md,
     height: screenHeight,
     zIndex: 9,
   },
