@@ -5,6 +5,7 @@ import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
 import { MENU_ITEM_SCHEMA, INIT_MENU_ITEM_VALUES } from '../../utils/constants'
+import { useVendor, MenuItem } from '../../hooks'
 
 import {
   Button,
@@ -18,8 +19,22 @@ import {
 
 export default function VendorMenuItems() {
   const { presets, spacing } = useTheme()
+  const { addMenuItemToPopUp } = useVendor()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+
+  const handleAddMenuItem = async (values: MenuItem) => {
+    try {
+      setIsSaving(true)
+      await addMenuItemToPopUp(values)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+      setIsOpen(false)
+    }
+  }
 
   const toggleBottomSheet = () => {
     if (isOpen) {
@@ -55,7 +70,7 @@ export default function VendorMenuItems() {
               enableReinitialize
               initialValues={INIT_MENU_ITEM_VALUES}
               validationSchema={MENU_ITEM_SCHEMA}
-              onSubmit={(values) => console.log(values)}
+              onSubmit={handleAddMenuItem}
             >
               {({
                 handleChange,
@@ -102,7 +117,7 @@ export default function VendorMenuItems() {
 
                   <Button
                     mode='text'
-                    // loading={isSaving}
+                    loading={isSaving}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.lg }}
                   >

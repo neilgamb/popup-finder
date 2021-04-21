@@ -38,6 +38,8 @@ interface VendorContextProps {
   getVendorPopUps: () => void
   populateVendorPopUps: (userUid: string) => void
   setIsVendorSetup: (isVendorSetup: boolean) => void
+  addMenuItemToPopUp: (menuItemInfo: MenuItem) => void
+  getMenuItems: (userUid: string) => void
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -140,6 +142,19 @@ function useVendorProvider() {
     })
   }
 
+  const addMenuItemToPopUp = (values: MenuItem) => {
+    const popUpCollection = firestore().collection('popUps')
+
+    return new Promise((resolve, reject) => {
+      popUpCollection
+        .doc(activePopUp?.popUpUid)
+        .collection('menuItems')
+        .add({ ...values })
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
+  }
+
   const getVendorPopUps = async (userUid: string) => {
     const popUpCollection = firestore()
       .collection('popUps')
@@ -163,6 +178,34 @@ function useVendorProvider() {
     })
   }
 
+  const getMenuItems = async (userUid: string) => {
+    const popUpCollection = firestore()
+      .collection('popUps')
+      .where('userUid', '==', userUid)
+
+    let menuItems = [] as MenuItem[]
+
+    return new Promise<MenuItem[]>((resolve, reject) => {
+      popUpCollection.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref
+            .collection('menuItems')
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                menuItems.push(doc.data())
+              })
+              return menuItems
+            })
+            .then((menuItems) => {
+              resolve(menuItems)
+            })
+            .catch((error) => reject(error))
+        })
+      })
+    })
+  }
+
   const populateVendorPopUps = async (userUid: string) => {
     const popUps = await getVendorPopUps(userUid)
     setVendorPopUps(popUps)
@@ -183,5 +226,7 @@ function useVendorProvider() {
     deletePopUp,
     populateVendorPopUps,
     setIsVendorSetup,
+    addMenuItemToPopUp,
+    getMenuItems,
   }
 }
