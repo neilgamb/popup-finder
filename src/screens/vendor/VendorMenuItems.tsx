@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { SafeAreaView, Dimensions, Text, View } from 'react-native'
+import { SafeAreaView, View } from 'react-native'
 import { useTheme } from 'react-native-paper'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
 import { BottomSheet, ScreenHeader, FAB } from '../../components'
-
-// const screenHeight = Dimensions.get('window').height
 
 export default function VendorMenuItems() {
   const { presets, withBorder, spacing } = useTheme()
@@ -34,13 +32,13 @@ export default function VendorMenuItems() {
         <ScreenHeader withBackButton />
         <View style={presets.screenContent}></View>
       </SafeAreaView>
+      <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
       <BottomSheet
         ref={sheetRef}
         header='test'
+        isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
-
-      <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
     </>
   )
 }
