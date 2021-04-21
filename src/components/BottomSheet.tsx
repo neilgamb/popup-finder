@@ -46,15 +46,18 @@ const BottomSheet = forwardRef(
           ref={ref}
           snapPoints={['50%', 0]}
           initialSnap={1}
-          onCloseEnd={onClose}
+          onCloseStart={onClose}
           renderHeader={() => (
             <View style={styles.headerContainer}>
+              <View style={styles.handleContainer}>
+                <View style={styles.headerHandle} />
+              </View>
               <Title>{header}</Title>
             </View>
           )}
           renderContent={() => (
             <View style={styles.contentContainer}>
-              <Title>{header}</Title>
+              {/* <Title>{header}</Title> */}
             </View>
           )}
         />
@@ -76,16 +79,32 @@ export default BottomSheet
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: 'white',
-    padding: 16,
+    padding: theme.spacing.md,
+    paddingTop: 32,
     zIndex: 9,
-    ...theme.withBorder,
     borderBottomWidth: 0,
+    borderTopLeftRadius: theme.roundness,
+    borderTopRightRadius: theme.roundness,
+    position: 'relative',
+  },
+  handleContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerHandle: {
+    backgroundColor: theme.colors.gray,
+    width: 70,
+    height: 3,
+    borderRadius: 5,
   },
   contentContainer: {
     backgroundColor: 'white',
-    padding: 16,
+    padding: theme.spacing.lg,
     height: screenHeight,
     zIndex: 9,
-    ...theme.withBorder,
   },
 })

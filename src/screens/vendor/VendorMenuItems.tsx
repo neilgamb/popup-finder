@@ -35,7 +35,7 @@ export default function VendorMenuItems() {
       <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
       <BottomSheet
         ref={sheetRef}
-        header='test'
+        header='Add Menu Item'
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
       />
