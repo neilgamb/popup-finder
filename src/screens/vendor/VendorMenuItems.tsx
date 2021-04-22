@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { SafeAreaView, View } from 'react-native'
+import { SafeAreaView, TouchableOpacity, ScrollView, View } from 'react-native'
 import { List, useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
@@ -18,8 +18,8 @@ import {
 } from '../../components'
 
 export default function VendorMenuItems() {
-  const { presets, spacing } = useTheme()
-  const { addMenuItemToPopUp, menuItems } = useVendor()
+  const { presets, spacing, withBorder } = useTheme()
+  const { addMenuItem, deleteMenuItem, menuItems } = useVendor()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -27,12 +27,25 @@ export default function VendorMenuItems() {
   const handleAddMenuItem = async (values: MenuItem) => {
     try {
       setIsSaving(true)
-      await addMenuItemToPopUp(values)
+      await addMenuItem(values)
     } catch (error) {
       console.log(error)
     } finally {
       setIsSaving(false)
       setIsOpen(false)
+    }
+  }
+
+  const handleEditMenuItem = (menuItem: MenuItem) => {}
+
+  const handleDeleteMenuItem = async (menuItem: MenuItem) => {
+    try {
+      setIsSaving(true)
+      await deleteMenuItem(menuItem.menuItemUid)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -57,15 +70,37 @@ export default function VendorMenuItems() {
       <View style={{ flex: 1 }}>
         <SafeAreaView style={presets.screenContainer}>
           <ScreenHeader withBackButton />
-          <View style={presets.screenContent}>
+          <ScrollView style={presets.screenContent}>
             {menuItems.map((menuItem, i) => (
               <List.Item
                 key={i}
                 title={`${menuItem.name} $${menuItem.price}`}
                 description={menuItem.description}
+                right={(props) => (
+                  <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                      onPress={() => handleEditMenuItem(menuItem)}
+                    >
+                      <List.Icon
+                        {...props}
+                        icon='pencil'
+                        style={{ margin: 0 }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteMenuItem(menuItem)}
+                    >
+                      <List.Icon
+                        {...props}
+                        icon='delete'
+                        style={{ margin: 0 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
               />
             ))}
-          </View>
+          </ScrollView>
         </SafeAreaView>
         <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
         <BottomSheet

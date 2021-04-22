@@ -34,12 +34,13 @@ interface VendorContextProps {
   isVendorSetup: boolean
   activePopUp: PopUp
   menuItems: Array<MenuItem>
-  addPopUp: (popUpInfo: object) => void
-  deletePopUp: (popUpUid: string) => void
-  editPopUp: (popUpInfo: object) => void
-  addMenuItemToPopUp: (menuItemInfo: MenuItem) => void
   setActiveUserUid: (userUid: string) => void
   resetVendor: () => void
+  addPopUp: (popUpInfo: object) => Promise<boolean>
+  deletePopUp: (popUpUid: string) => Promise<boolean>
+  editPopUp: (popUpInfo: object) => Promise<boolean>
+  addMenuItem: (menuItemInfo: MenuItem) => Promise<boolean>
+  deleteMenuItem: (menuItemUid: string) => Promise<boolean>
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -141,7 +142,7 @@ function useVendorProvider() {
     })
   }
 
-  const addMenuItemToPopUp = (values: MenuItem) => {
+  const addMenuItem = (values: MenuItem) => {
     const popUpCollection = firestore().collection('popUps')
     const uid = popUpCollection.doc().id
 
@@ -154,6 +155,21 @@ function useVendorProvider() {
         .then(() => {
           resolve(true)
         })
+        .catch((error) => reject(error))
+    })
+  }
+
+  const deleteMenuItem = (menuItemUid: string) => {
+    const menuItemCollection = firestore()
+      .collection('popUps')
+      .doc(activePopUp?.popUpUid)
+      .collection('menuItems')
+
+    return new Promise((resolve, reject) => {
+      menuItemCollection
+        .doc(menuItemUid)
+        .delete()
+        .then(() => resolve(true))
         .catch((error) => reject(error))
     })
   }
@@ -187,7 +203,6 @@ function useVendorProvider() {
       .onSnapshot((querySnapshot) => {
         let menuItems = [] as MenuItem[]
         querySnapshot.forEach((doc) => {
-          console.log(doc.data())
           menuItems.push(doc.data())
         })
         setMenuItems(menuItems)
@@ -224,11 +239,12 @@ function useVendorProvider() {
     isVendorSetup,
     activePopUp,
     menuItems,
+    setActiveUserUid,
+    resetVendor,
     addPopUp,
     editPopUp,
     deletePopUp,
-    addMenuItemToPopUp,
-    setActiveUserUid,
-    resetVendor,
+    addMenuItem,
+    deleteMenuItem,
   }
 }
