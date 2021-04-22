@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, SafeAreaView, ScrollView, View } from 'react-native'
-import { Headline, Title, List, useTheme } from 'react-native-paper'
+import {
+  Alert,
+  Platform,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native'
+import { Avatar, Headline, Title, List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import auth from '@react-native-firebase/auth'
+import storage from '@react-native-firebase/storage'
+import * as ImagePicker from 'expo-image-picker'
 
 import { useAuth } from '../../hooks/useAuth'
 import { useVendor, PopUp } from '../../hooks/useVendor'
@@ -19,7 +28,7 @@ import {
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 
 const VendorProfile = () => {
-  const { presets, spacing } = useTheme()
+  const { presets, spacing, withBorder } = useTheme()
   const { navigate, goBack } = useNavigation()
   const { userInfo } = useAuth()
   const {
@@ -35,6 +44,7 @@ const VendorProfile = () => {
   const [locationResults, setLocationResults] = useState([])
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [logoImage, setLogoImage] = useState(null)
 
   const handleLocationSearch = (locationQuery: string) => {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
@@ -42,6 +52,19 @@ const VendorProfile = () => {
     fetch(url)
       .then((response) => response.json())
       .then(({ predictions }) => setLocationResults(predictions))
+  }
+
+  const uploadLogoImage = async () => {
+    const response = await fetch(logoImage)
+    const blob = await response.blob()
+    const reference = storage().ref(`popUpLogos/test.png`)
+    reference
+      .put(blob)
+      .then(() => {
+        console.log('upload success')
+        reference.getDownloadURL().then((url) => console.log(url))
+      })
+      .catch((e) => console.log(e))
   }
 
   const handleAddPopUp = async (values: any) => {
@@ -86,6 +109,21 @@ const VendorProfile = () => {
 
   const handleSelectLogo = () => {}
 
+  const pickLogoImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    console.log(result)
+
+    if (!result.cancelled) {
+      setLogoImage(result.uri)
+    }
+  }
+
   const signOut = async () => {
     try {
       await auth().signOut()
@@ -95,9 +133,22 @@ const VendorProfile = () => {
     }
   }
 
+  const handleMediaLibraryPermissions = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!')
+      }
+    }
+  }
+
   useEffect(() => {
     handleLocationSearch(locationQuery)
   }, [locationQuery])
+
+  useEffect(() => {
+    handleMediaLibraryPermissions()
+  }, [])
 
   return (
     <DismissKeyboard>
@@ -234,16 +285,47 @@ const VendorProfile = () => {
                       touched={touched.description}
                     />
 
-                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: '100%',
+                        marginTop: spacing.md,
+                        alignItems: 'center',
+                      }}
+                    >
+                      {logoImage && (
+                        <Avatar.Image
+                          style={{
+                            backgroundColor: '#f0f0f0',
+                            marginHorizontal: spacing.sm,
+                          }}
+                          size={60}
+                          source={{
+                            uri: logoImage,
+                          }}
+                        />
+                      )}
+
                       <Button
                         mode='text'
-                        // compact
+                        style={{ marginTop: 0 }}
                         labelStyle={{ fontSize: 16 }}
                         loading={isSaving}
-                        onPress={handleSelectLogo}
+                        onPress={pickLogoImage}
                       >
                         Select Logo
                       </Button>
+                      {logoImage && (
+                        <Button
+                          mode='text'
+                          style={{ marginTop: 0 }}
+                          labelStyle={{ fontSize: 16 }}
+                          loading={isSaving}
+                          onPress={uploadLogoImage}
+                        >
+                          Upload
+                        </Button>
+                      )}
                     </View>
                   </>
                 )}
