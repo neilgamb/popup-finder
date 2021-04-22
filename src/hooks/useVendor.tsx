@@ -158,29 +158,6 @@ function useVendorProvider() {
     })
   }
 
-  const getVendorPopUps = async () => {
-    const popUpCollection = firestore()
-      .collection('popUps')
-      .where('userUid', '==', activeUserUid)
-
-    let popUps = [] as PopUp[]
-
-    return new Promise<PopUp[]>((resolve, reject) => {
-      popUpCollection
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            popUps.push(doc.data())
-          })
-          return popUps
-        })
-        .then((popUps) => {
-          resolve(popUps)
-        })
-        .catch((error) => reject(error))
-    })
-  }
-
   const getPopUps = () => {
     const unsubscribePopUps = firestore()
       .collection('popUps')
