@@ -19,9 +19,11 @@ import {
 
 export default function VendorMenuItems() {
   const { presets, spacing, withBorder } = useTheme()
-  const { addMenuItem, deleteMenuItem, menuItems } = useVendor()
+  const { menuItems, addMenuItem, deleteMenuItem, editMenuItem } = useVendor()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [initValues, setInitValues] = useState<MenuItem>(INIT_MENU_ITEM_VALUES)
   const [isSaving, setIsSaving] = useState(false)
 
   const handleAddMenuItem = async (values: MenuItem) => {
@@ -36,7 +38,17 @@ export default function VendorMenuItems() {
     }
   }
 
-  const handleEditMenuItem = (menuItem: MenuItem) => {}
+  const handleEditMenuItem = async (menuItem: MenuItem) => {
+    try {
+      setIsSaving(true)
+      await editMenuItem(menuItem)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+      setIsOpen(false)
+    }
+  }
 
   const handleDeleteMenuItem = async (menuItem: MenuItem) => {
     try {
@@ -57,11 +69,19 @@ export default function VendorMenuItems() {
     }
   }
 
+  const openEditBottomSheet = (menuItem: MenuItem) => {
+    setIsEditing(true)
+    setInitValues(menuItem)
+    setIsOpen(true)
+  }
+
   useEffect(() => {
     if (isOpen) {
       sheetRef?.current?.snapTo(0)
     } else {
       sheetRef?.current?.snapTo(1)
+      setInitValues(INIT_MENU_ITEM_VALUES)
+      setIsEditing(false)
     }
   }, [isOpen])
 
@@ -79,7 +99,7 @@ export default function VendorMenuItems() {
                 right={(props) => (
                   <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
-                      onPress={() => handleEditMenuItem(menuItem)}
+                      onPress={() => openEditBottomSheet(menuItem)}
                     >
                       <List.Icon
                         {...props}
@@ -105,15 +125,19 @@ export default function VendorMenuItems() {
         <FAB icon='plus' onPress={toggleBottomSheet} isOpen={isOpen} />
         <BottomSheet
           ref={sheetRef}
-          header='Add Menu Item'
+          header={`${isEditing ? 'Edit' : 'Add'} Menu Item`}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           content={
             <Formik
               enableReinitialize
-              initialValues={INIT_MENU_ITEM_VALUES}
+              initialValues={initValues}
               validationSchema={MENU_ITEM_SCHEMA}
-              onSubmit={handleAddMenuItem}
+              onSubmit={(values) =>
+                isEditing
+                  ? handleEditMenuItem(values)
+                  : handleAddMenuItem(values)
+              }
             >
               {({
                 handleChange,

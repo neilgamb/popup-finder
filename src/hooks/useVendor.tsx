@@ -41,6 +41,7 @@ interface VendorContextProps {
   editPopUp: (popUpInfo: object) => Promise<boolean>
   addMenuItem: (menuItemInfo: MenuItem) => Promise<boolean>
   deleteMenuItem: (menuItemUid: string) => Promise<boolean>
+  editMenuItem: (menuItem: MenuItem) => Promise<boolean>
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -106,9 +107,7 @@ function useVendorProvider() {
       popUpCollection
         .doc(popUpInfo.popUpUid)
         .set(popUpInfo)
-        .then(async () => {
-          resolve(true)
-        })
+        .then(() => resolve(true))
         .catch((error) => reject(error))
     })
   }
@@ -169,6 +168,21 @@ function useVendorProvider() {
       menuItemCollection
         .doc(menuItemUid)
         .delete()
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
+  }
+
+  const editMenuItem = (menuItem: MenuItem) => {
+    const menuItemCollection = firestore()
+      .collection('popUps')
+      .doc(activePopUp?.popUpUid)
+      .collection('menuItems')
+
+    return new Promise((resolve, reject) => {
+      menuItemCollection
+        .doc(menuItem.menuItemUid)
+        .set(menuItem)
         .then(() => resolve(true))
         .catch((error) => reject(error))
     })
@@ -246,5 +260,6 @@ function useVendorProvider() {
     deletePopUp,
     addMenuItem,
     deleteMenuItem,
+    editMenuItem,
   }
 }
