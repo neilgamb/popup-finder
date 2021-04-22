@@ -121,7 +121,9 @@ const VendorProfile = () => {
           }) => (
             <>
               <ScreenHeader />
-              <ScrollView style={presets.screenContent}>
+              <ScrollView
+                style={{ ...presets.screenContent, paddingHorizontal: 0 }}
+              >
                 {isVendorSetup && !isEditing ? (
                   <>
                     <List.Item

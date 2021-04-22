@@ -219,7 +219,9 @@ function useVendorProvider() {
         querySnapshot.forEach((doc) => {
           menuItems.push(doc.data())
         })
-        setMenuItems(menuItems)
+        setTimeout(() => {
+          setMenuItems(menuItems)
+        }, 500)
       })
 
     return unsubscribeMenuItems
