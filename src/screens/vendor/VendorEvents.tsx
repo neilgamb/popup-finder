@@ -9,16 +9,11 @@ import { useVendor } from '../../hooks'
 const VendorEvents = () => {
   const { presets } = useTheme()
   const { navigate } = useNavigation()
-  const { isVendorSetup, populateVendorPopUps, populateMenuItems } = useVendor()
+  const { isVendorSetup } = useVendor()
 
   useEffect(() => {
     !isVendorSetup && navigate('VendorProfile')
   }, [isVendorSetup])
-
-  useEffect(() => {
-    populateVendorPopUps()
-    populateMenuItems()
-  }, [])
 
   return (
     <SafeAreaView style={presets.screenContainer}>

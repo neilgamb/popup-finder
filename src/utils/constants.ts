@@ -32,11 +32,13 @@ export const INIT_MENU_ITEM_VALUES = __DEV__
       name: 'Burger',
       description: 'Juicy smash burger with all the fixings',
       price: '1.99',
+      menuItemUid: '',
     }
   : {
       name: '',
       description: '',
       price: '',
+      menuItemUid: '',
     }
 
 export const MENU_ITEM_SCHEMA = Yup.object().shape({

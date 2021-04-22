@@ -23,7 +23,7 @@ export interface MenuItem {
   menuItemUid: string
   name: string
   description: string
-  price: Number
+  price: string
 }
 
 interface VendorProps {
@@ -34,14 +34,12 @@ interface VendorContextProps {
   isVendorSetup: boolean
   activePopUp: PopUp
   menuItems: Array<MenuItem>
-  setActiveUserUid: (userUid: string) => void
-  setIsVendorSetup: (isVendorSetup: boolean) => void
   addPopUp: (popUpInfo: object) => void
   deletePopUp: (popUpUid: string) => void
   editPopUp: (popUpInfo: object) => void
   addMenuItemToPopUp: (menuItemInfo: MenuItem) => void
-  populateVendorPopUps: () => void
-  populateMenuItems: () => void
+  setActiveUserUid: (userUid: string) => void
+  resetVendor: () => void
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -80,7 +78,6 @@ function useVendorProvider() {
         })
         .then(async () => {
           await addPopUpToVendor(uid)
-          populateVendorPopUps()
           resolve(uid)
         })
         .catch((error) => reject(error))
@@ -109,7 +106,6 @@ function useVendorProvider() {
         .doc(popUpInfo.popUpUid)
         .set(popUpInfo)
         .then(async () => {
-          populateVendorPopUps()
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -125,7 +121,6 @@ function useVendorProvider() {
         .delete()
         .then(async () => {
           await removePopUpFromVendor(popUpUid)
-          populateVendorPopUps()
           resolve(true)
         })
         .catch((error) => reject(error))
@@ -148,15 +143,16 @@ function useVendorProvider() {
 
   const addMenuItemToPopUp = (values: MenuItem) => {
     const popUpCollection = firestore().collection('popUps')
+    const uid = popUpCollection.doc().id
 
     return new Promise((resolve, reject) => {
       popUpCollection
         .doc(activePopUp?.popUpUid)
         .collection('menuItems')
-        .add({ ...values })
+        .doc(uid)
+        .set({ ...values, menuItemUid: uid })
         .then(() => {
           resolve(true)
-          populateMenuItems()
         })
         .catch((error) => reject(error))
     })
@@ -185,71 +181,77 @@ function useVendorProvider() {
     })
   }
 
-  const getMenuItems = async () => {
-    const popUpCollection = firestore()
+  const getPopUps = () => {
+    const unsubscribePopUps = firestore()
       .collection('popUps')
       .where('userUid', '==', activeUserUid)
-
-    let menuItems = [] as MenuItem[]
-
-    return new Promise<MenuItem[]>((resolve, reject) => {
-      popUpCollection.get().then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
+        let popUps = [] as PopUp[]
         querySnapshot.forEach((doc) => {
-          doc.ref
-            .collection('menuItems')
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                menuItems.push(doc.data())
-              })
-              return menuItems
-            })
-            .then((menuItems) => {
-              resolve(menuItems)
-            })
-            .catch((error) => reject(error))
+          popUps.push(doc.data())
         })
+        setVendorPopUps(popUps)
+        if (popUps.length) {
+          setActivePopUp(popUps[0])
+          setIsVendorSetup(true)
+        } else {
+          resetVendor()
+        }
       })
-    })
+
+    return unsubscribePopUps
   }
 
-  const populateVendorPopUps = async () => {
-    const popUps = await getVendorPopUps()
-    setVendorPopUps(popUps)
-    if (popUps.length) {
-      setActivePopUp(popUps[0])
-      setIsVendorSetup(true)
-    } else {
-      setActivePopUp(null)
-      setIsVendorSetup(false)
-    }
+  const getMenuItems = () => {
+    const unsubscribeMenuItems = firestore()
+      .collection('popUps')
+      .doc(activePopUp?.popUpUid)
+      .collection('menuItems')
+      .onSnapshot((querySnapshot) => {
+        let menuItems = [] as MenuItem[]
+        querySnapshot.forEach((doc) => {
+          console.log(doc.data())
+          menuItems.push(doc.data())
+        })
+        setMenuItems(menuItems)
+      })
+
+    return unsubscribeMenuItems
   }
 
-  const populateMenuItems = async () => {
-    try {
-      const menuItems = await getMenuItems()
-      setMenuItems(menuItems)
-      console.log(menuItems)
-    } catch (error) {
-      console.log(error)
-    }
+  const resetVendor = () => {
+    setActivePopUp(null)
+    setIsVendorSetup(true)
+    setActiveUserUid('')
   }
 
   useEffect(() => {
-    console.log(activeUserUid)
+    const unsubscribePopUps = getPopUps()
+
+    if (!activeUserUid) {
+      console.log('unsubscribing from pop up updates...')
+      unsubscribePopUps()
+    }
   }, [activeUserUid])
+
+  useEffect(() => {
+    const unsubscribeMenuItems = getMenuItems()
+
+    if (!activePopUp) {
+      console.log('unsubscribing from menu item updates...')
+      unsubscribeMenuItems()
+    }
+  }, [activePopUp])
 
   return {
     isVendorSetup,
     activePopUp,
     menuItems,
-    setActiveUserUid,
-    setIsVendorSetup,
     addPopUp,
     editPopUp,
     deletePopUp,
     addMenuItemToPopUp,
-    populateVendorPopUps,
-    populateMenuItems,
+    setActiveUserUid,
+    resetVendor,
   }
 }

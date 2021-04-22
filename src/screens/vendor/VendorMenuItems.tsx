@@ -58,11 +58,11 @@ export default function VendorMenuItems() {
         <SafeAreaView style={presets.screenContainer}>
           <ScreenHeader withBackButton />
           <View style={presets.screenContent}>
-            {menuItems.map((menuItem) => (
+            {menuItems.map((menuItem, i) => (
               <List.Item
+                key={i}
                 title={`${menuItem.name} $${menuItem.price}`}
                 description={menuItem.description}
-                // left={(props) => <List.Icon {...props} icon='note' />}
               />
             ))}
           </View>
@@ -102,7 +102,7 @@ export default function VendorMenuItems() {
 
                   <TextInput
                     label='Price ( $ )'
-                    // keyboardType='decimal-pad'
+                    keyboardType='decimal-pad'
                     onChangeText={handleChange('price')}
                     onBlur={handleBlur('price')}
                     value={values.price}
