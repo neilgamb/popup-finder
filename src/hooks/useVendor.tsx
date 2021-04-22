@@ -202,7 +202,7 @@ function useVendorProvider() {
           setActivePopUp(popUps[0])
           setIsVendorSetup(true)
         } else {
-          resetVendor()
+          setIsVendorSetup(false)
         }
       })
 
@@ -229,8 +229,8 @@ function useVendorProvider() {
 
   const resetVendor = () => {
     setActivePopUp(null)
-    setIsVendorSetup(true)
     setActiveUserUid('')
+    setIsVendorSetup(true)
   }
 
   useEffect(() => {

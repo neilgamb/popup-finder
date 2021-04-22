@@ -84,6 +84,8 @@ const VendorProfile = () => {
     // }
   }
 
+  const handleSelectLogo = () => {}
+
   const signOut = async () => {
     try {
       await auth().signOut()
@@ -121,9 +123,7 @@ const VendorProfile = () => {
           }) => (
             <>
               <ScreenHeader />
-              <ScrollView
-                style={{ ...presets.screenContent, paddingHorizontal: 0 }}
-              >
+              <ScrollView style={presets.screenContent}>
                 {isVendorSetup && !isEditing ? (
                   <>
                     <List.Item
@@ -233,6 +233,18 @@ const VendorProfile = () => {
                       error={errors.description}
                       touched={touched.description}
                     />
+
+                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                      <Button
+                        mode='text'
+                        // compact
+                        labelStyle={{ fontSize: 16 }}
+                        loading={isSaving}
+                        onPress={handleSelectLogo}
+                      >
+                        Select Logo
+                      </Button>
+                    </View>
                   </>
                 )}
               </ScrollView>

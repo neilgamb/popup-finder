@@ -90,9 +90,7 @@ export default function VendorMenuItems() {
       <View style={{ flex: 1 }}>
         <SafeAreaView style={presets.screenContainer}>
           <ScreenHeader withBackButton />
-          <ScrollView
-            style={{ ...presets.screenContent, paddingHorizontal: 0 }}
-          >
+          <ScrollView style={presets.screenContent}>
             {menuItems.map((menuItem, i) => (
               <List.Item
                 key={i}
