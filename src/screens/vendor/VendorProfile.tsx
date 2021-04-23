@@ -68,7 +68,7 @@ const VendorProfile = () => {
   const handleEditPopUp = async (values: any) => {
     try {
       setIsSaving(true)
-      await editPopUp(values)
+      await editPopUp(values, logoImageUri)
       setIsEditing(false)
     } catch (error) {
       console.log(error)
@@ -123,6 +123,12 @@ const VendorProfile = () => {
       }
     }
   }
+
+  useEffect(() => {
+    if (isEditing && activePopUp.logoImageUrl) {
+      setLogoImageUri(activePopUp.logoImageUrl)
+    }
+  }, [isEditing])
 
   useEffect(() => {
     handleLocationSearch(locationQuery)

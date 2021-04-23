@@ -39,11 +39,11 @@ interface VendorContextProps {
   setActiveUserUid: (userUid: string) => void
   resetVendor: () => void
   addPopUp: (popUpInfo: object, logoImageUri: string) => Promise<boolean>
+  editPopUp: (popUpInfo: object, logoImageUri: string) => Promise<boolean>
   deletePopUp: (popUpUid: string) => Promise<boolean>
-  editPopUp: (popUpInfo: object) => Promise<boolean>
   addMenuItem: (menuItemInfo: MenuItem) => Promise<boolean>
-  deleteMenuItem: (menuItemUid: string) => Promise<boolean>
   editMenuItem: (menuItem: MenuItem) => Promise<boolean>
+  deleteMenuItem: (menuItemUid: string) => Promise<boolean>
 }
 
 export const VendorContext = createContext<VendorContextProps>(null)
@@ -122,13 +122,18 @@ function useVendorProvider() {
     })
   }
 
-  const editPopUp = (popUpInfo: PopUp) => {
+  const editPopUp = (popUpInfo: PopUp, logoImageUri: string) => {
     const popUpCollection = firestore().collection('popUps')
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const logoImageUrl = await uploadLogoImage(
+        logoImageUri,
+        popUpInfo.popUpUid
+      )
+
       popUpCollection
         .doc(popUpInfo.popUpUid)
-        .set(popUpInfo)
+        .set({ ...popUpInfo, logoImageUrl })
         .then(() => resolve(true))
         .catch((error) => reject(error))
     })
@@ -137,7 +142,11 @@ function useVendorProvider() {
   const deletePopUp = (popUpUid: string) => {
     const popUpCollection = firestore().collection('popUps')
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      // TODO — when reinstating delete popup, need to make sure
+      // TODO — we delete the logo image from storage
+      // await storage().ref(`popUpLogos/${popUpUid}.png`).delete()
+
       popUpCollection
         .doc(popUpUid)
         .delete()
