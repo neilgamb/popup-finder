@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { SafeAreaView, TouchableOpacity, ScrollView, View } from 'react-native'
+import {
+  SafeAreaView,
+  Keyboard,
+  TouchableOpacity,
+  ScrollView,
+  View,
+} from 'react-native'
 import { List, useTheme } from 'react-native-paper'
 import { Formik } from 'formik'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
@@ -29,6 +35,7 @@ export default function VendorMenuItems() {
   const handleAddMenuItem = async (values: MenuItem) => {
     try {
       setIsSaving(true)
+      Keyboard.dismiss()
       await addMenuItem(values)
     } catch (error) {
       console.log(error)
@@ -78,6 +85,7 @@ export default function VendorMenuItems() {
   useEffect(() => {
     if (isOpen) {
       sheetRef?.current?.snapTo(0)
+      Keyboard.dismiss()
     } else {
       sheetRef?.current?.snapTo(1)
       setInitValues(INIT_MENU_ITEM_VALUES)

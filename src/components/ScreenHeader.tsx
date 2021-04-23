@@ -39,14 +39,14 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
         >
           {userInfo?.isAnonymous ? (
             <Avatar.Icon
-              icon='menu'
+              icon='account'
               style={{ backgroundColor: '#f0f0f0' }}
-              size={60}
+              size={50}
             />
           ) : activePopUp !== null ? (
             <Avatar.Image
               style={{ backgroundColor: '#f0f0f0' }}
-              size={60}
+              size={50}
               source={{
                 uri: activePopUp.logoImageUrl,
               }}
@@ -54,7 +54,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           ) : (
             <Avatar.Image
               style={{ backgroundColor: '#f0f0f0' }}
-              size={40}
+              size={50}
               source={{
                 uri: userInfo?.photoURL,
               }}

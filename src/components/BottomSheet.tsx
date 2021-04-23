@@ -18,7 +18,7 @@ const BottomSheet = forwardRef(
   (props: BottomSheetProps, ref: React.Ref<ReanimatedBottomSheet>) => {
     const { header, content, onClose, isOpen } = props
     const bgOpacityAnim = useRef(new Animated.Value(0)).current
-    const bottomSheetOffset = useRef(new Animated.Value(0)).current
+    // const bottomSheetOffset = useRef(new Animated.Value(0)).current
 
     const [showBg, setShowBg] = useState(false)
 
@@ -41,33 +41,33 @@ const BottomSheet = forwardRef(
       toggleBgColor(isOpen)
     }, [isOpen])
 
-    useEffect(() => {
-      const keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        () => {
-          Animated.timing(bottomSheetOffset, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true,
-          }).start()
-        }
-      )
-      const keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        () => {
-          Animated.timing(bottomSheetOffset, {
-            toValue: 0,
-            duration: 150,
-            useNativeDriver: true,
-          }).start()
-        }
-      )
+    // useEffect(() => {
+    //   const keyboardDidShowListener = Keyboard.addListener(
+    //     'keyboardDidShow',
+    //     () => {
+    //       Animated.timing(bottomSheetOffset, {
+    //         toValue: 1,
+    //         duration: 150,
+    //         useNativeDriver: true,
+    //       }).start()
+    //     }
+    //   )
+    //   const keyboardDidHideListener = Keyboard.addListener(
+    //     'keyboardDidHide',
+    //     () => {
+    //       Animated.timing(bottomSheetOffset, {
+    //         toValue: 0,
+    //         duration: 150,
+    //         useNativeDriver: true,
+    //       }).start()
+    //     }
+    //   )
 
-      return () => {
-        keyboardDidHideListener.remove()
-        keyboardDidShowListener.remove()
-      }
-    }, [])
+    //   return () => {
+    //     keyboardDidHideListener.remove()
+    //     keyboardDidShowListener.remove()
+    //   }
+    // }, [])
 
     return (
       <>
