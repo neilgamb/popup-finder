@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigationState, useNavigation } from '@react-navigation/native'
 import { Avatar, IconButton, Title } from 'react-native-paper'
 
-import { useAuth } from '../hooks/useAuth'
+import { useAuth, useVendor } from '../hooks'
 import { theme } from '../style/theme'
 
 type ScreenHeaderProps = {
@@ -14,6 +14,7 @@ type ScreenHeaderProps = {
 const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
   const { navigate, goBack } = useNavigation()
   const { userInfo } = useAuth()
+  const { activePopUp } = useVendor()
 
   const routeName = useNavigationState(
     (state) => state.routes[state.index].name
@@ -42,13 +43,20 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
               style={{ backgroundColor: '#f0f0f0' }}
               size={60}
             />
+          ) : activePopUp !== null ? (
+            <Avatar.Image
+              style={{ backgroundColor: '#f0f0f0' }}
+              size={60}
+              source={{
+                uri: activePopUp.logoImageUrl,
+              }}
+            />
           ) : (
             <Avatar.Image
               style={{ backgroundColor: '#f0f0f0' }}
               size={40}
               source={{
-                uri:
-                  userInfo && userInfo.photoURL ? userInfo.photoURL : undefined,
+                uri: userInfo?.photoURL,
               }}
             />
           )}

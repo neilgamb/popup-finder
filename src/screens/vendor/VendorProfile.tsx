@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import auth from '@react-native-firebase/auth'
-import storage from '@react-native-firebase/storage'
 import * as ImagePicker from 'expo-image-picker'
 
 import { useAuth } from '../../hooks/useAuth'
@@ -44,7 +43,7 @@ const VendorProfile = () => {
   const [locationResults, setLocationResults] = useState([])
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [logoImage, setLogoImage] = useState(null)
+  const [logoImageUri, setLogoImageUri] = useState('')
 
   const handleLocationSearch = (locationQuery: string) => {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
@@ -54,23 +53,10 @@ const VendorProfile = () => {
       .then(({ predictions }) => setLocationResults(predictions))
   }
 
-  const uploadLogoImage = async () => {
-    const response = await fetch(logoImage)
-    const blob = await response.blob()
-    const reference = storage().ref(`popUpLogos/test.png`)
-    reference
-      .put(blob)
-      .then(() => {
-        console.log('upload success')
-        reference.getDownloadURL().then((url) => console.log(url))
-      })
-      .catch((e) => console.log(e))
-  }
-
   const handleAddPopUp = async (values: any) => {
     try {
       setIsSaving(true)
-      await addPopUp(values)
+      await addPopUp(values, logoImageUri)
     } catch (error) {
       console.log(error)
     } finally {
@@ -107,9 +93,7 @@ const VendorProfile = () => {
     // }
   }
 
-  const handleSelectLogo = () => {}
-
-  const pickLogoImage = async () => {
+  const handleLogoImageSelect = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -117,10 +101,8 @@ const VendorProfile = () => {
       quality: 1,
     })
 
-    console.log(result)
-
     if (!result.cancelled) {
-      setLogoImage(result.uri)
+      setLogoImageUri(result.uri)
     }
   }
 
@@ -148,6 +130,7 @@ const VendorProfile = () => {
 
   useEffect(() => {
     handleMediaLibraryPermissions()
+    console.log(activePopUp)
   }, [])
 
   return (
@@ -180,9 +163,20 @@ const VendorProfile = () => {
                     <List.Item
                       title={activePopUp?.name}
                       description='Pop Up Name'
-                      left={(props) => (
-                        <List.Icon {...props} icon='hamburger' />
-                      )}
+                      left={(props) => {
+                        return activePopUp === null ? (
+                          <List.Icon {...props} icon='account' />
+                        ) : (
+                          <Avatar.Image
+                            style={{
+                              backgroundColor: '#f0f0f0',
+                              marginRight: spacing.sm,
+                            }}
+                            size={40}
+                            source={{ uri: activePopUp.logoImageUrl }}
+                          />
+                        )
+                      }}
                       style={{ marginTop: spacing.md }}
                     />
                     <List.Item
@@ -293,7 +287,7 @@ const VendorProfile = () => {
                         alignItems: 'center',
                       }}
                     >
-                      {logoImage && (
+                      {!!logoImageUri && (
                         <Avatar.Image
                           style={{
                             backgroundColor: '#f0f0f0',
@@ -301,7 +295,7 @@ const VendorProfile = () => {
                           }}
                           size={60}
                           source={{
-                            uri: logoImage,
+                            uri: logoImageUri,
                           }}
                         />
                       )}
@@ -311,21 +305,10 @@ const VendorProfile = () => {
                         style={{ marginTop: 0 }}
                         labelStyle={{ fontSize: 16 }}
                         loading={isSaving}
-                        onPress={pickLogoImage}
+                        onPress={handleLogoImageSelect}
                       >
                         Select Logo
                       </Button>
-                      {logoImage && (
-                        <Button
-                          mode='text'
-                          style={{ marginTop: 0 }}
-                          labelStyle={{ fontSize: 16 }}
-                          loading={isSaving}
-                          onPress={uploadLogoImage}
-                        >
-                          Upload
-                        </Button>
-                      )}
                     </View>
                   </>
                 )}

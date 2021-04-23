@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from 'react'
 import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 import * as admin from 'firebase-admin'
 
 export interface PopUp {
@@ -16,6 +17,7 @@ export interface PopUp {
   foodType: string
   description: string
   user: string
+  logoImageUrl: string
 }
 
 export interface MenuItem {
@@ -36,7 +38,7 @@ interface VendorContextProps {
   menuItems: Array<MenuItem>
   setActiveUserUid: (userUid: string) => void
   resetVendor: () => void
-  addPopUp: (popUpInfo: object) => Promise<boolean>
+  addPopUp: (popUpInfo: object, logoImageUri: string) => Promise<boolean>
   deletePopUp: (popUpUid: string) => Promise<boolean>
   editPopUp: (popUpInfo: object) => Promise<boolean>
   addMenuItem: (menuItemInfo: MenuItem) => Promise<boolean>
@@ -64,17 +66,19 @@ function useVendorProvider() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [activePopUp, setActivePopUp] = useState<PopUp | null>(null)
 
-  const addPopUp = (popUpInfo: PopUp) => {
+  const addPopUp = (popUpInfo: PopUp, logoImageUri: string) => {
     const popUpCollection = firestore().collection('popUps')
     const uid = popUpCollection.doc().id
     const dateAdded = firestore.Timestamp.now()
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      const logoImageUrl = await uploadLogoImage(logoImageUri, uid)
       popUpCollection
         .doc(uid)
         .set({
           ...popUpInfo,
           dateAdded,
+          logoImageUrl,
           userUid: activeUserUid,
           popUpUid: uid,
         })
@@ -83,6 +87,24 @@ function useVendorProvider() {
           resolve(uid)
         })
         .catch((error) => reject(error))
+    })
+  }
+
+  const uploadLogoImage = async (logoImageUri: string, popUpUid: string) => {
+    return new Promise<string>(async (resolve, reject) => {
+      const response = await fetch(logoImageUri)
+      const blob = await response.blob()
+      const reference = storage().ref(`popUpLogos/${popUpUid}.png`)
+
+      reference
+        .put(blob)
+        .then(() => {
+          console.log('upload success')
+          reference.getDownloadURL().then((url) => {
+            resolve(url)
+          })
+        })
+        .catch((e) => reject(e))
     })
   }
 
