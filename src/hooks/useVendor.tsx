@@ -83,7 +83,7 @@ function useVendorProvider() {
           popUpUid: uid,
         })
         .then(async () => {
-          await addPopUpToVendor(uid)
+          // await addPopUpToVendor(uid)
           resolve(uid)
         })
         .catch((error) => reject(error))
@@ -105,20 +105,6 @@ function useVendorProvider() {
           })
         })
         .catch((e) => reject(e))
-    })
-  }
-
-  const addPopUpToVendor = (popUpUid: string) => {
-    const userCollection = firestore().collection('users')
-
-    return new Promise((resolve, reject) => {
-      userCollection
-        .doc(activeUserUid)
-        .collection('popUps')
-        .doc(popUpUid)
-        .set({ popUpUid })
-        .then(() => resolve(true))
-        .catch((error) => reject(error))
     })
   }
 
@@ -151,26 +137,41 @@ function useVendorProvider() {
         .doc(popUpUid)
         .delete()
         .then(async () => {
-          await removePopUpFromVendor(popUpUid)
+          // await removePopUpFromVendor(popUpUid)
           resolve(true)
         })
         .catch((error) => reject(error))
     })
   }
 
-  const removePopUpFromVendor = (popUpUid: string) => {
-    const userCollection = firestore().collection('users')
+  // TODO: I don't think I need these
+  // const addPopUpToVendor = (popUpUid: string) => {
+  //   const userCollection = firestore().collection('users')
 
-    return new Promise((resolve, reject) => {
-      userCollection
-        .doc(activeUserUid)
-        .collection('popUps')
-        .doc(popUpUid)
-        .delete()
-        .then(() => resolve(true))
-        .catch((error) => reject(error))
-    })
-  }
+  //   return new Promise((resolve, reject) => {
+  //     userCollection
+  //       .doc(activeUserUid)
+  //       .collection('popUps')
+  //       .doc(popUpUid)
+  //       .set({ popUpUid })
+  //       .then(() => resolve(true))
+  //       .catch((error) => reject(error))
+  //   })
+  // }
+
+  // const removePopUpFromVendor = (popUpUid: string) => {
+  //   const userCollection = firestore().collection('users')
+
+  //   return new Promise((resolve, reject) => {
+  //     userCollection
+  //       .doc(activeUserUid)
+  //       .collection('popUps')
+  //       .doc(popUpUid)
+  //       .delete()
+  //       .then(() => resolve(true))
+  //       .catch((error) => reject(error))
+  //   })
+  // }
 
   const addMenuItem = (values: MenuItem) => {
     const popUpCollection = firestore().collection('popUps')
