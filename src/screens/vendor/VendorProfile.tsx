@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Alert,
+  Dimensions,
   Platform,
   Image,
   SafeAreaView,
   ScrollView,
+  Text,
   View,
 } from 'react-native'
 import { Avatar, Headline, Title, List, useTheme } from 'react-native-paper'
@@ -13,6 +15,7 @@ import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import auth from '@react-native-firebase/auth'
 import * as ImagePicker from 'expo-image-picker'
+import Carousel from 'react-native-snap-carousel'
 
 import { useAuth } from '../../hooks/useAuth'
 import { useVendor, PopUp } from '../../hooks/useVendor'
@@ -26,6 +29,13 @@ import {
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import ModalContainer from '../../navigation/ModalContainer'
+
+// Carousel
+const screenWidth = Dimensions.get('window').width
+const horizontalMargin = 0
+const slideWidth = screenWidth
+const sliderWidth = screenWidth
+const itemWidth = screenWidth
 
 const VendorProfile = () => {
   const { presets, spacing, roundness, withBorder } = useTheme()
@@ -45,6 +55,13 @@ const VendorProfile = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [logoImageUri, setLogoImageUri] = useState('')
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  interface Item {
+    title: string
+  }
+
+  const carouselRef = useRef<Carousel<Item>>(null)
 
   const handleLocationSearch = (locationQuery: string) => {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
@@ -140,10 +157,25 @@ const VendorProfile = () => {
     console.log(activePopUp)
   }, [])
 
+  const renderItems = ({ item }) => (
+    <View style={{ ...withBorder, height: '100%' }}>
+      <Text>{item.title}</Text>
+    </View>
+  )
+
   return (
     <DismissKeyboard>
       <ModalContainer>
-        <SafeAreaView style={presets.screenContainer}>
+        <SafeAreaView style={[presets.screenContainer, { marginTop: 50 }]}>
+          <Carousel
+            layout='default'
+            ref={carouselRef}
+            data={[{ title: 'Profile' }, { title: 'Menu' }]}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+            renderItem={renderItems}
+            onSnapToItem={setActiveIndex}
+          />
           {/* <Formik
               enableReinitialize
               initialValues={isEditing ? activePopUp : INIT_POP_VALUES}
