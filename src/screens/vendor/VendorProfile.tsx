@@ -34,7 +34,7 @@ const VendorProfile = () => {
   const { navigate, goBack } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const { resetVendor } = useVendor()
+  const { activePopUp, resetVendor } = useVendor()
 
   const carouselRef = useRef<Carousel<Item>>(null)
   const menuIndicatorAnim = useRef(new Animated.Value(0)).current
@@ -48,7 +48,7 @@ const VendorProfile = () => {
     }
   }
 
-  const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item.comp}</View>
+  const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item}</View>
 
   useEffect(() => {
     carouselRef.current?.snapToItem(activeIndex)
@@ -66,8 +66,8 @@ const VendorProfile = () => {
           <View style={styles.avatarContainer}>
             <Avatar.Image
               style={styles.avatar}
-              size={70}
-              source={{ uri: route.params.activePopUp.logoImageUrl }}
+              size={100}
+              source={{ uri: activePopUp.logoImageUrl }}
             />
           </View>
           <View style={styles.menuContainer}>
@@ -75,7 +75,7 @@ const VendorProfile = () => {
               style={styles.menuButton}
               onPress={() => setActiveIndex(0)}
             >
-              <Text style={styles.menuButtonText}>INFO</Text>
+              <Text style={styles.menuButtonText}>PROFILE</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuButton}
@@ -108,36 +108,7 @@ const VendorProfile = () => {
               ref={carouselRef}
               // scrollEnabled={false}
               inactiveSlideScale={1}
-              data={[
-                {
-                  comp: (
-                    <View
-                      style={{
-                        flex: 1,
-                        // justifyContent: 'center',
-                        // alignItems: 'center',
-                        // ...withBorder,
-                      }}
-                    >
-                      <VendorProfileInfo />
-                    </View>
-                  ),
-                },
-                {
-                  comp: (
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        ...withBorder,
-                      }}
-                    >
-                      <Text>Comp 2</Text>
-                    </View>
-                  ),
-                },
-              ]}
+              data={[<VendorProfileInfo />, <VendorProfileInfo />]}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
               renderItem={renderItems}
@@ -153,18 +124,18 @@ const VendorProfile = () => {
           >
             <Button
               mode='text'
+              icon='logout'
               style={{ flex: 1, marginRight: spacing.xs }}
               labelStyle={{ fontSize: 18, color: colors.gray }}
-              icon='logout'
               onPress={signOut}
             >
               Log Out
             </Button>
             <Button
               mode='text'
+              icon='chevron-double-down'
               style={{ flex: 1, marginLeft: spacing.xs }}
               labelStyle={{ fontSize: 18, color: colors.gray }}
-              icon='chevron-double-down'
               onPress={goBack}
             >
               Dismiss
@@ -195,10 +166,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   menuContainer: {
-    marginTop: 30,
+    marginTop: 45,
     flexDirection: 'row',
     position: 'relative',
-    marginBottom: theme.spacing.sm,
   },
   menuButton: {
     flex: 1,

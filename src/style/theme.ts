@@ -6,6 +6,17 @@ export const withBorder = {
   borderColor: 'black',
 }
 
+export const boxShadow = {
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 6,
+  },
+  shadowOpacity: 0.15,
+  shadowRadius: 6,
+  elevation: 8,
+}
+
 const SPACING = {
   xl: 64,
   lg: 32,
@@ -37,7 +48,7 @@ const fontConfig = {
     input: {
       fontFamily: 'Arial',
       fontWeight: 'normal',
-      fontSize: 20,
+      fontSize: 18,
     },
   },
 }
@@ -48,6 +59,10 @@ declare global {
   namespace ReactNativePaper {
     interface ThemeColors {
       gray: string
+      darkGray: string
+      lightGray: string
+      extraLightGray: string
+      offWhite: string
     }
 
     interface Theme {
@@ -67,6 +82,10 @@ export const theme = {
     primary: 'black',
     accent: 'cyan',
     gray: '#666',
+    darkGray: '#333',
+    lightGray: '#ccc',
+    extraLightGray: '#f0f0f0',
+    offWhite: '#f7f7f7',
   },
   fonts: configureFonts(fontConfig),
   spacing: {
@@ -81,9 +100,10 @@ export const theme = {
       paddingHorizontal: SPACING.md,
     },
     screenActions: {
-      paddingHorizontal: SPACING.sm,
+      paddingHorizontal: SPACING.md,
       paddingVertical: SPACING.md,
     },
   }),
   withBorder,
+  boxShadow,
 }
