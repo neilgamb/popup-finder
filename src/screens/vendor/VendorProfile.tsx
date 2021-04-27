@@ -1,423 +1,134 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
-  Alert,
+  Animated,
   Dimensions,
-  Platform,
-  Image,
   SafeAreaView,
-  ScrollView,
+  StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native'
-import { Avatar, Headline, Title, List, useTheme } from 'react-native-paper'
-import { useNavigation } from '@react-navigation/native'
-import { Formik } from 'formik'
-import { GOOGLE_PLACES_API_KEY } from '@env'
-import auth from '@react-native-firebase/auth'
-import * as ImagePicker from 'expo-image-picker'
+import { Avatar, useTheme } from 'react-native-paper'
+import { useRoute } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
 
-import { useAuth } from '../../hooks/useAuth'
-import { useVendor, PopUp } from '../../hooks/useVendor'
-import {
-  ScreenHeader,
-  TextInput,
-  Button,
-  DismissKeyboard,
-  FormInputError,
-} from '../../components'
+import { DismissKeyboard } from '../../components'
+import { VendorProfileInfo } from '../../screens'
+import { theme } from '../../style/theme'
 
-import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import ModalContainer from '../../navigation/ModalContainer'
 
-// Carousel
 const screenWidth = Dimensions.get('window').width
-const horizontalMargin = 0
-const slideWidth = screenWidth
 const sliderWidth = screenWidth
 const itemWidth = screenWidth
 
+interface Item {
+  title: string
+}
+
 const VendorProfile = () => {
-  const { presets, spacing, roundness, withBorder } = useTheme()
-  const { navigate, goBack } = useNavigation()
-  const { userInfo } = useAuth()
-  const {
-    addPopUp,
-    editPopUp,
-    deletePopUp,
-    resetVendor,
-    isVendorSetup,
-    activePopUp,
-  } = useVendor()
-
-  const [locationQuery, setLocationQuery] = useState('')
-  const [locationResults, setLocationResults] = useState([])
-  const [isEditing, setIsEditing] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [logoImageUri, setLogoImageUri] = useState('')
+  const { presets, withBorder } = useTheme()
+  const route = useRoute()
   const [activeIndex, setActiveIndex] = useState(0)
-
-  interface Item {
-    title: string
-  }
-
   const carouselRef = useRef<Carousel<Item>>(null)
+  const menuIndicatorAnim = useRef(new Animated.Value(0)).current
 
-  const handleLocationSearch = (locationQuery: string) => {
-    // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&types=(cities)&key=${GOOGLE_PLACES_API_KEY}`
-    fetch(url)
-      .then((response) => response.json())
-      .then(({ predictions }) => setLocationResults(predictions))
-  }
-
-  const handleAddPopUp = async (values: any) => {
-    try {
-      setIsSaving(true)
-      await addPopUp(values, logoImageUri)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsSaving(false)
-      goBack()
-    }
-  }
-
-  const handleEditPopUp = async (values: any) => {
-    try {
-      setIsSaving(true)
-      await editPopUp(values, logoImageUri)
-      setIsEditing(false)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const handleDeletePopUp = async () => {
-    Alert.alert(
-      'Temporarily Disabled',
-      'This functionality is setup, but disabled until Vendor Events are set up',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
-    )
-    // try {
-    //   setIsSaving(true)
-    //   await deletePopUp(activePopUp.popUpUid)
-    // } catch (error) {
-    //   console.log(error)
-    // } finally {
-    //   setIsSaving(false)
-    // }
-  }
-
-  const handleLogoImageSelect = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    })
-
-    if (!result.cancelled) {
-      setLogoImageUri(result.uri)
-    }
-  }
-
-  const signOut = async () => {
-    try {
-      await auth().signOut()
-      resetVendor()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const handleMediaLibraryPermissions = async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!')
-      }
-    }
-  }
+  const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item.comp}</View>
 
   useEffect(() => {
-    if (isEditing && activePopUp.logoImageUrl) {
-      setLogoImageUri(activePopUp.logoImageUrl)
-    }
-  }, [isEditing])
-
-  useEffect(() => {
-    handleLocationSearch(locationQuery)
-  }, [locationQuery])
-
-  useEffect(() => {
-    handleMediaLibraryPermissions()
-    console.log(activePopUp)
-  }, [])
-
-  const renderItems = ({ item }) => (
-    <View style={{ ...withBorder, height: '100%' }}>
-      <Text>{item.title}</Text>
-    </View>
-  )
+    carouselRef.current?.snapToItem(activeIndex)
+    Animated.timing(menuIndicatorAnim, {
+      toValue: activeIndex,
+      duration: 250,
+      useNativeDriver: true,
+    }).start()
+  }, [activeIndex])
 
   return (
     <DismissKeyboard>
       <ModalContainer>
-        <SafeAreaView style={[presets.screenContainer, { marginTop: 50 }]}>
-          <Carousel
-            layout='default'
-            ref={carouselRef}
-            data={[{ title: 'Profile' }, { title: 'Menu' }]}
-            sliderWidth={sliderWidth}
-            itemWidth={itemWidth}
-            renderItem={renderItems}
-            onSnapToItem={setActiveIndex}
-          />
-          {/* <Formik
-              enableReinitialize
-              initialValues={isEditing ? activePopUp : INIT_POP_VALUES}
-              validationSchema={POP_UP_SCHEMA}
-              onSubmit={(values) =>
-                isEditing ? handleEditPopUp(values) : handleAddPopUp(values)
-              }
+        <SafeAreaView style={presets.screenContainer}>
+          <View style={styles.avatarContainer}>
+            <Avatar.Image
+              style={styles.avatar}
+              size={70}
+              source={{ uri: route.params.activePopUp.logoImageUrl }}
+            />
+          </View>
+          <View style={styles.menuContainer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setActiveIndex(0)}
             >
-              {({
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setValues,
-                values,
-                errors,
-                touched,
-                isValid,
-                dirty,
-              }) => (
-                <>
-                  <ScreenHeader />
-                  <View style={presets.screenContent}>
-                    {isVendorSetup && !isEditing ? (
-                      <>
-                        <List.Item
-                          title={activePopUp?.name}
-                          description='Pop Up Name'
-                          left={(props) => {
-                            return activePopUp === null ? (
-                              <List.Icon {...props} icon='account' />
-                            ) : (
-                              <Avatar.Image
-                                style={{
-                                  backgroundColor: '#f0f0f0',
-                                  marginRight: spacing.sm,
-                                }}
-                                size={40}
-                                source={{ uri: activePopUp.logoImageUrl }}
-                              />
-                            )
-                          }}
-                          style={{ marginTop: spacing.md }}
-                        />
-                        <List.Item
-                          title={activePopUp?.location}
-                          description='Location'
-                          left={(props) => (
-                            <List.Icon {...props} icon='map-marker' />
-                          )}
-                        />
-                        <List.Item
-                          title={activePopUp?.foodType}
-                          description='Food Type'
-                          left={(props) => (
-                            <List.Icon {...props} icon='earth' />
-                          )}
-                        />
-                        <List.Item
-                          title={activePopUp?.description}
-                          description='Description'
-                          left={(props) => <List.Icon {...props} icon='note' />}
-                        />
-                        <List.Item
-                          title='Menu Items'
-                          description='Tap to Edit'
-                          left={(props) => (
-                            <List.Icon {...props} icon='format-list-bulleted' />
-                          )}
-                          onPress={() => navigate('VendorMenuItems')}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        {!isVendorSetup && (
-                          <>
-                            <Headline>
-                              Welcome, {userInfo?.displayName?.split(' ')[0]}
-                            </Headline>
-                            <Title style={{ marginTop: spacing.sm }}>
-                              Please set up your Pop Up profile:
-                            </Title>
-                          </>
-                        )}
-
-                        <TextInput
-                          label='Pop Up Name'
-                          onChangeText={handleChange('name')}
-                          onBlur={handleBlur('name')}
-                          value={values.name}
-                        />
-                        <FormInputError
-                          error={errors.name}
-                          touched={touched.name}
-                        />
-
-                        <TextInput
-                          label='Location'
-                          onChangeText={(text) => {
-                            setLocationQuery(text)
-                            setValues({ ...values, location: text })
-                          }}
-                          onBlur={handleBlur('location')}
-                          value={values.location}
-                        />
-                        <FormInputError
-                          error={errors.location}
-                          touched={touched.location}
-                        />
-                        {locationResults?.map((result: PopUp, i) => (
-                          <List.Item
-                            key={i}
-                            title={result.description}
-                            onPress={() => {
-                              setValues({
-                                ...values,
-                                location: result.description,
-                              })
-                              setLocationResults([])
-                              setLocationQuery('')
-                            }}
-                          />
-                        ))}
-
-                        <TextInput
-                          label='Food Type'
-                          onChangeText={handleChange('foodType')}
-                          onBlur={handleBlur('foodType')}
-                          value={values.foodType}
-                        />
-                        <FormInputError
-                          error={errors.foodType}
-                          touched={touched.foodType}
-                        />
-
-                        <TextInput
-                          label='Description'
-                          onChangeText={handleChange('description')}
-                          onBlur={handleBlur('description')}
-                          value={values.description}
-                        />
-                        <FormInputError
-                          error={errors.description}
-                          touched={touched.description}
-                        />
-
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            width: '100%',
-                            marginTop: spacing.md,
-                            alignItems: 'center',
-                          }}
-                        >
-                          {!!logoImageUri && (
-                            <Avatar.Image
-                              style={{
-                                backgroundColor: '#f0f0f0',
-                                marginHorizontal: spacing.sm,
-                              }}
-                              size={60}
-                              source={{
-                                uri: logoImageUri,
-                              }}
-                            />
-                          )}
-
-                          <Button
-                            mode='text'
-                            style={{ marginTop: 0 }}
-                            labelStyle={{ fontSize: 16 }}
-                            loading={isSaving}
-                            onPress={handleLogoImageSelect}
-                          >
-                            Select Logo
-                          </Button>
-                        </View>
-                      </>
-                    )}
-                  </View>
-                  <View style={presets.screenActions}>
-                    {isVendorSetup && !isEditing ? (
-                      <>
-                        <Button
-                          mode='text'
-                          loading={isSaving}
-                          onPress={() => setIsEditing(true)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          mode='text'
-                          loading={isSaving}
-                          onPress={handleDeletePopUp}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          mode='text'
-                          loading={isSaving}
-                          onPress={signOut}
-                        >
-                          Sign Out
-                        </Button>
-                        <Button
-                          mode='text'
-                          loading={isSaving}
-                          onPress={() => goBack()}
-                        >
-                          Dismiss
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          disabled={!isValid}
-                          mode='text'
-                          loading={isSaving}
-                          onPress={handleSubmit}
-                        >
-                          Submit
-                        </Button>
-                        <Button
-                          mode='text'
-                          loading={isSaving}
-                          onPress={signOut}
-                        >
-                          Sign Out
-                        </Button>
-                        {isVendorSetup && (
-                          <Button
-                            mode='text'
-                            onPress={() => setIsEditing(false)}
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                      </>
-                    )}
-                  </View>
-                </>
-              )}
-            </Formik> */}
+              <Text style={styles.menuButtonText}>Info</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setActiveIndex(1)}
+            >
+              <Text style={styles.menuButtonText}>Menu</Text>
+            </TouchableOpacity>
+            <Animated.View
+              style={[
+                styles.menuIndicatorContainer,
+                {
+                  transform: [
+                    {
+                      translateX: menuIndicatorAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, screenWidth / 2],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={styles.menuIndicator} />
+            </Animated.View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Carousel
+              layout='default'
+              activeSlideAlignment='center'
+              ref={carouselRef}
+              scrollEnabled={false}
+              inactiveSlideScale={1}
+              data={[
+                {
+                  comp: (
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        // ...withBorder,
+                      }}
+                    >
+                      <Text>Comp 1</Text>
+                    </View>
+                  ),
+                },
+                {
+                  comp: (
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        // ...withBorder,
+                      }}
+                    >
+                      <Text>Comp 2</Text>
+                    </View>
+                  ),
+                },
+              ]}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+              renderItem={renderItems}
+              onSnapToItem={setActiveIndex}
+            />
+          </View>
         </SafeAreaView>
       </ModalContainer>
     </DismissKeyboard>
@@ -425,3 +136,51 @@ const VendorProfile = () => {
 }
 
 export default VendorProfile
+
+const styles = StyleSheet.create({
+  avatarContainer: {
+    height: 120,
+    width: 120,
+    borderRadius: 100,
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: screenWidth / 2 - 60,
+    top: -60,
+    zIndex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    backgroundColor: 'white',
+  },
+  menuContainer: {
+    marginTop: 50,
+    flexDirection: 'row',
+    position: 'relative',
+    marginBottom: theme.spacing.sm,
+  },
+  menuButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.xs,
+    paddingBottom: theme.spacing.sm,
+  },
+  menuButtonText: {
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  menuIndicatorContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: screenWidth / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuIndicator: {
+    height: 2,
+    width: 60,
+    backgroundColor: 'black',
+  },
+})

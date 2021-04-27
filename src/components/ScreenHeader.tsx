@@ -35,7 +35,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
       {withAvatar && (
         <TouchableOpacity
           style={styles.avatarContainer}
-          onPress={() => navigate('VendorProfile')}
+          onPress={() => navigate('VendorProfile', { activePopUp })}
         >
           {userInfo?.isAnonymous ? (
             <Avatar.Icon

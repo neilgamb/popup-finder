@@ -23,7 +23,7 @@ import {
   ScreenHeader,
 } from '../../components'
 
-export default function VendorMenuItems() {
+const VendorMenuItems = () => {
   const { presets, spacing, withBorder } = useTheme()
   const { menuItems, addMenuItem, deleteMenuItem, editMenuItem } = useVendor()
   const sheetRef = useRef<ReanimatedBottomSheet>(null)
@@ -97,7 +97,6 @@ export default function VendorMenuItems() {
     <DismissKeyboard>
       <View style={{ flex: 1 }}>
         <SafeAreaView style={presets.screenContainer}>
-          <ScreenHeader withBackButton />
           <ScrollView style={presets.screenContent}>
             {menuItems.map((menuItem, i) => (
               <List.Item
@@ -207,3 +206,5 @@ export default function VendorMenuItems() {
     </DismissKeyboard>
   )
 }
+
+export default VendorMenuItems
