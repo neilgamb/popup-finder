@@ -46,9 +46,9 @@ fontConfig.ios = fontConfig.default
 
 declare global {
   namespace ReactNativePaper {
-    // interface ThemeColors {
-    //   myOwnColor: string
-    // }
+    interface ThemeColors {
+      gray: string
+    }
 
     interface Theme {
       presets: any
@@ -64,7 +64,7 @@ export const theme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#5d6c8c',
+    primary: 'black',
     accent: 'cyan',
     gray: '#666',
   },

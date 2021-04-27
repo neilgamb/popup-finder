@@ -1,31 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
-import {
-  Alert,
-  Dimensions,
-  Platform,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Alert, Platform, View } from 'react-native'
 import { Avatar, Headline, Title, List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
-import auth from '@react-native-firebase/auth'
 import * as ImagePicker from 'expo-image-picker'
-import Carousel from 'react-native-snap-carousel'
 
 import { useAuth } from '../../hooks/useAuth'
 import { useVendor, PopUp } from '../../hooks/useVendor'
-import {
-  ScreenHeader,
-  TextInput,
-  Button,
-  DismissKeyboard,
-  FormInputError,
-} from '../../components'
+import { TextInput, Button, FormInputError } from '../../components'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 
@@ -109,15 +92,6 @@ const VendorProfileInfo = () => {
     }
   }
 
-  const signOut = async () => {
-    try {
-      await auth().signOut()
-      resetVendor()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   const handleMediaLibraryPermissions = async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -185,7 +159,7 @@ const VendorProfileInfo = () => {
                   }}
                   style={{ marginTop: spacing.md }}
                 /> */}
-                {/* <List.Item
+                <List.Item
                   title={activePopUp?.location}
                   description='Location'
                   left={(props) => <List.Icon {...props} icon='map-marker' />}
@@ -200,7 +174,7 @@ const VendorProfileInfo = () => {
                   description='Description'
                   left={(props) => <List.Icon {...props} icon='note' />}
                 />
-                <List.Item
+                {/* <List.Item
                   title='Menu Items'
                   description='Tap to Edit'
                   left={(props) => (
@@ -314,51 +288,42 @@ const VendorProfileInfo = () => {
               </>
             )}
           </View>
-          {/* <View style={presets.screenActions}>
-            {isVendorSetup && !isEditing ? (
-              <>
-                <Button
-                  mode='text'
-                  loading={isSaving}
-                  onPress={() => setIsEditing(true)}
-                >
-                  Edit
+          {/* <View style={presets.screenActions}> */}
+          {isVendorSetup && !isEditing ? (
+            <>
+              <Button
+                mode='text'
+                loading={isSaving}
+                onPress={() => setIsEditing(true)}
+              >
+                Edit
+              </Button>
+              {/* <Button
+                mode='text'
+                loading={isSaving}
+                onPress={handleDeletePopUp}
+              >
+                Delete
+              </Button> */}
+            </>
+          ) : (
+            <>
+              <Button
+                disabled={!isValid}
+                mode='text'
+                loading={isSaving}
+                onPress={handleSubmit}
+              >
+                Submit
+              </Button>
+              {isVendorSetup && (
+                <Button mode='text' onPress={() => setIsEditing(false)}>
+                  Cancel
                 </Button>
-                <Button
-                  mode='text'
-                  loading={isSaving}
-                  onPress={handleDeletePopUp}
-                >
-                  Delete
-                </Button>
-                <Button mode='text' loading={isSaving} onPress={signOut}>
-                  Sign Out
-                </Button>
-                <Button mode='text' loading={isSaving} onPress={() => goBack()}>
-                  Dismiss
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  disabled={!isValid}
-                  mode='text'
-                  loading={isSaving}
-                  onPress={handleSubmit}
-                >
-                  Submit
-                </Button>
-                <Button mode='text' loading={isSaving} onPress={signOut}>
-                  Sign Out
-                </Button>
-                {isVendorSetup && (
-                  <Button mode='text' onPress={() => setIsEditing(false)}>
-                    Cancel
-                  </Button>
-                )}
-              </>
-            )}
-          </View> */}
+              )}
+            </>
+          )}
+          {/* </View> */}
         </>
       )}
     </Formik>

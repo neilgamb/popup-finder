@@ -8,12 +8,14 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native'
-import { Avatar, useTheme } from 'react-native-paper'
-import { useRoute } from '@react-navigation/native'
+import { Avatar, Title, useTheme } from 'react-native-paper'
+import { useRoute, useNavigation } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
+import auth from '@react-native-firebase/auth'
 
-import { DismissKeyboard } from '../../components'
+import { Button, DismissKeyboard } from '../../components'
 import { VendorProfileInfo } from '../../screens'
+import { useVendor } from '../../hooks'
 import { theme } from '../../style/theme'
 
 import ModalContainer from '../../navigation/ModalContainer'
@@ -27,11 +29,24 @@ interface Item {
 }
 
 const VendorProfile = () => {
-  const { presets, withBorder } = useTheme()
+  const { presets, spacing, colors, withBorder } = useTheme()
   const route = useRoute()
+  const { navigate, goBack } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
+
+  const { resetVendor } = useVendor()
+
   const carouselRef = useRef<Carousel<Item>>(null)
   const menuIndicatorAnim = useRef(new Animated.Value(0)).current
+
+  const signOut = async () => {
+    try {
+      await auth().signOut()
+      resetVendor()
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item.comp}</View>
 
@@ -60,13 +75,13 @@ const VendorProfile = () => {
               style={styles.menuButton}
               onPress={() => setActiveIndex(0)}
             >
-              <Text style={styles.menuButtonText}>Info</Text>
+              <Text style={styles.menuButtonText}>INFO</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setActiveIndex(1)}
             >
-              <Text style={styles.menuButtonText}>Menu</Text>
+              <Text style={styles.menuButtonText}>MENU</Text>
             </TouchableOpacity>
             <Animated.View
               style={[
@@ -91,7 +106,7 @@ const VendorProfile = () => {
               layout='default'
               activeSlideAlignment='center'
               ref={carouselRef}
-              scrollEnabled={false}
+              // scrollEnabled={false}
               inactiveSlideScale={1}
               data={[
                 {
@@ -99,12 +114,12 @@ const VendorProfile = () => {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        // justifyContent: 'center',
+                        // alignItems: 'center',
                         // ...withBorder,
                       }}
                     >
-                      <Text>Comp 1</Text>
+                      <VendorProfileInfo />
                     </View>
                   ),
                 },
@@ -115,7 +130,7 @@ const VendorProfile = () => {
                         flex: 1,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        // ...withBorder,
+                        ...withBorder,
                       }}
                     >
                       <Text>Comp 2</Text>
@@ -128,6 +143,32 @@ const VendorProfile = () => {
               renderItem={renderItems}
               onSnapToItem={setActiveIndex}
             />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: spacing.lg,
+              paddingTop: 16,
+            }}
+          >
+            <Button
+              mode='text'
+              style={{ flex: 1, marginRight: spacing.xs }}
+              labelStyle={{ fontSize: 18, color: colors.gray }}
+              icon='logout'
+              onPress={signOut}
+            >
+              Log Out
+            </Button>
+            <Button
+              mode='text'
+              style={{ flex: 1, marginLeft: spacing.xs }}
+              labelStyle={{ fontSize: 18, color: colors.gray }}
+              icon='chevron-double-down'
+              onPress={goBack}
+            >
+              Dismiss
+            </Button>
           </View>
         </SafeAreaView>
       </ModalContainer>
@@ -154,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   menuContainer: {
-    marginTop: 50,
+    marginTop: 30,
     flexDirection: 'row',
     position: 'relative',
     marginBottom: theme.spacing.sm,
@@ -169,6 +210,7 @@ const styles = StyleSheet.create({
   menuButtonText: {
     textAlign: 'center',
     fontSize: 18,
+    color: theme.colors.gray,
   },
   menuIndicatorContainer: {
     position: 'absolute',
@@ -181,6 +223,6 @@ const styles = StyleSheet.create({
   menuIndicator: {
     height: 2,
     width: 60,
-    backgroundColor: 'black',
+    backgroundColor: theme.colors.gray,
   },
 })

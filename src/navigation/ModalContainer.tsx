@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     justifyContent: 'center',
-    borderTopRightRadius: theme.roundness * 2,
-    borderTopLeftRadius: theme.roundness * 2,
+    borderTopRightRadius: theme.roundness * 1.5,
+    borderTopLeftRadius: theme.roundness * 1.5,
   },
 })
