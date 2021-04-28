@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import { VendorProfile, VendorEvents, VendorMenuItems } from '../screens'
 
+import { useVendor } from '../hooks'
+
 const Stack = createStackNavigator()
 
 const modalOptions = {
@@ -32,6 +34,7 @@ const modalOptions = {
 }
 
 export default function VendorStack() {
+  const { isVendorSetup } = useVendor()
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -44,7 +47,11 @@ export default function VendorStack() {
         <Stack.Screen name='VendorEvents' component={VendorEvents} />
         <Stack.Screen
           name='VendorProfile'
-          options={{ ...modalOptions, gestureDirection: 'vertical' }}
+          options={{
+            ...modalOptions,
+            gestureDirection: 'vertical',
+            gestureEnabled: isVendorSetup ? true : false,
+          }}
           component={VendorProfile}
         />
 

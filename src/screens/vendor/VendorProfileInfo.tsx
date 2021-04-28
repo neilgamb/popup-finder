@@ -23,7 +23,7 @@ import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const VendorProfileInfo = () => {
-  const { spacing } = useTheme()
+  const { spacing, colors } = useTheme()
   const { goBack } = useNavigation()
   const { userInfo } = useAuth()
   const {
@@ -122,12 +122,10 @@ const VendorProfileInfo = () => {
 
   useEffect(() => {
     handleMediaLibraryPermissions()
-    console.log(activePopUp)
   }, [])
 
-  const logoImageChanged = activePopUp.logoImageUrl !== logoImageUri
-
-  console.log(logoImageChanged)
+  const logoImageChanged =
+    activePopUp && activePopUp.logoImageUrl !== logoImageUri
 
   return (
     <Formik
@@ -152,17 +150,22 @@ const VendorProfileInfo = () => {
         <View style={[styles.container]}>
           <ScrollView>
             <ProfileCard style={{ marginTop: spacing.md }}>
-              <FAB
-                style={styles.fab}
-                icon={isEditing ? 'check' : 'pencil'}
-                disabled={isEditing && !(dirty && isValid) && !logoImageChanged}
-                onPress={() =>
-                  isEditing ? handleSubmit() : setIsEditing(true)
-                }
-              />
+              {isVendorSetup && (
+                <FAB
+                  small
+                  style={styles.fab}
+                  icon={isEditing ? 'check' : 'pencil'}
+                  disabled={
+                    isEditing && !(dirty && isValid) && !logoImageChanged
+                  }
+                  onPress={() =>
+                    isEditing ? handleSubmit() : setIsEditing(true)
+                  }
+                />
+              )}
               {isEditing && (
                 <FAB
-                  style={styles.secondaryFab}
+                  style={{ ...styles.fab, marginRight: 48 }}
                   icon='close'
                   small
                   onPress={() => setIsEditing(false)}
@@ -170,7 +173,7 @@ const VendorProfileInfo = () => {
               )}
               {isEditing && (
                 <FAB
-                  style={styles.tertiaryFab}
+                  style={{ ...styles.fab, marginRight: 88 }}
                   icon='delete'
                   small
                   onPress={handleDeletePopUp}
@@ -181,7 +184,7 @@ const VendorProfileInfo = () => {
                   <View style={styles.profileCardRow}>
                     <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
                       <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
-                        {activePopUp.name}
+                        {activePopUp?.name}
                       </Text>
                       <Text style={styles.profileCardLabel}>POP UP NAME</Text>
                     </View>
@@ -189,20 +192,20 @@ const VendorProfileInfo = () => {
                   <View style={styles.profileCardRow}>
                     <View style={styles.profileCardItem}>
                       <Text style={styles.profileCardText}>
-                        {activePopUp.foodType}
+                        {activePopUp?.foodType}
                       </Text>
                       <Text style={styles.profileCardLabel}>FOOD TYPE</Text>
                     </View>
                     <View style={styles.profileCardItem}>
                       <Text style={styles.profileCardText}>
-                        {activePopUp.location}
+                        {activePopUp?.location}
                       </Text>
                       <Text style={styles.profileCardLabel}>CITY</Text>
                     </View>
                   </View>
                   <View style={styles.profileCardItem}>
                     <Text style={styles.profileCardText}>
-                      {activePopUp.description}
+                      {activePopUp?.description}
                     </Text>
                     <Text style={styles.profileCardLabel}>DESCRIPTION</Text>
                   </View>
@@ -210,14 +213,16 @@ const VendorProfileInfo = () => {
               ) : (
                 <>
                   {!isVendorSetup && (
-                    <>
-                      <Headline>
-                        Welcome, {userInfo?.displayName?.split(' ')[0]}
-                      </Headline>
-                      <Title style={{ marginTop: spacing.sm }}>
-                        Please set up your Pop Up profile:
-                      </Title>
-                    </>
+                    <Text
+                      style={{
+                        marginTop: spacing.sm,
+                        marginLeft: spacing.xs,
+                        fontSize: 18,
+                        color: colors.gray,
+                      }}
+                    >
+                      Please set up your Pop Up profile
+                    </Text>
                   )}
 
                   <TextInput
@@ -225,6 +230,7 @@ const VendorProfileInfo = () => {
                     onChangeText={handleChange('name')}
                     onBlur={handleBlur('name')}
                     value={values.name}
+                    style={{ marginTop: spacing.lg }}
                   />
                   <FormInputError error={errors.name} touched={touched.name} />
 
@@ -278,36 +284,43 @@ const VendorProfileInfo = () => {
                     touched={touched.description}
                   />
 
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '100%',
-                      marginTop: spacing.md,
-                      alignItems: 'center',
-                    }}
-                  >
-                    {!!logoImageUri && (
-                      <Avatar.Image
-                        style={{
-                          backgroundColor: '#f0f0f0',
-                          marginHorizontal: spacing.sm,
-                        }}
-                        size={60}
-                        source={{
-                          uri: logoImageUri,
-                        }}
+                  <View style={styles.logoPickerContainer}>
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
+                      {!!logoImageUri && (
+                        <Avatar.Image
+                          style={{
+                            backgroundColor: '#f0f0f0',
+                            marginHorizontal: spacing.sm,
+                          }}
+                          size={40}
+                          source={{
+                            uri: logoImageUri,
+                          }}
+                        />
+                      )}
+
+                      <Button
+                        mode='text'
+                        style={{ marginTop: 0 }}
+                        labelStyle={{ fontSize: 16 }}
+                        loading={isSaving}
+                        onPress={handleLogoImageSelect}
+                      >
+                        Select Logo
+                      </Button>
+                    </View>
+
+                    {!isVendorSetup && (
+                      <FAB
+                        icon='content-save'
+                        color='white'
+                        // style={{ backgroundColor: colors.gray }}
+                        disabled={!(dirty && isValid)}
+                        onPress={handleSubmit}
                       />
                     )}
-
-                    <Button
-                      mode='text'
-                      style={{ marginTop: 0 }}
-                      labelStyle={{ fontSize: 16 }}
-                      loading={isSaving}
-                      onPress={handleLogoImageSelect}
-                    >
-                      Select Logo
-                    </Button>
                   </View>
                 </>
               )}
@@ -344,7 +357,7 @@ const styles = StyleSheet.create({
   },
   profileCardContainer: {
     flex: 1,
-    backgroundColor: theme.colors.offWhite,
+    backgroundColor: 'white',
     marginHorizontal: theme.spacing.md,
     borderRadius: theme.roundness,
     marginTop: theme.spacing.md,
@@ -373,23 +386,18 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: 12,
-    top: -24,
-    backgroundColor: theme.colors.gray,
     zIndex: 2,
+    top: 0,
+    right: 0,
+    margin: theme.spacing.xs,
+    backgroundColor: 'white',
+    shadowOpacity: 0,
   },
-  secondaryFab: {
-    position: 'absolute',
-    right: 80,
-    top: -16,
-    backgroundColor: theme.colors.lightGray,
-    zIndex: 2,
-  },
-  tertiaryFab: {
-    position: 'absolute',
-    right: 130,
-    top: -16,
-    backgroundColor: theme.colors.lightGray,
-    zIndex: 2,
+  logoPickerContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    marginTop: theme.spacing.md,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 })

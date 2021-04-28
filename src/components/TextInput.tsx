@@ -10,6 +10,7 @@ type TextInputProps = PaperTextInputProps & {
 const TextInput = (props: TextInputProps) => {
   const { fonts, spacing } = props.theme
   const { style: styleOverrides } = props
+
   return (
     <PaperTextInput
       {...props}

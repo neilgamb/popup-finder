@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     transform: [{ scale: 1.2 }],
-    backgroundColor: '#5d6c8c',
+    // backgroundColor: '#5d6c8c',
   },
 })

@@ -79,8 +79,8 @@ export const theme = {
   dark: false,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'black',
-    accent: 'cyan',
+    primary: '#333',
+    accent: '#ff3333',
     gray: '#666',
     darkGray: '#333',
     lightGray: '#ccc',

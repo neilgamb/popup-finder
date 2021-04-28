@@ -8,14 +8,14 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native'
-import { Avatar, Title, useTheme } from 'react-native-paper'
-import { useRoute, useNavigation } from '@react-navigation/native'
+import { Avatar, useTheme } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
 import auth from '@react-native-firebase/auth'
 
 import { Button, DismissKeyboard } from '../../components'
 import { VendorProfileInfo } from '../../screens'
-import { useVendor } from '../../hooks'
+import { useVendor, useAuth } from '../../hooks'
 import { theme } from '../../style/theme'
 
 import ModalContainer from '../../navigation/ModalContainer'
@@ -29,12 +29,12 @@ interface Item {
 }
 
 const VendorProfile = () => {
-  const { presets, spacing, colors, withBorder } = useTheme()
-  const route = useRoute()
-  const { navigate, goBack } = useNavigation()
+  const { presets, spacing, colors } = useTheme()
+  const { goBack } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const { activePopUp, resetVendor } = useVendor()
+  const { activePopUp, isVendorSetup, resetVendor } = useVendor()
+  const { userInfo } = useAuth()
 
   const carouselRef = useRef<Carousel<Item>>(null)
   const menuIndicatorAnim = useRef(new Animated.Value(0)).current
@@ -66,8 +66,12 @@ const VendorProfile = () => {
           <View style={styles.avatarContainer}>
             <Avatar.Image
               style={styles.avatar}
-              size={100}
-              source={{ uri: activePopUp.logoImageUrl }}
+              size={90}
+              source={{
+                uri: activePopUp
+                  ? activePopUp.logoImageUrl
+                  : userInfo?.photoURL,
+              }}
             />
           </View>
           <View style={styles.menuContainer}>
@@ -137,6 +141,7 @@ const VendorProfile = () => {
               style={{ flex: 1, marginLeft: spacing.xs }}
               labelStyle={{ fontSize: 18, color: colors.gray }}
               onPress={goBack}
+              disabled={!isVendorSetup}
             >
               Dismiss
             </Button>
@@ -161,6 +166,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    ...theme.boxShadow,
   },
   avatar: {
     backgroundColor: 'white',

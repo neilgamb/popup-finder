@@ -9,14 +9,22 @@ type ButtonProps = PaperButtonProps & {
 
 const Button = (props: ButtonProps) => {
   const { fonts, spacing } = props.theme
+  const { style, ...rest } = { ...props }
+
   return (
     <PaperButton
       dark
       mode='contained'
-      style={{ marginTop: spacing.xs }}
+      style={[
+        {
+          opacity: props.disabled ? 0.5 : 1,
+          marginTop: spacing.xs,
+        },
+        props.style,
+      ]}
       contentStyle={{ paddingVertical: 8 }}
       labelStyle={fonts.button}
-      {...props}
+      {...rest}
     />
   )
 }
