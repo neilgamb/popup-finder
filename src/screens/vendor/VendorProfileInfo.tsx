@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Alert, Platform, StyleSheet, View } from 'react-native'
-import {
-  Avatar,
-  Headline,
-  Title,
-  List,
-  FAB,
-  Text,
-  useTheme,
-} from 'react-native-paper'
+import { Avatar, List, FAB, Text, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
 
-import { useAuth } from '../../hooks/useAuth'
 import { useVendor, PopUp } from '../../hooks/useVendor'
 import { TextInput, Button, FormInputError } from '../../components'
-import { theme, withBorder } from '../../style/theme'
+import { theme } from '../../style/theme'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -25,7 +16,6 @@ import { ScrollView } from 'react-native-gesture-handler'
 const VendorProfileInfo = () => {
   const { spacing, colors } = useTheme()
   const { goBack } = useNavigation()
-  const { userInfo } = useAuth()
   const {
     addPopUp,
     editPopUp,
@@ -39,6 +29,8 @@ const VendorProfileInfo = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [logoImageUri, setLogoImageUri] = useState('')
+
+  const scrollRef = useRef<ScrollView>(null)
 
   const handleLocationSearch = (locationQuery: string) => {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
@@ -148,7 +140,7 @@ const VendorProfileInfo = () => {
         dirty,
       }) => (
         <View style={[styles.container]}>
-          <ScrollView>
+          <ScrollView ref={scrollRef}>
             <ProfileCard style={{ marginTop: spacing.md }}>
               {isVendorSetup && (
                 <FAB
@@ -227,21 +219,23 @@ const VendorProfileInfo = () => {
 
                   <TextInput
                     label='Pop Up Name'
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
                     value={values.name}
                     style={{ marginTop: spacing.lg }}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    onFocus={() => scrollRef.current?.scrollTo(100)}
                   />
                   <FormInputError error={errors.name} touched={touched.name} />
 
                   <TextInput
                     label='Location'
+                    value={values.location}
                     onChangeText={(text) => {
                       setLocationQuery(text)
                       setValues({ ...values, location: text })
                     }}
                     onBlur={handleBlur('location')}
-                    value={values.location}
+                    onFocus={() => scrollRef.current?.scrollTo(200)}
                   />
                   <FormInputError
                     error={errors.location}
@@ -264,9 +258,10 @@ const VendorProfileInfo = () => {
 
                   <TextInput
                     label='Food Type'
+                    value={values.foodType}
                     onChangeText={handleChange('foodType')}
                     onBlur={handleBlur('foodType')}
-                    value={values.foodType}
+                    onFocus={() => scrollRef.current?.scrollTo(300)}
                   />
                   <FormInputError
                     error={errors.foodType}

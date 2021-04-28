@@ -41,7 +41,10 @@ const VendorProfile = () => {
 
   const signOut = async () => {
     try {
-      await auth().signOut()
+      goBack()
+      setTimeout(async () => {
+        await auth().signOut()
+      }, 500)
       resetVendor()
     } catch (e) {
       console.error(e)
