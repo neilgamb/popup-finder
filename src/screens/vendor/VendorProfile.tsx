@@ -14,7 +14,7 @@ import Carousel from 'react-native-snap-carousel'
 import auth from '@react-native-firebase/auth'
 
 import { Button, DismissKeyboard } from '../../components'
-import { VendorProfileInfo } from '../../screens'
+import { VendorProfileInfo, VendorProfileMenu } from '../../screens'
 import { useVendor, useAuth } from '../../hooks'
 import { theme } from '../../style/theme'
 
@@ -114,7 +114,7 @@ const VendorProfile = () => {
               activeSlideAlignment='center'
               ref={carouselRef}
               inactiveSlideScale={1}
-              data={[<VendorProfileInfo />, <VendorProfileInfo />]}
+              data={[<VendorProfileInfo />, <VendorProfileMenu />]}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
               renderItem={renderItems}

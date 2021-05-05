@@ -7,11 +7,11 @@ interface ProfileCardProps {
   style: any
 }
 
-const ProfileCard = ({ children, style }: ProfileCardProps) => (
+const Card = ({ children, style }: ProfileCardProps) => (
   <View style={{ ...styles.profileCardContainer, ...style }}>{children}</View>
 )
 
-export default ProfileCard
+export default Card
 
 const styles = StyleSheet.create({
   profileCardContainer: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginHorizontal: theme.spacing.md,
     borderRadius: theme.roundness,
     marginTop: theme.spacing.md,
-    padding: theme.spacing.md,
+    // padding: theme.spacing.md,
     position: 'relative',
     ...theme.boxShadow,
   },

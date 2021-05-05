@@ -7,12 +7,7 @@ import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
 
 import { useVendor, PopUp } from '../../hooks/useVendor'
-import {
-  TextInput,
-  Button,
-  FormInputError,
-  ProfileCard,
-} from '../../components'
+import { TextInput, Button, FormInputError, Card } from '../../components'
 import { theme } from '../../style/theme'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
@@ -146,7 +141,7 @@ const VendorProfileInfo = () => {
       }) => (
         <View style={[styles.container]}>
           <ScrollView ref={scrollRef}>
-            <ProfileCard style={{ marginTop: spacing.md }}>
+            <Card style={{ marginTop: spacing.md, padding: spacing.md }}>
               {isVendorSetup && (
                 <FAB
                   small
@@ -323,14 +318,14 @@ const VendorProfileInfo = () => {
                   </View>
                 </>
               )}
-            </ProfileCard>
-            <ProfileCard style={{ marginBottom: spacing.xl }}>
+            </Card>
+            <Card style={{ marginBottom: spacing.xl, padding: spacing.md }}>
               <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
                 <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
                   Placeholder for Images section
                 </Text>
               </View>
-            </ProfileCard>
+            </Card>
           </ScrollView>
         </View>
       )}

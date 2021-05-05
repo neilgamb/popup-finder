@@ -7,7 +7,7 @@ import { useTheme } from 'react-native-paper'
 
 import { ScreenHeader } from '../../components'
 
-export default function VendorMenuItems() {
+export default function ScreenName() {
   const { presets } = useTheme()
 
   return (
