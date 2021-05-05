@@ -113,7 +113,6 @@ const VendorProfile = () => {
               layout='default'
               activeSlideAlignment='center'
               ref={carouselRef}
-              // scrollEnabled={false}
               inactiveSlideScale={1}
               data={[<VendorProfileInfo />, <VendorProfileInfo />]}
               sliderWidth={sliderWidth}

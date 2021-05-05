@@ -7,7 +7,12 @@ import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
 
 import { useVendor, PopUp } from '../../hooks/useVendor'
-import { TextInput, Button, FormInputError } from '../../components'
+import {
+  TextInput,
+  Button,
+  FormInputError,
+  ProfileCard,
+} from '../../components'
 import { theme } from '../../style/theme'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
@@ -311,7 +316,6 @@ const VendorProfileInfo = () => {
                       <FAB
                         icon='content-save'
                         color='white'
-                        // style={{ backgroundColor: colors.gray }}
                         disabled={!(dirty && isValid)}
                         onPress={handleSubmit}
                       />
@@ -336,29 +340,10 @@ const VendorProfileInfo = () => {
 
 export default VendorProfileInfo
 
-interface ProfileCardProps {
-  children: React.ReactNode
-  style: any
-}
-
-const ProfileCard = ({ children, style }: ProfileCardProps) => (
-  <View style={{ ...styles.profileCardContainer, ...style }}>{children}</View>
-)
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: theme.spacing.xs,
-  },
-  profileCardContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginHorizontal: theme.spacing.md,
-    borderRadius: theme.roundness,
-    marginTop: theme.spacing.md,
-    padding: theme.spacing.md,
-    position: 'relative',
-    ...theme.boxShadow,
   },
   profileCardRow: {
     flexDirection: 'row',
@@ -368,7 +353,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: theme.spacing.xs,
     marginTop: theme.spacing.xs,
-    // ...withBorder,
   },
   profileCardText: {
     fontSize: 18,
