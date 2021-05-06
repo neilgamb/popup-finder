@@ -101,7 +101,8 @@ export const theme = {
     },
     screenActions: {
       paddingHorizontal: SPACING.md,
-      paddingVertical: SPACING.md,
+      paddingBottom: SPACING.md,
+      // paddingVertical: SPACING.md,
     },
   }),
   withBorder,

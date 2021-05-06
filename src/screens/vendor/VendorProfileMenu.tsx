@@ -13,13 +13,14 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 const VendorProfileMenu = () => {
   const { spacing, colors } = useTheme()
+  const { navigate } = useNavigation()
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <Button
           icon='plus'
-          // onPress={toggleBottomSheet}
+          onPress={() => navigate('VendorAddMenuItem')}
           style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
         >
           Add Menu Item

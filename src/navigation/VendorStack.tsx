@@ -2,7 +2,7 @@ import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import { VendorProfile, VendorEvents } from '../screens'
+import { VendorProfile, VendorEvents, VendorAddMenuItem } from '../screens'
 
 import { useVendor } from '../hooks'
 
@@ -53,6 +53,15 @@ export default function VendorStack() {
             gestureEnabled: isVendorSetup ? true : false,
           }}
           component={VendorProfile}
+        />
+        <Stack.Screen
+          name='VendorAddMenuItem'
+          options={{
+            ...modalOptions,
+            gestureDirection: 'vertical',
+            gestureEnabled: false,
+          }}
+          component={VendorAddMenuItem}
         />
       </Stack.Navigator>
     </NavigationContainer>
