@@ -71,10 +71,6 @@ export default function VendorAddMenuItem() {
   //   }
   // }, [isOpen])
 
-  useEffect(() => {
-    console.log(isEditing)
-  }, [isEditing])
-
   return (
     <DismissKeyboard>
       <ModalContainer>
