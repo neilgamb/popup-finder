@@ -27,16 +27,16 @@ const VendorProfileMenu = () => {
   const { spacing, colors } = useTheme()
   const { navigate } = useNavigation()
   const { menuItems, deleteMenuItem } = useVendor()
-  const [isSaving, setIsSaving] = useState(false)
+  // const [isSaving, setIsSaving] = useState(false)
 
   const handleDeleteMenuItem = async (menuItem: MenuItem) => {
     try {
-      setIsSaving(true)
+      // setIsSaving(true)
       await deleteMenuItem(menuItem.menuItemUid)
     } catch (error) {
       console.log(error)
     } finally {
-      setIsSaving(false)
+      // setIsSaving(false)
     }
   }
 
@@ -69,27 +69,9 @@ const VendorProfileMenu = () => {
                     <List.Icon {...props} icon='pencil' style={{ margin: 0 }} />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={{
-                      // borderWidth: 1,
-                      borderColor: 'black',
-                      justifyContent: 'center',
-                      paddingRight: spacing.xs,
-                    }}
                     onPress={() => handleDeleteMenuItem(menuItem)}
                   >
-                    {isSaving ? (
-                      <ActivityIndicator
-                        animating
-                        size={20}
-                        color={colors.gray}
-                      />
-                    ) : (
-                      <List.Icon
-                        {...props}
-                        icon='delete'
-                        style={{ margin: 0 }}
-                      />
-                    )}
+                    <List.Icon {...props} icon='delete' style={{ margin: 0 }} />
                   </TouchableOpacity>
                 </View>
               )}

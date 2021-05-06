@@ -27,9 +27,9 @@ export default function VendorAddMenuItem() {
   const { params } = useRoute()
   const { addMenuItem, editMenuItem } = useVendor()
 
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(params?.isEditing ? true : false)
   const [initValues, setInitValues] = useState<MenuItem>(
-    params?.isEditing ? params.menuItem : INIT_MENU_ITEM_VALUES
+    isEditing ? params.menuItem : INIT_MENU_ITEM_VALUES
   )
   const [isSaving, setIsSaving] = useState(false)
 
@@ -71,6 +71,10 @@ export default function VendorAddMenuItem() {
   //   }
   // }, [isOpen])
 
+  useEffect(() => {
+    console.log(isEditing)
+  }, [isEditing])
+
   return (
     <DismissKeyboard>
       <ModalContainer>
@@ -87,7 +91,6 @@ export default function VendorAddMenuItem() {
               handleChange,
               handleBlur,
               handleSubmit,
-              setValues,
               values,
               errors,
               touched,
@@ -103,7 +106,7 @@ export default function VendorAddMenuItem() {
                       marginTop: spacing.md,
                     }}
                   >
-                    Add Menu Item
+                    {`${isEditing ? 'Edit' : 'Add'} Menu Item`}
                   </Title>
                   <TextInput
                     label='Item Name'
@@ -142,7 +145,10 @@ export default function VendorAddMenuItem() {
                     setValue={handleChange('category')}
                     list={MENU_ITEM_CATEGORIES}
                     visible={showDropDown}
-                    showDropDown={() => setShowDropDown(true)}
+                    showDropDown={() => {
+                      Keyboard.dismiss()
+                      setShowDropDown(true)
+                    }}
                     onDismiss={() => setShowDropDown(false)}
                     inputProps={{
                       right: (
