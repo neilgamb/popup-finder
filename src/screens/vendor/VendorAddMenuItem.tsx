@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native'
-import { Title, useTheme } from 'react-native-paper'
+import { Title, TextInput as PTextInput, useTheme } from 'react-native-paper'
+import DropDown from 'react-native-paper-dropdown'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 
@@ -18,13 +19,23 @@ import { MENU_ITEM_SCHEMA, INIT_MENU_ITEM_VALUES } from '../../utils/constants'
 import { theme } from '../../style/theme'
 
 export default function VendorAddMenuItem() {
-  const { spacing, presets } = useTheme()
+  const { fonts, spacing, presets } = useTheme()
   const { goBack } = useNavigation()
   const { menuItems, addMenuItem, deleteMenuItem, editMenuItem } = useVendor()
 
   const [isEditing, setIsEditing] = useState(false)
   const [initValues, setInitValues] = useState<MenuItem>(INIT_MENU_ITEM_VALUES)
   const [isSaving, setIsSaving] = useState(false)
+
+  const [showDropDown, setShowDropDown] = useState(false)
+  const [gender, setGender] = useState()
+  const genderList = [
+    { label: 'Male', value: 'male' },
+
+    { label: 'Female', value: 'female' },
+
+    { label: 'Others', value: 'others' },
+  ]
 
   const handleAddMenuItem = async (values: MenuItem) => {
     try {
@@ -61,6 +72,17 @@ export default function VendorAddMenuItem() {
       setIsSaving(false)
     }
   }
+
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     sheetRef?.current?.snapTo(0)
+  //     Keyboard.dismiss()
+  //   } else {
+  //     sheetRef?.current?.snapTo(1)
+  //     setInitValues(INIT_MENU_ITEM_VALUES)
+  //     setIsEditing(false)
+  //   }
+  // }, [isOpen])
 
   return (
     <DismissKeyboard>
@@ -125,6 +147,28 @@ export default function VendorAddMenuItem() {
                   <FormInputError
                     error={errors.description}
                     touched={touched.description}
+                  />
+                  <DropDown
+                    label={'Menu Category'}
+                    mode={'outlined'}
+                    value={values.category}
+                    setValue={handleChange('category')}
+                    list={genderList}
+                    visible={showDropDown}
+                    showDropDown={() => setShowDropDown(true)}
+                    onDismiss={() => setShowDropDown(false)}
+                    inputProps={{
+                      right: (
+                        <PTextInput.Icon
+                          name={showDropDown ? 'menu-up' : 'menu-down'}
+                        />
+                      ),
+                      style: {
+                        marginTop: spacing.sm,
+                        backgroundColor: 'white',
+                        ...fonts.input,
+                      },
+                    }}
                   />
                 </View>
                 <View style={[presets.screenActions]}>

@@ -26,6 +26,7 @@ export interface MenuItem {
   name: string
   description: string
   price: string
+  category: string
 }
 
 interface VendorProps {

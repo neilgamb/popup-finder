@@ -11,6 +11,8 @@ const Button = (props: ButtonProps) => {
   const { fonts, spacing } = props.theme
   const { style, ...rest } = { ...props }
 
+  console.log(spacing)
+
   return (
     <PaperButton
       dark

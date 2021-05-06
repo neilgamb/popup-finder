@@ -70,6 +70,10 @@ declare global {
       withBorder: any
       spacing: any
     }
+
+    interface ThemeFonts {
+      input: any
+    }
   }
 }
 
