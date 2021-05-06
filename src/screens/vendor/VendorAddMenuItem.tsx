@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native'
 import { Title, TextInput as PTextInput, useTheme } from 'react-native-paper'
-import DropDown from 'react-native-paper-dropdown'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Formik } from 'formik'
+import DropDown from 'react-native-paper-dropdown'
 
 import {
   Button,
@@ -15,27 +15,25 @@ import ModalContainer from '../../navigation/ModalContainer'
 
 import { useVendor, MenuItem } from '../../hooks'
 
-import { MENU_ITEM_SCHEMA, INIT_MENU_ITEM_VALUES } from '../../utils/constants'
-import { theme } from '../../style/theme'
+import {
+  MENU_ITEM_SCHEMA,
+  INIT_MENU_ITEM_VALUES,
+  MENU_ITEM_CATEGORIES,
+} from '../../utils/constants'
 
 export default function VendorAddMenuItem() {
   const { fonts, spacing, presets } = useTheme()
   const { goBack } = useNavigation()
-  const { menuItems, addMenuItem, deleteMenuItem, editMenuItem } = useVendor()
+  const { params } = useRoute()
+  const { addMenuItem, editMenuItem } = useVendor()
 
   const [isEditing, setIsEditing] = useState(false)
-  const [initValues, setInitValues] = useState<MenuItem>(INIT_MENU_ITEM_VALUES)
+  const [initValues, setInitValues] = useState<MenuItem>(
+    params?.isEditing ? params.menuItem : INIT_MENU_ITEM_VALUES
+  )
   const [isSaving, setIsSaving] = useState(false)
 
   const [showDropDown, setShowDropDown] = useState(false)
-  const [gender, setGender] = useState()
-  const genderList = [
-    { label: 'Male', value: 'male' },
-
-    { label: 'Female', value: 'female' },
-
-    { label: 'Others', value: 'others' },
-  ]
 
   const handleAddMenuItem = async (values: MenuItem) => {
     try {
@@ -59,17 +57,6 @@ export default function VendorAddMenuItem() {
     } finally {
       setIsSaving(false)
       goBack()
-    }
-  }
-
-  const handleDeleteMenuItem = async (menuItem: MenuItem) => {
-    try {
-      setIsSaving(true)
-      await deleteMenuItem(menuItem.menuItemUid)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsSaving(false)
     }
   }
 
@@ -153,7 +140,7 @@ export default function VendorAddMenuItem() {
                     mode={'outlined'}
                     value={values.category}
                     setValue={handleChange('category')}
-                    list={genderList}
+                    list={MENU_ITEM_CATEGORIES}
                     visible={showDropDown}
                     showDropDown={() => setShowDropDown(true)}
                     onDismiss={() => setShowDropDown(false)}
