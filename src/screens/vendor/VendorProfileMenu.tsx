@@ -40,10 +40,11 @@ const VendorProfileMenu = () => {
         >
           Add Menu Item
         </Button>
-        {categories.map((category) => {
+        {categories.map((category, catI) => {
           return (
             category && (
               <Card
+                key={catI}
                 style={{ marginTop: spacing.md, paddingVertical: spacing.sm }}
               >
                 <List.Item
@@ -53,11 +54,11 @@ const VendorProfileMenu = () => {
                     fontWeight: '600',
                   }}
                 />
-                {menuItems.map((menuItem, i) => {
+                {menuItems.map((menuItem, mII) => {
                   if (menuItem.category === category) {
                     return (
                       <List.Item
-                        key={i}
+                        key={mII}
                         title={`${menuItem.name} $${menuItem.price}`}
                         description={menuItem.description}
                         right={(props) => (

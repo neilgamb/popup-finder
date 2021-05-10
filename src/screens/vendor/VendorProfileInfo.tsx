@@ -223,7 +223,13 @@ const VendorProfileInfo = () => {
                     style={{ marginTop: spacing.lg }}
                     onChangeText={handleChange('name')}
                     onBlur={handleBlur('name')}
-                    onFocus={() => scrollRef.current?.scrollTo(100)}
+                    onFocus={() =>
+                      scrollRef.current?.scrollTo({
+                        x: 0,
+                        y: 100,
+                        animated: true,
+                      })
+                    }
                   />
                   <FormInputError error={errors.name} touched={touched.name} />
 
@@ -235,23 +241,34 @@ const VendorProfileInfo = () => {
                       setValues({ ...values, location: text })
                     }}
                     onBlur={handleBlur('location')}
-                    onFocus={() => scrollRef.current?.scrollTo(200)}
+                    onFocus={() =>
+                      scrollRef.current?.scrollTo({
+                        x: 0,
+                        y: 200,
+                        animated: true,
+                      })
+                    }
                   />
                   <FormInputError
                     error={errors.location}
                     touched={touched.location}
                   />
-                  {locationResults?.map((result: PopUp, i) => (
+                  {locationResults?.map((result, i) => (
                     <List.Item
                       key={i}
                       title={result.description}
                       onPress={() => {
-                        setValues({
-                          ...values,
-                          location: result.description,
-                        })
-                        setLocationResults([])
-                        setLocationQuery('')
+                        const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${result.place_id}&key=${GOOGLE_PLACES_API_KEY}`
+                        fetch(url)
+                          .then((response) => response.json())
+                          .then(({ result }) => console.log(result))
+
+                        // setValues({
+                        //   ...values,
+                        //   location: result.description,
+                        // })
+                        // setLocationResults([])
+                        // setLocationQuery('')
                       }}
                     />
                   ))}
@@ -261,7 +278,13 @@ const VendorProfileInfo = () => {
                     value={values.foodType}
                     onChangeText={handleChange('foodType')}
                     onBlur={handleBlur('foodType')}
-                    onFocus={() => scrollRef.current?.scrollTo(300)}
+                    onFocus={() =>
+                      scrollRef.current?.scrollTo({
+                        x: 0,
+                        y: 300,
+                        animated: true,
+                      })
+                    }
                   />
                   <FormInputError
                     error={errors.foodType}
