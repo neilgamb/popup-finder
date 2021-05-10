@@ -8,12 +8,14 @@ export const INIT_POP_VALUES = __DEV__
       // description: 'its also good',
       name: '',
       location: '',
+      locationData: null,
       foodType: '',
       description: '',
     }
   : {
       name: '',
       location: '',
+      locationData: null,
       foodType: '',
       description: '',
     }

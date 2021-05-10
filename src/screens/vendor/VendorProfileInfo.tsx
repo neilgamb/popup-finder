@@ -253,25 +253,37 @@ const VendorProfileInfo = () => {
                     error={errors.location}
                     touched={touched.location}
                   />
-                  {locationResults?.map((result, i) => (
-                    <List.Item
-                      key={i}
-                      title={result.description}
-                      onPress={() => {
-                        const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${result.place_id}&key=${GOOGLE_PLACES_API_KEY}`
-                        fetch(url)
-                          .then((response) => response.json())
-                          .then(({ result }) => console.log(result))
-
-                        // setValues({
-                        //   ...values,
-                        //   location: result.description,
-                        // })
-                        // setLocationResults([])
-                        // setLocationQuery('')
-                      }}
-                    />
-                  ))}
+                  {locationResults?.map(
+                    (
+                      locResult: google.maps.places.AutocompletePrediction,
+                      i
+                    ) => (
+                      <List.Item
+                        key={i}
+                        title={locResult.description}
+                        onPress={() => {
+                          const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${locResult.place_id}&key=${GOOGLE_PLACES_API_KEY}`
+                          fetch(url)
+                            .then((response) => response.json())
+                            .then(
+                              ({
+                                result,
+                              }: {
+                                result: google.maps.places.PlaceResult
+                              }) => {
+                                setValues({
+                                  locationData: result,
+                                  ...values,
+                                  location: locResult.description,
+                                })
+                                setLocationResults([])
+                                setLocationQuery('')
+                              }
+                            )
+                        }}
+                      />
+                    )
+                  )}
 
                   <TextInput
                     label='Food Type'

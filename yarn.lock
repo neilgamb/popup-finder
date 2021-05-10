@@ -2304,6 +2304,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/google.maps@^3.44.4":
+  version "3.44.4"
+  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.44.4.tgz#ca69f9f220e3683d07efc8663da6b525aad603cf"
+  integrity sha512-gVk2MKVuCQUKLt7ncrLLxfF1ipGeRL5LysgNNRAZNpRs5jLt8gewmIAX1zTNW2x2p54Uc5w8Nft/dfsJiPuptA==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
