@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useVendor, MenuItem } from '../../hooks/useVendor'
 import { Button, Card } from '../../components'
 import { theme } from '../../style/theme'
+import { MENU_ITEM_CATEGORIES } from '../../utils/constants'
 
 import { ScrollView } from 'react-native-gesture-handler'
 
@@ -23,7 +24,11 @@ const VendorProfileMenu = () => {
     }
   }
 
-  const categories = [...new Set(menuItems.map((x) => x.category))]
+  const categories = MENU_ITEM_CATEGORIES.map((c) => {
+    if (menuItems.some((e) => e.category === c.value)) {
+      return c.value
+    }
+  })
 
   return (
     <View style={styles.container}>
@@ -37,55 +42,57 @@ const VendorProfileMenu = () => {
         </Button>
         {categories.map((category) => {
           return (
-            <Card
-              style={{ marginTop: spacing.md, paddingVertical: spacing.sm }}
-            >
-              <List.Item
-                title={category.charAt(0).toUpperCase() + category.slice(1)}
-                titleStyle={{
-                  fontSize: 18,
-                  fontWeight: '600',
-                }}
-              />
-              {menuItems.map((menuItem, i) => {
-                if (menuItem.category === category) {
-                  return (
-                    <List.Item
-                      key={i}
-                      title={`${menuItem.name} $${menuItem.price}`}
-                      description={menuItem.description}
-                      right={(props) => (
-                        <View style={{ flexDirection: 'row' }}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              navigate('VendorAddMenuItem', {
-                                isEditing: true,
-                                menuItem,
-                              })
-                            }
-                          >
-                            <List.Icon
-                              {...props}
-                              icon='pencil'
-                              style={{ margin: 0 }}
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => handleDeleteMenuItem(menuItem)}
-                          >
-                            <List.Icon
-                              {...props}
-                              icon='delete'
-                              style={{ margin: 0 }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      )}
-                    />
-                  )
-                }
-              })}
-            </Card>
+            category && (
+              <Card
+                style={{ marginTop: spacing.md, paddingVertical: spacing.sm }}
+              >
+                <List.Item
+                  title={category.charAt(0).toUpperCase() + category.slice(1)}
+                  titleStyle={{
+                    fontSize: 18,
+                    fontWeight: '600',
+                  }}
+                />
+                {menuItems.map((menuItem, i) => {
+                  if (menuItem.category === category) {
+                    return (
+                      <List.Item
+                        key={i}
+                        title={`${menuItem.name} $${menuItem.price}`}
+                        description={menuItem.description}
+                        right={(props) => (
+                          <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                navigate('VendorAddMenuItem', {
+                                  isEditing: true,
+                                  menuItem,
+                                })
+                              }
+                            >
+                              <List.Icon
+                                {...props}
+                                icon='pencil'
+                                style={{ margin: 0 }}
+                              />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => handleDeleteMenuItem(menuItem)}
+                            >
+                              <List.Icon
+                                {...props}
+                                icon='delete'
+                                style={{ margin: 0 }}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                      />
+                    )
+                  }
+                })}
+              </Card>
+            )
           )
         })}
       </ScrollView>
