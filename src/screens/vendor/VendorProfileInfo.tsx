@@ -5,16 +5,18 @@ import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
 import { useVendor, PopUp } from '../../hooks/useVendor'
 import { TextInput, Button, FormInputError, Card } from '../../components'
 import { theme } from '../../style/theme'
+import { mapStyle } from '../../style/mapStyle'
 
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const VendorProfileInfo = () => {
-  const { spacing, colors } = useTheme()
+  const { spacing, colors, roundness } = useTheme()
   const { goBack } = useNavigation()
   const {
     addPopUp,
@@ -353,6 +355,26 @@ const VendorProfileInfo = () => {
                   </View>
                 </>
               )}
+            </Card>
+            <Card>
+              {/* <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
+                <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
+                  Placeholder for Images section
+                </Text>
+              </View> */}
+              <MapView
+                style={{ flex: 1, height: 200, borderRadius: roundness }}
+                scrollEnabled={false}
+                mapType='standard'
+                provider={PROVIDER_GOOGLE}
+                customMapStyle={mapStyle}
+                initialRegion={{
+                  latitude: activePopUp.locationData.geometry?.location?.lat,
+                  longitude: activePopUp.locationData.geometry?.location?.lng,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              />
             </Card>
             <Card style={{ marginBottom: spacing.xl, padding: spacing.md }}>
               <View style={{ ...styles.profileCardItem, marginTop: 0 }}>

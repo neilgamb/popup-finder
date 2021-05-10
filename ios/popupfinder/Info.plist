@@ -75,5 +75,7 @@
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>PopUp Finder uses your phone's photo library to upload photos for Pop Ups including food photos, event photos and logos.</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
