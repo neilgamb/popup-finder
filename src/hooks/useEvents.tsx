@@ -8,27 +8,21 @@ import React, {
 import firestore from '@react-native-firebase/firestore'
 import * as admin from 'firebase-admin'
 
+import { MenuItem } from './index'
+
 interface EventsProps {
   children: ReactNode
 }
 
 interface EventsContextProps {}
 
-interface MenuItem {
-  menuItemUid: string
-  name: string
-  description: string
-  price: string
-}
-
-interface Event {
+export interface Event {
   dateAdded?: admin.firestore.Timestamp
   addedBy: string
   eventUid: string
   popUpUid: string
-  popUpName: string
   location: string
-  popUpDate: admin.firestore.Timestamp
+  eventDate: admin.firestore.Timestamp | Date | undefined
   menu: Array<MenuItem>
 }
 

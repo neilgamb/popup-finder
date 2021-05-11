@@ -84,7 +84,7 @@ export const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#333',
-    accent: '#ff3333',
+    accent: '#E50006',
     gray: '#666',
     darkGray: '#333',
     lightGray: '#ccc',
@@ -105,8 +105,7 @@ export const theme = {
     },
     screenActions: {
       paddingHorizontal: SPACING.md,
-      paddingBottom: SPACING.md,
-      // paddingVertical: SPACING.md,
+      paddingBottom: SPACING.xs,
     },
   }),
   withBorder,
