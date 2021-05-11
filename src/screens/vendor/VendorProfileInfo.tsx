@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Alert, Platform, StyleSheet, View } from 'react-native'
+import { Alert, Platform, Keyboard, StyleSheet, View } from 'react-native'
 import { Avatar, List, FAB, Text, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
@@ -280,6 +280,7 @@ const VendorProfileInfo = () => {
                                 })
                                 setLocationResults([])
                                 setLocationQuery('')
+                                Keyboard.dismiss()
                               }
                             )
                         }}

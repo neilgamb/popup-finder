@@ -95,13 +95,7 @@ export default function VendorAddMenuItem() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Title
-                    style={{
-                      fontSize: 24,
-                      marginLeft: spacing.xs,
-                      marginTop: spacing.md,
-                    }}
-                  >
+                  <Title style={fonts.title}>
                     {`${isEditing ? 'Edit' : 'Add'} Menu Item`}
                   </Title>
                   <TextInput

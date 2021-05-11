@@ -50,6 +50,11 @@ const fontConfig = {
       fontWeight: 'normal',
       fontSize: 18,
     },
+    title: {
+      fontSize: 24,
+      marginLeft: SPACING.xs,
+      marginTop: SPACING.md,
+    },
   },
 }
 
@@ -73,6 +78,7 @@ declare global {
 
     interface ThemeFonts {
       input: any
+      title: any
     }
   }
 }

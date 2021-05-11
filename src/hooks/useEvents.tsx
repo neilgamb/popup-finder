@@ -22,6 +22,7 @@ export interface Event {
   eventUid: string
   popUpUid: string
   location: string
+  locationData: google.maps.places.PlaceResult
   eventDate: admin.firestore.Timestamp | Date | undefined
   menu: Array<MenuItem>
 }

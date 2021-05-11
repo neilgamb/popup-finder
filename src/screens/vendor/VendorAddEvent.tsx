@@ -11,11 +11,13 @@ import {
   TextInput as PTextInput,
   Modal,
   Portal,
+  List,
   useTheme,
 } from 'react-native-paper'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { format } from 'date-fns'
+import { GOOGLE_PLACES_API_KEY } from '@env'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 // import DropDown from 'react-native-paper-dropdown'
@@ -31,9 +33,10 @@ import ModalContainer from '../../navigation/ModalContainer'
 import { useVendor, MenuItem, Event } from '../../hooks'
 
 import { EVENT_SCHEMA, INIT_EVENT_VALUES } from '../../utils/constants'
+import { theme } from '../../style/theme'
 
 export default function VendorAddEvent() {
-  const { colors, spacing, presets } = useTheme()
+  const { fonts, spacing, presets } = useTheme()
   const { goBack } = useNavigation()
   const { params } = useRoute()
   const { addMenuItem, editMenuItem } = useVendor()
@@ -44,22 +47,23 @@ export default function VendorAddEvent() {
   )
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<boolean>(false)
+  const [locationQuery, setLocationQuery] = useState<string>('')
+  const [locationResults, setLocationResults] = useState([])
 
   // const [showDropDown, setShowDropDown] = useState(false)
 
-  const handleAddMenuItem = async (values: MenuItem) => {
-    console.log(values)
-    // try {
-    //   setIsSaving(true)
-    //   Keyboard.dismiss()
-    //   await addMenuItem(values)
-    // } catch (error) {
-    //   console.log(error)
-    // } finally {
-    //   setIsSaving(false)
-    //   goBack()
-    // }
-  }
+  // const handleAddMenuItem = async (values: MenuItem) => {
+  //   try {
+  //     setIsSaving(true)
+  //     Keyboard.dismiss()
+  //     await addMenuItem(values)
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     setIsSaving(false)
+  //     goBack()
+  //   }
+  // }
 
   // const handleEditMenuItem = async (menuItem: MenuItem) => {
   //   try {
@@ -83,6 +87,17 @@ export default function VendorAddEvent() {
   //     setIsEditing(false)
   //   }
   // }, [isOpen])
+
+  const handleLocationSearch = (locationQuery: string) => {
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
+    fetch(url)
+      .then((response) => response.json())
+      .then(({ predictions }) => setLocationResults(predictions))
+  }
+
+  useEffect(() => {
+    handleLocationSearch(locationQuery)
+  }, [locationQuery])
 
   return (
     <DismissKeyboard>
@@ -111,13 +126,7 @@ export default function VendorAddEvent() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Title
-                    style={{
-                      fontSize: 24,
-                      marginLeft: spacing.xs,
-                      marginTop: spacing.md,
-                    }}
-                  >
+                  <Title style={fonts.title}>
                     {`${isEditing ? 'Edit' : 'Add'} Event`}
                   </Title>
 
@@ -129,7 +138,6 @@ export default function VendorAddEvent() {
                   >
                     <View>
                       <TextInput
-                        dense
                         pointerEvents='none'
                         label='Event Date *'
                         value={
@@ -153,13 +161,12 @@ export default function VendorAddEvent() {
                       onDismiss={() => setShowDatePicker(false)}
                       contentContainerStyle={styles.modalContainer}
                     >
-                      <Title style={styles.modalTitle}>Event Date</Title>
+                      <Title style={[fonts.title, styles.modalTitle]}>
+                        Event Date
+                      </Title>
                       {/* Date piker goes here */}
                       <DateTimePicker
                         testID='dateTimePicker'
-                        style={{
-                          backgroundColor: '#f0f0f0',
-                        }}
                         textColor='black'
                         value={values.eventDate ? values.eventDate : new Date()}
                         mode='date'
@@ -170,6 +177,52 @@ export default function VendorAddEvent() {
                       />
                     </Modal>
                   </Portal>
+
+                  <TextInput
+                    label='Location'
+                    value={values.location.split(',')[0]}
+                    onChangeText={(text) => {
+                      setLocationQuery(text)
+                      setValues({ ...values, location: text })
+                    }}
+                    onBlur={handleBlur('location')}
+                  />
+                  <FormInputError
+                    error={errors.location}
+                    touched={touched.location}
+                  />
+                  {locationResults?.map(
+                    (
+                      locResult: google.maps.places.AutocompletePrediction,
+                      i
+                    ) => (
+                      <List.Item
+                        key={i}
+                        title={locResult.description}
+                        onPress={() => {
+                          const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${locResult.place_id}&key=${GOOGLE_PLACES_API_KEY}`
+                          fetch(url)
+                            .then((response) => response.json())
+                            .then(
+                              ({
+                                result,
+                              }: {
+                                result: google.maps.places.PlaceResult
+                              }) => {
+                                setValues({
+                                  ...values,
+                                  locationData: result,
+                                  location: locResult.description,
+                                })
+                                setLocationResults([])
+                                setLocationQuery('')
+                                Keyboard.dismiss()
+                              }
+                            )
+                        }}
+                      />
+                    )
+                  )}
 
                   {/* <DropDown
                     label={'Menu Category'}
@@ -228,7 +281,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     textAlign: 'center',
-    paddingVertical: 16,
     fontSize: 24,
+    marginBottom: theme.spacing.md,
   },
 })
