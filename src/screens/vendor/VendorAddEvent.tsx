@@ -98,12 +98,6 @@ export default function VendorAddEvent() {
     }
   })
 
-  const [checked, setChecked] = React.useState(false)
-
-  useEffect(() => {
-    console.log(menuItemSelections)
-  }, [menuItemSelections])
-
   return (
     <DismissKeyboard>
       <ModalContainer>
@@ -229,6 +223,12 @@ export default function VendorAddEvent() {
                     )
                   )}
                   <Title style={[fonts.title]}>Menu</Title>
+                  {menuItemSelections.length === 0 && !(dirty && isValid) && (
+                    <FormInputError
+                      error={'Please set a menu'}
+                      touched={true}
+                    />
+                  )}
                   <ScrollView>
                     {categories.map((category, catI) => {
                       return (
