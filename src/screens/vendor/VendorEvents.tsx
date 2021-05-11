@@ -19,7 +19,11 @@ const VendorEvents = () => {
     <SafeAreaView style={presets.screenContainer}>
       <ScreenHeader withAvatar />
       <View style={presets.screenContent}></View>
-      <FAB isOpen={false} icon='plus' onPress={() => console.log('Pressed')} />
+      <FAB
+        isOpen={false}
+        icon='plus'
+        onPress={() => navigate('VendorAddEvent')}
+      />
     </SafeAreaView>
   )
 }

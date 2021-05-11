@@ -192,7 +192,7 @@ const VendorProfileInfo = () => {
                     </View>
                     <View style={styles.profileCardItem}>
                       <Text style={styles.profileCardText}>
-                        {activePopUp?.location}
+                        {activePopUp?.location.split(',')[0]}
                       </Text>
                       <Text style={styles.profileCardLabel}>CITY</Text>
                     </View>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useNavigationState, useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Avatar, IconButton, Title } from 'react-native-paper'
 
 import { useAuth, useVendor } from '../hooks'
@@ -15,10 +15,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
   const { navigate, goBack } = useNavigation()
   const { userInfo } = useAuth()
   const { activePopUp } = useVendor()
-
-  const routeName = useNavigationState(
-    (state) => state.routes[state.index].name
-  )
+  const route = useRoute()
 
   return (
     <View style={styles.container}>
@@ -31,7 +28,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           onPress={() => goBack()}
         />
       )}
-      <Title style={styles.title}>{routeName}</Title>
+      <Title style={styles.title}>{route.name}</Title>
       {withAvatar && (
         <TouchableOpacity
           style={styles.avatarContainer}

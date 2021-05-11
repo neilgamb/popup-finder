@@ -66,3 +66,21 @@ export const MENU_ITEM_CATEGORIES = [
   { label: 'Dessert', value: 'dessert' },
   { label: 'Drinks', value: 'drinks' },
 ]
+
+export const EVENT_SCHEMA = Yup.object().shape({
+  eventDate: Yup.string().required('Required').nullable(),
+  location: Yup.string().required(),
+  menu: Yup.array().required().nullable(),
+})
+
+export const INIT_EVENT_VALUES = __DEV__
+  ? {
+      eventDate: Date.now(),
+      location: '',
+      menu: [],
+    }
+  : {
+      eventDate: Date.now(),
+      location: '',
+      menu: [],
+    }
