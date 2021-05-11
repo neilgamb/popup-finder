@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import {
   Keyboard,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {
+  Checkbox,
   Title,
   TextInput as PTextInput,
   Modal,
@@ -20,8 +22,6 @@ import { format } from 'date-fns'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
-// import DropDown from 'react-native-paper-dropdown'
-
 import {
   Button,
   DismissKeyboard,
@@ -32,25 +32,29 @@ import ModalContainer from '../../navigation/ModalContainer'
 
 import { useVendor, MenuItem, Event } from '../../hooks'
 
-import { EVENT_SCHEMA, INIT_EVENT_VALUES } from '../../utils/constants'
+import {
+  EVENT_SCHEMA,
+  INIT_EVENT_VALUES,
+  MENU_ITEM_CATEGORIES,
+} from '../../utils/constants'
+
 import { theme } from '../../style/theme'
 
 export default function VendorAddEvent() {
-  const { fonts, spacing, presets } = useTheme()
+  const { fonts, spacing, presets, colors } = useTheme()
   const { goBack } = useNavigation()
   const { params } = useRoute()
-  const { addMenuItem, editMenuItem } = useVendor()
+  const { addMenuItem, editMenuItem, menuItems } = useVendor()
 
-  const [isEditing, setIsEditing] = useState(params?.isEditing ? true : false)
-  const [initValues, setInitValues] = useState<Event>(
-    isEditing ? params.event : INIT_EVENT_VALUES
-  )
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<boolean>(false)
   const [locationQuery, setLocationQuery] = useState<string>('')
   const [locationResults, setLocationResults] = useState([])
+  const [menuItemSelections, setMenuItemSelections] = useState<Array<MenuItem>>(
+    []
+  )
 
-  // const [showDropDown, setShowDropDown] = useState(false)
+  const isEditing = params?.isEditing ? true : false
 
   // const handleAddMenuItem = async (values: MenuItem) => {
   //   try {
@@ -77,17 +81,6 @@ export default function VendorAddEvent() {
   //   }
   // }
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     sheetRef?.current?.snapTo(0)
-  //     Keyboard.dismiss()
-  //   } else {
-  //     sheetRef?.current?.snapTo(1)
-  //     setInitValues(INIT_MENU_ITEM_VALUES)
-  //     setIsEditing(false)
-  //   }
-  // }, [isOpen])
-
   const handleLocationSearch = (locationQuery: string) => {
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
     fetch(url)
@@ -99,13 +92,25 @@ export default function VendorAddEvent() {
     handleLocationSearch(locationQuery)
   }, [locationQuery])
 
+  const categories = MENU_ITEM_CATEGORIES.map((c) => {
+    if (menuItems.some((e) => e.category === c.value)) {
+      return c.value
+    }
+  })
+
+  const [checked, setChecked] = React.useState(false)
+
+  useEffect(() => {
+    console.log(menuItemSelections)
+  }, [menuItemSelections])
+
   return (
     <DismissKeyboard>
       <ModalContainer>
         <SafeAreaView style={presets.screenContainer}>
           <Formik
             enableReinitialize
-            initialValues={initValues}
+            initialValues={isEditing ? params.event : INIT_EVENT_VALUES}
             validationSchema={EVENT_SCHEMA}
             onSubmit={(values) => {
               console.log(values)
@@ -223,32 +228,72 @@ export default function VendorAddEvent() {
                       />
                     )
                   )}
-
-                  {/* <DropDown
-                    label={'Menu Category'}
-                    mode={'outlined'}
-                    value={values.category}
-                    setValue={handleChange('category')}
-                    list={MENU_ITEM_CATEGORIES}
-                    visible={showDropDown}
-                    showDropDown={() => {
-                      Keyboard.dismiss()
-                      setShowDropDown(true)
-                    }}
-                    onDismiss={() => setShowDropDown(false)}
-                    inputProps={{
-                      right: (
-                        <PTextInput.Icon
-                          name={showDropDown ? 'menu-up' : 'menu-down'}
-                        />
-                      ),
-                      style: {
-                        marginTop: spacing.sm,
-                        backgroundColor: 'white',
-                        ...fonts.input,
-                      },
-                    }}
-                  /> */}
+                  <Title style={[fonts.title]}>Menu</Title>
+                  <ScrollView>
+                    {categories.map((category, catI) => {
+                      return (
+                        category && (
+                          <View key={catI}>
+                            {/* <List.Item
+                              title={
+                                category.charAt(0).toUpperCase() +
+                                category.slice(1)
+                              }
+                              titleStyle={{
+                                fontSize: 18,
+                                fontWeight: '600',
+                              }}
+                            /> */}
+                            {menuItems.map((menuItem, mII) => {
+                              if (menuItem.category === category) {
+                                return (
+                                  <List.Item
+                                    key={mII}
+                                    title={`${menuItem.name} $${menuItem.price}`}
+                                    // description={menuItem.description}
+                                    left={(props) => (
+                                      <Checkbox.Android
+                                        uncheckedColor={colors.lightGray}
+                                        status={
+                                          menuItemSelections.some(
+                                            (e) => e.name === menuItem.name
+                                          )
+                                            ? 'checked'
+                                            : 'unchecked'
+                                        }
+                                        onPress={() => {
+                                          let selections
+                                          if (
+                                            menuItemSelections.some(
+                                              (e) => e.name === menuItem.name
+                                            )
+                                          ) {
+                                            selections = menuItemSelections.filter(
+                                              (e) => e.name !== menuItem.name
+                                            )
+                                          } else {
+                                            selections = [
+                                              ...menuItemSelections,
+                                              menuItem,
+                                            ]
+                                          }
+                                          setMenuItemSelections(selections)
+                                          setValues({
+                                            ...values,
+                                            menu: selections,
+                                          })
+                                        }}
+                                      />
+                                    )}
+                                  />
+                                )
+                              }
+                            })}
+                          </View>
+                        )
+                      )
+                    })}
+                  </ScrollView>
                 </View>
                 <View style={presets.screenActions}>
                   <Button loading={isSaving} onPress={handleSubmit}>

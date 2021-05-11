@@ -26,14 +26,10 @@ export default function VendorAddMenuItem() {
   const { goBack } = useNavigation()
   const { params } = useRoute()
   const { addMenuItem, editMenuItem } = useVendor()
-
-  const [isEditing, setIsEditing] = useState(params?.isEditing ? true : false)
-  const [initValues, setInitValues] = useState<MenuItem>(
-    isEditing ? params.menuItem : INIT_MENU_ITEM_VALUES
-  )
   const [isSaving, setIsSaving] = useState(false)
-
   const [showDropDown, setShowDropDown] = useState(false)
+
+  const isEditing = params?.isEditing ? true : false
 
   const handleAddMenuItem = async (values: MenuItem) => {
     try {
@@ -60,24 +56,13 @@ export default function VendorAddMenuItem() {
     }
   }
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     sheetRef?.current?.snapTo(0)
-  //     Keyboard.dismiss()
-  //   } else {
-  //     sheetRef?.current?.snapTo(1)
-  //     setInitValues(INIT_MENU_ITEM_VALUES)
-  //     setIsEditing(false)
-  //   }
-  // }, [isOpen])
-
   return (
     <DismissKeyboard>
       <ModalContainer>
         <SafeAreaView style={presets.screenContainer}>
           <Formik
             enableReinitialize
-            initialValues={initValues}
+            initialValues={isEditing ? params.menuItem : INIT_MENU_ITEM_VALUES}
             validationSchema={MENU_ITEM_SCHEMA}
             onSubmit={(values) =>
               isEditing ? handleEditMenuItem(values) : handleAddMenuItem(values)
