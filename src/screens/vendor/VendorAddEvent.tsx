@@ -41,8 +41,8 @@ import {
 import { theme } from '../../style/theme'
 
 export default function VendorAddEvent() {
-  const { fonts, spacing, presets, colors } = useTheme()
-  const { goBack } = useNavigation()
+  const { fonts, spacing, presets, colors, withBorder } = useTheme()
+  const { goBack, navigate } = useNavigation()
   const { params } = useRoute()
   const { addMenuItem, editMenuItem, menuItems } = useVendor()
 
@@ -223,76 +223,82 @@ export default function VendorAddEvent() {
                     )
                   )}
                   <Title style={[fonts.title]}>Menu</Title>
-                  {menuItemSelections.length === 0 && !(dirty && isValid) && (
+                  {menuItemSelections.length === 0 && !isValid && (
                     <FormInputError
                       error={'Please set a menu'}
                       touched={true}
                     />
                   )}
                   <ScrollView>
-                    {categories.map((category, catI) => {
-                      return (
-                        category && (
-                          <View key={catI}>
-                            {/* <List.Item
-                              title={
-                                category.charAt(0).toUpperCase() +
-                                category.slice(1)
-                              }
-                              titleStyle={{
-                                fontSize: 18,
-                                fontWeight: '600',
-                              }}
-                            /> */}
-                            {menuItems.map((menuItem, mII) => {
-                              if (menuItem.category === category) {
-                                return (
-                                  <List.Item
-                                    key={mII}
-                                    title={`${menuItem.name} $${menuItem.price}`}
-                                    // description={menuItem.description}
-                                    left={(props) => (
-                                      <Checkbox.Android
-                                        uncheckedColor={colors.lightGray}
-                                        status={
-                                          menuItemSelections.some(
-                                            (e) => e.name === menuItem.name
-                                          )
-                                            ? 'checked'
-                                            : 'unchecked'
-                                        }
-                                        onPress={() => {
-                                          let selections
-                                          if (
+                    <View style={{ marginBottom: 50 }}>
+                      <List.Item
+                        title='Add Menu Item'
+                        titleStyle={{ left: -spacing.sm }}
+                        onPress={() => navigate('VendorAddMenuItem')}
+                        left={(props) => (
+                          <List.Icon {...props} icon='plus-circle' />
+                        )}
+                      />
+                      {categories.map((category, catI) => {
+                        return (
+                          category && (
+                            <View key={catI}>
+                              <List.Item
+                                title={
+                                  category.charAt(0).toUpperCase() +
+                                  category.slice(1)
+                                }
+                                titleStyle={{ textDecorationLine: 'underline' }}
+                                style={{ paddingVertical: 0 }}
+                              />
+                              {menuItems.map((menuItem, mII) => {
+                                if (menuItem.category === category) {
+                                  return (
+                                    <List.Item
+                                      key={mII}
+                                      title={`${menuItem.name} $${menuItem.price}`}
+                                      left={() => (
+                                        <Checkbox.Android
+                                          uncheckedColor={colors.lightGray}
+                                          status={
                                             menuItemSelections.some(
                                               (e) => e.name === menuItem.name
                                             )
-                                          ) {
-                                            selections = menuItemSelections.filter(
-                                              (e) => e.name !== menuItem.name
-                                            )
-                                          } else {
-                                            selections = [
-                                              ...menuItemSelections,
-                                              menuItem,
-                                            ]
+                                              ? 'checked'
+                                              : 'unchecked'
                                           }
-                                          setMenuItemSelections(selections)
-                                          setValues({
-                                            ...values,
-                                            menu: selections,
-                                          })
-                                        }}
-                                      />
-                                    )}
-                                  />
-                                )
-                              }
-                            })}
-                          </View>
+                                          onPress={() => {
+                                            let selections
+                                            const isSelected = menuItemSelections.some(
+                                              (e) => e.name === menuItem.name
+                                            )
+                                            if (isSelected) {
+                                              selections = menuItemSelections.filter(
+                                                (e) => e.name !== menuItem.name
+                                              )
+                                            } else {
+                                              selections = [
+                                                ...menuItemSelections,
+                                                menuItem,
+                                              ]
+                                            }
+                                            setMenuItemSelections(selections)
+                                            setValues({
+                                              ...values,
+                                              menu: selections,
+                                            })
+                                          }}
+                                        />
+                                      )}
+                                    />
+                                  )
+                                }
+                              })}
+                            </View>
+                          )
                         )
-                      )
-                    })}
+                      })}
+                    </View>
                   </ScrollView>
                 </View>
                 <View style={presets.screenActions}>
