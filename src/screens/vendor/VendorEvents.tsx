@@ -9,20 +9,31 @@ import { useVendor, useEvents } from '../../hooks'
 const VendorEvents = () => {
   const { presets } = useTheme()
   const { navigate } = useNavigation()
-  const { isVendorSetup } = useVendor()
-  const { getEvents } = useEvents()
+  const { activePopUp, isVendorSetup } = useVendor()
+  const { getEvents, events } = useEvents()
 
   useEffect(() => {
     !isVendorSetup && navigate('VendorProfile')
   }, [isVendorSetup])
 
   useEffect(() => {
-    const unsubscribeEvents = getEvents()
+    let unsubscribeEvents: any
+
+    if (activePopUp) {
+      unsubscribeEvents = getEvents(activePopUp.popUpUid)
+    }
 
     return () => {
-      unsubscribeEvents()
+      if (activePopUp && unsubscribeEvents) {
+        console.log('unsubscribing from events')
+        unsubscribeEvents()
+      }
     }
-  }, [])
+  }, [activePopUp])
+
+  useEffect(() => {
+    console.log(events)
+  }, [events])
 
   return (
     <SafeAreaView style={presets.screenContainer}>

@@ -44,6 +44,8 @@ export const useEvents = () => {
 }
 
 function useEventsProvider() {
+  const [events, setEvents] = useState<Event[]>([])
+
   const addEvent = (eventInfo: Event) => {
     const eventCollection = firestore().collection('events')
     const uid = eventCollection.doc().id
@@ -64,29 +66,26 @@ function useEventsProvider() {
     })
   }
 
-  const getEvents = (popUid: string) => {
-    popUid = popUid || ''
-    console.log('subscribing to user events')
-    const unsubscribeEvents = firestore()
-      .collection('events')
-      // .where('popUpUid', '==', popUid)
-      .onSnapshot((querySnapshot) => {
-        // let popUps = [] as PopUp[]
-        querySnapshot.forEach((doc) => {
-          // popUps.push(doc.data())
-          console.log(doc.data())
-        })
-        // setVendorPopUps(popUps)
-        // if (popUps.length) {
-        //   setActivePopUp(popUps[0])
-        //   setIsVendorSetup(true)
-        // } else {
-        //   setIsVendorSetup(false)
-        // }
+  const getEvents = (popUpUid: string) => {
+    popUpUid = popUpUid || ''
+    console.log('subscribing to events')
+
+    let query = firestore().collection('events')
+
+    if (!!popUpUid) {
+      query = query.where('popUpUid', '==', popUpUid)
+    }
+
+    const unsubscribeEvents = query.onSnapshot((querySnapshot) => {
+      let events = [] as Event[]
+      querySnapshot.forEach((doc) => {
+        events.push(doc.data())
       })
+      setEvents(events)
+    })
 
     return unsubscribeEvents
   }
 
-  return { addEvent, getEvents }
+  return { addEvent, getEvents, events }
 }
