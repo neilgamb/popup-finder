@@ -17,7 +17,7 @@ export interface PopUp {
   locationData: google.maps.places.PlaceResult
   foodType: string
   description: string
-  user: string
+  userUid: string
   logoImageUrl: string
 }
 

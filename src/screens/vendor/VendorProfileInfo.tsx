@@ -18,13 +18,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 const VendorProfileInfo = () => {
   const { spacing, colors, roundness } = useTheme()
   const { goBack } = useNavigation()
-  const {
-    addPopUp,
-    editPopUp,
-    deletePopUp,
-    isVendorSetup,
-    activePopUp,
-  } = useVendor()
+  const { addPopUp, editPopUp, deletePopUp, isVendorSetup, activePopUp } =
+    useVendor()
 
   const [locationQuery, setLocationQuery] = useState('')
   const [locationResults, setLocationResults] = useState([])
@@ -35,7 +30,6 @@ const VendorProfileInfo = () => {
   const scrollRef = useRef<ScrollView>(null)
 
   const handleLocationSearch = (locationQuery: string) => {
-    // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&types=(cities)&key=${GOOGLE_PLACES_API_KEY}`
     fetch(url)
       .then((response) => response.json())

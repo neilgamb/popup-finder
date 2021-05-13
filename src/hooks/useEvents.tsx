@@ -14,20 +14,22 @@ interface EventsProps {
   children: ReactNode
 }
 
-interface EventsContextProps {}
+interface EventsContextProps {
+  addEvent: (eventInfo: object) => Promise<boolean>
+}
 
 export interface Event {
   dateAdded?: admin.firestore.Timestamp
-  addedBy: string
   eventUid: string
   popUpUid: string
+  userUid: string
   location: string
   locationData: google.maps.places.PlaceResult
   eventDate: admin.firestore.Timestamp | Date | undefined
   menu: Array<MenuItem>
 }
 
-export const EventsContext = createContext<EventsContextProps | null>(null)
+export const EventsContext = createContext<EventsContextProps>(null)
 
 export function EventsProvider({ children }: EventsProps) {
   const events = useEventsProvider()
@@ -41,5 +43,25 @@ export const useEvents = () => {
 }
 
 function useEventsProvider() {
-  return {}
+  const addEvent = (eventInfo: Event) => {
+    const eventCollection = firestore().collection('events')
+    const uid = eventCollection.doc().id
+    const dateAdded = firestore.Timestamp.now()
+
+    return new Promise(async (resolve, reject) => {
+      eventCollection
+        .doc(uid)
+        .set({
+          ...eventInfo,
+          dateAdded,
+          eventUid: uid,
+        })
+        .then(async () => {
+          resolve(uid)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+  return { addEvent }
 }

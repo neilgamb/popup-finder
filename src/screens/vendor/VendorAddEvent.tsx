@@ -30,7 +30,7 @@ import {
 } from '../../components'
 import ModalContainer from '../../navigation/ModalContainer'
 
-import { useVendor, MenuItem, Event } from '../../hooks'
+import { useVendor, useEvents, MenuItem, Event } from '../../hooks'
 
 import {
   EVENT_SCHEMA,
@@ -44,7 +44,8 @@ export default function VendorAddEvent() {
   const { fonts, spacing, presets, colors, withBorder } = useTheme()
   const { goBack, navigate } = useNavigation()
   const { params } = useRoute()
-  const { addMenuItem, editMenuItem, menuItems } = useVendor()
+  const { menuItems, activePopUp } = useVendor()
+  const { addEvent } = useEvents()
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<boolean>(false)
@@ -56,30 +57,34 @@ export default function VendorAddEvent() {
 
   const isEditing = params?.isEditing ? true : false
 
-  // const handleAddMenuItem = async (values: MenuItem) => {
-  //   try {
-  //     setIsSaving(true)
-  //     Keyboard.dismiss()
-  //     await addMenuItem(values)
-  //   } catch (error) {
-  //     console.log(error)
-  //   } finally {
-  //     setIsSaving(false)
-  //     goBack()
-  //   }
-  // }
+  const handleAddEvent = async (values: Event) => {
+    try {
+      setIsSaving(true)
+      Keyboard.dismiss()
+      await addEvent({
+        ...values,
+        popUpUid: activePopUp.popUpUid,
+        userUid: activePopUp.userUid,
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+      goBack()
+    }
+  }
 
-  // const handleEditMenuItem = async (menuItem: MenuItem) => {
-  //   try {
-  //     setIsSaving(true)
-  //     await editMenuItem(menuItem)
-  //   } catch (error) {
-  //     console.log(error)
-  //   } finally {
-  //     setIsSaving(false)
-  //     goBack()
-  //   }
-  // }
+  const handleEditEvent = async (values: Event) => {
+    // try {
+    //   setIsSaving(true)
+    //   await editMenuItem(menuItem)
+    // } catch (error) {
+    //   console.log(error)
+    // } finally {
+    //   setIsSaving(false)
+    //   goBack()
+    // }
+  }
 
   const handleLocationSearch = (locationQuery: string) => {
     const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${locationQuery}&key=${GOOGLE_PLACES_API_KEY}`
@@ -107,8 +112,7 @@ export default function VendorAddEvent() {
             initialValues={isEditing ? params.event : INIT_EVENT_VALUES}
             validationSchema={EVENT_SCHEMA}
             onSubmit={(values) => {
-              console.log(values)
-              // isEditing ? handleEditMenuItem(values) : handleAddMenuItem(values)
+              isEditing ? handleEditEvent(values) : handleAddEvent(values)
             }}
           >
             {({
@@ -174,6 +178,24 @@ export default function VendorAddEvent() {
                           setValues({ ...values, eventDate: date }, true)
                         }}
                       />
+                      <Button
+                        loading={isSaving}
+                        onPress={() => {
+                          setValues({
+                            ...values,
+                            eventDate: !!values.eventDate
+                              ? values.eventDate
+                              : new Date(),
+                          })
+                          setShowDatePicker(false)
+                        }}
+                        style={{
+                          borderTopLeftRadius: 0,
+                          borderTopRightRadius: 0,
+                        }}
+                      >
+                        SELECT
+                      </Button>
                     </Modal>
                   </Portal>
 
@@ -269,13 +291,16 @@ export default function VendorAddEvent() {
                                           }
                                           onPress={() => {
                                             let selections
-                                            const isSelected = menuItemSelections.some(
-                                              (e) => e.name === menuItem.name
-                                            )
-                                            if (isSelected) {
-                                              selections = menuItemSelections.filter(
-                                                (e) => e.name !== menuItem.name
+                                            const isSelected =
+                                              menuItemSelections.some(
+                                                (e) => e.name === menuItem.name
                                               )
+                                            if (isSelected) {
+                                              selections =
+                                                menuItemSelections.filter(
+                                                  (e) =>
+                                                    e.name !== menuItem.name
+                                                )
                                             } else {
                                               selections = [
                                                 ...menuItemSelections,
@@ -327,7 +352,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     marginHorizontal: 32,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: theme.roundness,
     overflow: 'hidden',
   },
   modalTitle: {
