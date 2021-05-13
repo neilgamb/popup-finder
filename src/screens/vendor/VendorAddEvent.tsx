@@ -63,6 +63,7 @@ export default function VendorAddEvent() {
       Keyboard.dismiss()
       await addEvent({
         ...values,
+        popUp: activePopUp.name,
         popUpUid: activePopUp.popUpUid,
         userUid: activePopUp.userUid,
       })

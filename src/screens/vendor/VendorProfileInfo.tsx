@@ -115,6 +115,9 @@ const VendorProfileInfo = () => {
   const logoImageChanged =
     activePopUp && activePopUp.logoImageUrl !== logoImageUri
 
+  const lat = Number(activePopUp?.locationData.geometry?.location?.lat)
+  const lng = Number(activePopUp?.locationData.geometry?.location?.lng)
+
   return (
     <Formik
       enableReinitialize
@@ -352,11 +355,6 @@ const VendorProfileInfo = () => {
               )}
             </Card>
             <Card>
-              {/* <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
-                <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
-                  Placeholder for Images section
-                </Text>
-              </View> */}
               <MapView
                 style={{ flex: 1, height: 200, borderRadius: roundness }}
                 scrollEnabled={false}
@@ -364,8 +362,8 @@ const VendorProfileInfo = () => {
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={mapStyle}
                 initialRegion={{
-                  latitude: activePopUp?.locationData.geometry?.location?.lat,
-                  longitude: activePopUp?.locationData.geometry?.location?.lng,
+                  latitude: lat,
+                  longitude: lng,
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 }}

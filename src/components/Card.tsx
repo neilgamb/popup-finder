@@ -5,7 +5,7 @@ import { theme } from '../style/theme'
 interface ProfileCardProps {
   children: React.ReactNode
   button?: boolean
-  style: any
+  style?: any
 }
 
 const Card = ({ children, style, button }: ProfileCardProps) => {

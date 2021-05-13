@@ -10,6 +10,18 @@ import * as admin from 'firebase-admin'
 
 import { MenuItem } from './index'
 
+export interface Event {
+  dateAdded?: admin.firestore.Timestamp
+  eventUid: string
+  popUp: string
+  popUpUid: string
+  userUid: string
+  location: string
+  locationData: google.maps.places.PlaceResult
+  eventDate: admin.firestore.Timestamp
+  menu: Array<MenuItem>
+}
+
 interface EventsProps {
   children: ReactNode
 }
@@ -17,17 +29,7 @@ interface EventsProps {
 interface EventsContextProps {
   addEvent: (eventInfo: object) => Promise<boolean>
   getEvents: (popUid?: string) => () => {}
-}
-
-export interface Event {
-  dateAdded?: admin.firestore.Timestamp
-  eventUid: string
-  popUpUid: string
-  userUid: string
-  location: string
-  locationData: google.maps.places.PlaceResult
-  eventDate: admin.firestore.Timestamp | Date | undefined
-  menu: Array<MenuItem>
+  events: Array<Event>
 }
 
 export const EventsContext = createContext<EventsContextProps>(null)
@@ -67,7 +69,6 @@ function useEventsProvider() {
   }
 
   const getEvents = (popUpUid: string) => {
-    popUpUid = popUpUid || ''
     console.log('subscribing to events')
 
     let query = firestore().collection('events')
