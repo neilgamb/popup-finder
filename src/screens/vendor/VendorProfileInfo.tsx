@@ -364,8 +364,8 @@ const VendorProfileInfo = () => {
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={mapStyle}
                 initialRegion={{
-                  latitude: activePopUp.locationData.geometry?.location?.lat,
-                  longitude: activePopUp.locationData.geometry?.location?.lng,
+                  latitude: activePopUp?.locationData.geometry?.location?.lat,
+                  longitude: activePopUp?.locationData.geometry?.location?.lng,
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 }}

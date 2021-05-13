@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'

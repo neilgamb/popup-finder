@@ -16,6 +16,7 @@ interface EventsProps {
 
 interface EventsContextProps {
   addEvent: (eventInfo: object) => Promise<boolean>
+  getEvents: (popUid?: string) => () => {}
 }
 
 export interface Event {
@@ -63,5 +64,29 @@ function useEventsProvider() {
     })
   }
 
-  return { addEvent }
+  const getEvents = (popUid: string) => {
+    popUid = popUid || ''
+    console.log('subscribing to user events')
+    const unsubscribeEvents = firestore()
+      .collection('events')
+      // .where('popUpUid', '==', popUid)
+      .onSnapshot((querySnapshot) => {
+        // let popUps = [] as PopUp[]
+        querySnapshot.forEach((doc) => {
+          // popUps.push(doc.data())
+          console.log(doc.data())
+        })
+        // setVendorPopUps(popUps)
+        // if (popUps.length) {
+        //   setActivePopUp(popUps[0])
+        //   setIsVendorSetup(true)
+        // } else {
+        //   setIsVendorSetup(false)
+        // }
+      })
+
+    return unsubscribeEvents
+  }
+
+  return { addEvent, getEvents }
 }
