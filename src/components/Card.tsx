@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Animated, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import {
+  Animated,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import { theme } from '../style/theme'
 
 interface ProfileCardProps {
@@ -37,7 +42,7 @@ const Card = ({ children, style, button }: ProfileCardProps) => {
     >
       <Animated.View
         style={{
-          ...styles.profileCardContainer,
+          ...styles.container,
           ...style,
           shadowOpacity: pressedAnim.interpolate({
             inputRange: [0, 1],
@@ -53,7 +58,7 @@ const Card = ({ children, style, button }: ProfileCardProps) => {
           ],
         }}
       >
-        {children}
+        <View style={styles.containerInner}>{children}</View>
       </Animated.View>
     </TouchableWithoutFeedback>
   )
@@ -62,7 +67,7 @@ const Card = ({ children, style, button }: ProfileCardProps) => {
 export default Card
 
 const styles = StyleSheet.create({
-  profileCardContainer: {
+  container: {
     flex: 1,
     backgroundColor: 'white',
     marginHorizontal: theme.spacing.md,
@@ -70,5 +75,9 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.md,
     position: 'relative',
     ...theme.boxShadow,
+  },
+  containerInner: {
+    borderRadius: theme.roundness,
+    overflow: 'hidden',
   },
 })
