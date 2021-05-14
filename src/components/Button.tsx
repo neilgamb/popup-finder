@@ -22,7 +22,7 @@ const Button = (props: ButtonProps) => {
         },
         props.style,
       ]}
-      contentStyle={{ paddingVertical: 8 }}
+      contentStyle={{ paddingVertical: 4 }}
       labelStyle={fonts.button}
       {...rest}
     />

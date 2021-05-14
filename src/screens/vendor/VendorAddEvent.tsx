@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
+  Alert,
   Keyboard,
   SafeAreaView,
   ScrollView,
@@ -45,7 +46,7 @@ export default function VendorAddEvent() {
   const { goBack, navigate } = useNavigation()
   const { params } = useRoute()
   const { menuItems, activePopUp } = useVendor()
-  const { addEvent, editEvent } = useEvents()
+  const { addEvent, editEvent, deleteEvent } = useEvents()
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<boolean>(false)
@@ -85,6 +86,29 @@ export default function VendorAddEvent() {
       setIsSaving(false)
       goBack()
     }
+  }
+
+  const handleDeleteEvent = () => {
+    Alert.alert('Are you sure?', 'All event data will be lost', [
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            setIsSaving(true)
+            await deleteEvent(params.event.eventUid)
+          } catch (error) {
+            console.log(error)
+          } finally {
+            setIsSaving(false)
+            goBack()
+          }
+        },
+      },
+      {
+        text: 'CANCEL',
+        onPress: () => console.log('event delete canceled'),
+      },
+    ])
   }
 
   const handleLocationSearch = (locationQuery: string) => {
@@ -338,15 +362,24 @@ export default function VendorAddEvent() {
                   </ScrollView>
                 </View>
                 <View style={presets.screenActions}>
-                  <Button loading={isSaving} onPress={handleSubmit}>
-                    SUBMIT
-                  </Button>
                   <Button
-                    mode='text'
                     loading={isSaving}
-                    onPress={goBack}
+                    onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >
+                    SUBMIT
+                  </Button>
+                  {isEditing && (
+                    <Button
+                      mode='text'
+                      loading={isSaving}
+                      onPress={handleDeleteEvent}
+                      labelStyle={{ ...fonts.button, color: colors.accent }}
+                    >
+                      DELETE
+                    </Button>
+                  )}
+                  <Button mode='text' loading={isSaving} onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>

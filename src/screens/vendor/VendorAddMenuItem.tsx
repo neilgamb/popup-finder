@@ -140,15 +140,14 @@ export default function VendorAddMenuItem() {
                   />
                 </View>
                 <View style={[presets.screenActions]}>
-                  <Button loading={isSaving} onPress={handleSubmit}>
-                    SUBMIT
-                  </Button>
                   <Button
-                    mode='text'
                     loading={isSaving}
-                    onPress={goBack}
+                    onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >
+                    SUBMIT
+                  </Button>
+                  <Button mode='text' loading={isSaving} onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>

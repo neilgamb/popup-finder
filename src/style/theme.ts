@@ -43,7 +43,7 @@ const fontConfig = {
     button: {
       fontFamily: 'Arial',
       fontWeight: 'normal',
-      fontSize: 20,
+      fontSize: 16,
     },
     input: {
       fontFamily: 'Arial',
@@ -79,6 +79,7 @@ declare global {
     interface ThemeFonts {
       input: any
       title: any
+      button: any
     }
   }
 }

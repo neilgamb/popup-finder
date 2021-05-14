@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { SafeAreaView, ScrollView } from 'react-native'
-import { ActivityIndicator, useTheme } from 'react-native-paper'
+import { useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 
 import { FAB, ScreenHeader, VendorEventCard } from '../../components'
@@ -35,11 +35,9 @@ const VendorEvents = () => {
     <SafeAreaView style={presets.screenContainer}>
       <ScreenHeader withAvatar />
       <ScrollView>
-        {events && events.length ? (
-          events.map((event, i) => <VendorEventCard key={i} event={event} />)
-        ) : (
-          <ActivityIndicator animating />
-        )}
+        {events.map((event, i) => (
+          <VendorEventCard key={i} event={event} />
+        ))}
       </ScrollView>
       <FAB
         isOpen={false}

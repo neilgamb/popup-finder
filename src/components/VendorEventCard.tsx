@@ -42,7 +42,7 @@ const VendorEventCard = ({ event }: Props) => {
         icon='pencil'
         style={styles.editButton}
         color={colors.gray}
-        size={25}
+        size={20}
         onPress={() =>
           navigate('VendorAddEvent', {
             isEditing: true,
