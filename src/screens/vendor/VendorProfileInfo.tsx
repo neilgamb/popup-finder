@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Alert, Platform, Keyboard, StyleSheet, View } from 'react-native'
-import { Avatar, List, FAB, Text, useTheme } from 'react-native-paper'
+import {
+  Avatar,
+  List,
+  FAB,
+  IconButton,
+  Text,
+  useTheme,
+} from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
@@ -140,219 +147,229 @@ const VendorProfileInfo = () => {
       }) => (
         <View style={[styles.container]}>
           <ScrollView ref={scrollRef}>
-            <Card style={{ marginTop: spacing.md, padding: spacing.md }}>
-              {isVendorSetup && (
-                <FAB
-                  small
-                  style={styles.fab}
-                  icon={isEditing ? 'check' : 'pencil'}
-                  disabled={
-                    isEditing && !(dirty && isValid) && !logoImageChanged
-                  }
-                  onPress={() =>
-                    isEditing ? handleSubmit() : setIsEditing(true)
-                  }
-                />
-              )}
-              {isEditing && (
-                <FAB
-                  style={{ ...styles.fab, marginRight: 48 }}
-                  icon='close'
-                  small
-                  onPress={() => setIsEditing(false)}
-                />
-              )}
-              {isEditing && (
-                <FAB
-                  style={{ ...styles.fab, marginRight: 88 }}
-                  icon='delete'
-                  small
-                  onPress={handleDeletePopUp}
-                />
-              )}
-              {isVendorSetup && !isEditing ? (
-                <>
-                  <View style={styles.profileCardRow}>
-                    <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
-                      <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
-                        {activePopUp?.name}
-                      </Text>
-                      <Text style={styles.profileCardLabel}>POP UP NAME</Text>
-                    </View>
-                  </View>
-                  <View style={styles.profileCardRow}>
-                    <View style={styles.profileCardItem}>
-                      <Text style={styles.profileCardText}>
-                        {activePopUp?.foodType}
-                      </Text>
-                      <Text style={styles.profileCardLabel}>FOOD TYPE</Text>
-                    </View>
-                    <View style={styles.profileCardItem}>
-                      <Text style={styles.profileCardText}>
-                        {activePopUp?.location.split(',')[0]}
-                      </Text>
-                      <Text style={styles.profileCardLabel}>CITY</Text>
-                    </View>
-                  </View>
-                  <View style={styles.profileCardItem}>
-                    <Text style={styles.profileCardText}>
-                      {activePopUp?.description}
-                    </Text>
-                    <Text style={styles.profileCardLabel}>DESCRIPTION</Text>
-                  </View>
-                </>
-              ) : (
-                <>
-                  {!isVendorSetup && (
-                    <Text
-                      style={{
-                        marginTop: spacing.sm,
-                        marginLeft: spacing.xs,
-                        fontSize: 18,
-                        color: colors.gray,
-                      }}
-                    >
-                      Please set up your Pop Up profile
-                    </Text>
-                  )}
-
-                  <TextInput
-                    label='Pop Up Name'
-                    value={values.name}
-                    style={{ marginTop: spacing.lg }}
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    onFocus={() =>
-                      scrollRef.current?.scrollTo({
-                        x: 0,
-                        y: 100,
-                        animated: true,
-                      })
+            <Card style={{ marginTop: spacing.md }}>
+              <View style={{ padding: spacing.sm }}>
+                {isVendorSetup && (
+                  <IconButton
+                    icon={isEditing ? 'check' : 'pencil'}
+                    style={styles.editButton}
+                    color={colors.gray}
+                    disabled={
+                      isEditing && !(dirty && isValid) && !logoImageChanged
+                    }
+                    size={20}
+                    onPress={() =>
+                      isEditing ? handleSubmit() : setIsEditing(true)
                     }
                   />
-                  <FormInputError error={errors.name} touched={touched.name} />
-
-                  <TextInput
-                    label='Location'
-                    value={values.location}
-                    onChangeText={(text) => {
-                      setLocationQuery(text)
-                      setValues({ ...values, location: text })
-                    }}
-                    onBlur={handleBlur('location')}
-                    onFocus={() =>
-                      scrollRef.current?.scrollTo({
-                        x: 0,
-                        y: 200,
-                        animated: true,
-                      })
-                    }
+                )}
+                {isEditing && (
+                  <IconButton
+                    icon='close'
+                    style={{ ...styles.editButton, right: 40 }}
+                    color={colors.gray}
+                    size={20}
+                    onPress={() => setIsEditing(false)}
                   />
-                  <FormInputError
-                    error={errors.location}
-                    touched={touched.location}
+                )}
+                {isEditing && (
+                  <IconButton
+                    icon='delete'
+                    style={{ ...styles.editButton, right: 80 }}
+                    color={colors.gray}
+                    size={20}
+                    onPress={handleDeletePopUp}
                   />
-                  {locationResults?.map(
-                    (
-                      locResult: google.maps.places.AutocompletePrediction,
-                      i
-                    ) => (
-                      <List.Item
-                        key={i}
-                        title={locResult.description}
-                        onPress={() => {
-                          const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${locResult.place_id}&key=${GOOGLE_PLACES_API_KEY}`
-                          fetch(url)
-                            .then((response) => response.json())
-                            .then(
-                              ({
-                                result,
-                              }: {
-                                result: google.maps.places.PlaceResult
-                              }) => {
-                                setValues({
-                                  locationData: result,
-                                  ...values,
-                                  location: locResult.description,
-                                })
-                                setLocationResults([])
-                                setLocationQuery('')
-                                Keyboard.dismiss()
-                              }
-                            )
+                )}
+                {isVendorSetup && !isEditing ? (
+                  <>
+                    <View style={styles.profileCardRow}>
+                      <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
+                        <Text
+                          style={{ ...styles.profileCardText, fontSize: 24 }}
+                        >
+                          {activePopUp?.name}
+                        </Text>
+                        <Text style={styles.profileCardLabel}>POP UP NAME</Text>
+                      </View>
+                    </View>
+                    <View style={styles.profileCardRow}>
+                      <View style={styles.profileCardItem}>
+                        <Text style={styles.profileCardText}>
+                          {activePopUp?.foodType}
+                        </Text>
+                        <Text style={styles.profileCardLabel}>FOOD TYPE</Text>
+                      </View>
+                      <View style={styles.profileCardItem}>
+                        <Text style={styles.profileCardText}>
+                          {activePopUp?.location.split(',')[0]}
+                        </Text>
+                        <Text style={styles.profileCardLabel}>CITY</Text>
+                      </View>
+                    </View>
+                    <View style={styles.profileCardItem}>
+                      <Text style={styles.profileCardText}>
+                        {activePopUp?.description}
+                      </Text>
+                      <Text style={styles.profileCardLabel}>DESCRIPTION</Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    {!isVendorSetup && (
+                      <Text
+                        style={{
+                          marginTop: spacing.sm,
+                          marginLeft: spacing.xs,
+                          fontSize: 18,
+                          color: colors.gray,
                         }}
-                      />
-                    )
-                  )}
+                      >
+                        Please set up your Pop Up profile
+                      </Text>
+                    )}
 
-                  <TextInput
-                    label='Food Type'
-                    value={values.foodType}
-                    onChangeText={handleChange('foodType')}
-                    onBlur={handleBlur('foodType')}
-                    onFocus={() =>
-                      scrollRef.current?.scrollTo({
-                        x: 0,
-                        y: 300,
-                        animated: true,
-                      })
-                    }
-                  />
-                  <FormInputError
-                    error={errors.foodType}
-                    touched={touched.foodType}
-                  />
+                    <TextInput
+                      label='Pop Up Name'
+                      value={values.name}
+                      style={{ marginTop: spacing.lg }}
+                      onChangeText={handleChange('name')}
+                      onBlur={handleBlur('name')}
+                      onFocus={() =>
+                        scrollRef.current?.scrollTo({
+                          x: 0,
+                          y: 100,
+                          animated: true,
+                        })
+                      }
+                    />
+                    <FormInputError
+                      error={errors.name}
+                      touched={touched.name}
+                    />
 
-                  <TextInput
-                    label='Description'
-                    onChangeText={handleChange('description')}
-                    onBlur={handleBlur('description')}
-                    value={values.description}
-                  />
-                  <FormInputError
-                    error={errors.description}
-                    touched={touched.description}
-                  />
-
-                  <View style={styles.logoPickerContainer}>
-                    <View
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                      {!!logoImageUri && (
-                        <Avatar.Image
-                          style={{
-                            backgroundColor: '#f0f0f0',
-                            marginHorizontal: spacing.sm,
-                          }}
-                          size={40}
-                          source={{
-                            uri: logoImageUri,
+                    <TextInput
+                      label='Location'
+                      value={values.location}
+                      onChangeText={(text) => {
+                        setLocationQuery(text)
+                        setValues({ ...values, location: text })
+                      }}
+                      onBlur={handleBlur('location')}
+                      onFocus={() =>
+                        scrollRef.current?.scrollTo({
+                          x: 0,
+                          y: 200,
+                          animated: true,
+                        })
+                      }
+                    />
+                    <FormInputError
+                      error={errors.location}
+                      touched={touched.location}
+                    />
+                    {locationResults?.map(
+                      (
+                        locResult: google.maps.places.AutocompletePrediction,
+                        i
+                      ) => (
+                        <List.Item
+                          key={i}
+                          title={locResult.description}
+                          onPress={() => {
+                            const url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${locResult.place_id}&key=${GOOGLE_PLACES_API_KEY}`
+                            fetch(url)
+                              .then((response) => response.json())
+                              .then(
+                                ({
+                                  result,
+                                }: {
+                                  result: google.maps.places.PlaceResult
+                                }) => {
+                                  setValues({
+                                    locationData: result,
+                                    ...values,
+                                    location: locResult.description,
+                                  })
+                                  setLocationResults([])
+                                  setLocationQuery('')
+                                  Keyboard.dismiss()
+                                }
+                              )
                           }}
                         />
-                      )}
-
-                      <Button
-                        mode='text'
-                        style={{ marginTop: 0 }}
-                        labelStyle={{ fontSize: 16 }}
-                        loading={isSaving}
-                        onPress={handleLogoImageSelect}
-                      >
-                        Select Logo
-                      </Button>
-                    </View>
-
-                    {!isVendorSetup && (
-                      <FAB
-                        icon='content-save'
-                        color='white'
-                        disabled={!(dirty && isValid)}
-                        onPress={handleSubmit}
-                      />
+                      )
                     )}
-                  </View>
-                </>
-              )}
+
+                    <TextInput
+                      label='Food Type'
+                      value={values.foodType}
+                      onChangeText={handleChange('foodType')}
+                      onBlur={handleBlur('foodType')}
+                      onFocus={() =>
+                        scrollRef.current?.scrollTo({
+                          x: 0,
+                          y: 300,
+                          animated: true,
+                        })
+                      }
+                    />
+                    <FormInputError
+                      error={errors.foodType}
+                      touched={touched.foodType}
+                    />
+
+                    <TextInput
+                      label='Description'
+                      onChangeText={handleChange('description')}
+                      onBlur={handleBlur('description')}
+                      value={values.description}
+                    />
+                    <FormInputError
+                      error={errors.description}
+                      touched={touched.description}
+                    />
+
+                    <View style={styles.logoPickerContainer}>
+                      <View
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                      >
+                        {!!logoImageUri && (
+                          <Avatar.Image
+                            style={{
+                              backgroundColor: '#f0f0f0',
+                              marginHorizontal: spacing.sm,
+                            }}
+                            size={40}
+                            source={{
+                              uri: logoImageUri,
+                            }}
+                          />
+                        )}
+
+                        <Button
+                          mode='text'
+                          style={{ marginTop: 0 }}
+                          labelStyle={{ fontSize: 16 }}
+                          loading={isSaving}
+                          onPress={handleLogoImageSelect}
+                        >
+                          Select Logo
+                        </Button>
+                      </View>
+
+                      {!isVendorSetup && (
+                        <FAB
+                          icon='content-save'
+                          color='white'
+                          disabled={!(dirty && isValid)}
+                          onPress={handleSubmit}
+                        />
+                      )}
+                    </View>
+                  </>
+                )}
+              </View>
             </Card>
             <Card>
               <MapView
@@ -408,14 +425,11 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.xxs,
     fontSize: 12,
   },
-  fab: {
+  editButton: {
     position: 'absolute',
-    zIndex: 2,
-    top: 0,
-    right: 0,
-    margin: theme.spacing.xs,
-    backgroundColor: 'white',
-    shadowOpacity: 0,
+    right: theme.spacing.xxs,
+    top: theme.spacing.xxs,
+    zIndex: 1,
   },
   logoPickerContainer: {
     flexDirection: 'row',
