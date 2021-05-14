@@ -45,7 +45,7 @@ export default function VendorAddEvent() {
   const { goBack, navigate } = useNavigation()
   const { params } = useRoute()
   const { menuItems, activePopUp } = useVendor()
-  const { addEvent } = useEvents()
+  const { addEvent, editEvent } = useEvents()
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<boolean>(false)
@@ -76,15 +76,15 @@ export default function VendorAddEvent() {
   }
 
   const handleEditEvent = async (values: Event) => {
-    // try {
-    //   setIsSaving(true)
-    //   await editMenuItem(menuItem)
-    // } catch (error) {
-    //   console.log(error)
-    // } finally {
-    //   setIsSaving(false)
-    //   goBack()
-    // }
+    try {
+      setIsSaving(true)
+      await editEvent(values)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSaving(false)
+      goBack()
+    }
   }
 
   const handleLocationSearch = (locationQuery: string) => {
@@ -98,6 +98,10 @@ export default function VendorAddEvent() {
     handleLocationSearch(locationQuery)
   }, [locationQuery])
 
+  useEffect(() => {
+    isEditing && setMenuItemSelections(params.event.menu)
+  }, [])
+
   const categories = MENU_ITEM_CATEGORIES.map((c) => {
     if (menuItems.some((e) => e.category === c.value)) {
       return c.value
@@ -110,7 +114,14 @@ export default function VendorAddEvent() {
         <SafeAreaView style={presets.screenContainer}>
           <Formik
             enableReinitialize
-            initialValues={isEditing ? params.event : INIT_EVENT_VALUES}
+            initialValues={
+              isEditing
+                ? {
+                    ...params.event,
+                    eventDate: params.event.eventDate.toDate(),
+                  }
+                : INIT_EVENT_VALUES
+            }
             validationSchema={EVENT_SCHEMA}
             onSubmit={(values) => {
               isEditing ? handleEditEvent(values) : handleAddEvent(values)
@@ -168,7 +179,6 @@ export default function VendorAddEvent() {
                       <Title style={[fonts.title, styles.modalTitle]}>
                         Event Date
                       </Title>
-                      {/* Date piker goes here */}
                       <DateTimePicker
                         testID='dateTimePicker'
                         textColor='black'

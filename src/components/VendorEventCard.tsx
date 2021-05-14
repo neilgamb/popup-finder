@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { IconButton, Title, Text, useTheme } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 import { format } from 'date-fns'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import Carousel from 'react-native-snap-carousel'
@@ -24,6 +25,7 @@ interface Item {
 
 const VendorEventCard = ({ event }: Props) => {
   const { spacing, colors } = useTheme()
+  const { navigate } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
 
   const carouselRef = useRef<Carousel<Item>>(null)
@@ -41,7 +43,12 @@ const VendorEventCard = ({ event }: Props) => {
         style={styles.editButton}
         color={colors.gray}
         size={25}
-        onPress={() => console.log('Pressed')}
+        onPress={() =>
+          navigate('VendorAddEvent', {
+            isEditing: true,
+            event,
+          })
+        }
       />
       <Carousel
         layout='default'
@@ -122,7 +129,7 @@ const EventInfo = ({ event }: Props) => {
         zoomEnabled={false}
         provider={PROVIDER_GOOGLE}
         customMapStyle={mapStyle}
-        initialRegion={{
+        region={{
           latitude: lat,
           longitude: lng,
           latitudeDelta: 0.0922,

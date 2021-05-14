@@ -28,6 +28,7 @@ interface EventsProps {
 
 interface EventsContextProps {
   addEvent: (eventInfo: object) => Promise<boolean>
+  editEvent: (eventInfo: object) => Promise<boolean>
   getEvents: (popUid?: string) => () => {}
   events: Array<Event>
 }
@@ -68,6 +69,20 @@ function useEventsProvider() {
     })
   }
 
+  const editEvent = (eventInfo: Event) => {
+    const eventCollection = firestore().collection('events')
+
+    return new Promise(async (resolve, reject) => {
+      eventCollection
+        .doc(eventInfo.eventUid)
+        .set(eventInfo)
+        .then(async () => {
+          resolve(true)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
   const getEvents = (popUpUid: string) => {
     console.log('subscribing to events')
 
@@ -88,5 +103,5 @@ function useEventsProvider() {
     return unsubscribeEvents
   }
 
-  return { addEvent, getEvents, events }
+  return { addEvent, editEvent, getEvents, events }
 }

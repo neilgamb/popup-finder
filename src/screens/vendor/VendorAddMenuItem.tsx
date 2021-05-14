@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native'
 import { Title, TextInput as PTextInput, useTheme } from 'react-native-paper'
 import { useNavigation, useRoute } from '@react-navigation/native'
