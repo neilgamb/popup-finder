@@ -4,7 +4,7 @@ import { List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 
 import { useVendor, MenuItem } from '../../hooks/useVendor'
-import { Button, Card } from '../../components'
+import { Text, Button, Card } from '../../components'
 import { theme } from '../../style/theme'
 import { MENU_ITEM_CATEGORIES } from '../../utils/constants'
 
@@ -33,69 +33,72 @@ const VendorProfileMenu = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Button
-          icon='plus'
-          onPress={() => navigate('VendorAddMenuItem')}
-          style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
-        >
-          Add Menu Item
-        </Button>
-        {categories.map((category, catI) => {
-          return (
-            category && (
-              <Card
-                key={catI}
-                style={{ marginTop: spacing.md, paddingVertical: spacing.sm }}
-              >
-                <List.Item
-                  title={category.charAt(0).toUpperCase() + category.slice(1)}
-                  titleStyle={{
-                    fontSize: 18,
-                    fontWeight: '600',
+        <View style={{ marginBottom: 100 }}>
+          <Button
+            icon='plus'
+            onPress={() => navigate('VendorAddMenuItem')}
+            style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
+          >
+            Add Menu Item
+          </Button>
+          {categories.map((category, catI) => {
+            return (
+              category && (
+                <Card
+                  key={catI}
+                  style={{
+                    marginTop: spacing.sm,
+                    paddingTop: spacing.sm,
+                    paddingBottom: spacing.xxs,
                   }}
-                />
-                {menuItems.map((menuItem, mII) => {
-                  if (menuItem.category === category) {
-                    return (
-                      <List.Item
-                        key={mII}
-                        title={`${menuItem.name} $${menuItem.price}`}
-                        description={menuItem.description}
-                        right={(props) => (
-                          <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity
-                              onPress={() =>
-                                navigate('VendorAddMenuItem', {
-                                  isEditing: true,
-                                  menuItem,
-                                })
-                              }
-                            >
-                              <List.Icon
-                                {...props}
-                                icon='pencil'
-                                style={{ margin: 0 }}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={() => handleDeleteMenuItem(menuItem)}
-                            >
-                              <List.Icon
-                                {...props}
-                                icon='delete'
-                                style={{ margin: 0 }}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        )}
-                      />
-                    )
-                  }
-                })}
-              </Card>
+                >
+                  <Text h3 style={{ marginLeft: spacing.sm }}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </Text>
+                  {menuItems.map((menuItem, mII) => {
+                    if (menuItem.category === category) {
+                      return (
+                        <List.Item
+                          key={mII}
+                          title={`${menuItem.name} $${menuItem.price}`}
+                          description={menuItem.description}
+                          style={{ paddingVertical: 0 }}
+                          right={(props) => (
+                            <View style={{ flexDirection: 'row' }}>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  navigate('VendorAddMenuItem', {
+                                    isEditing: true,
+                                    menuItem,
+                                  })
+                                }
+                              >
+                                <List.Icon
+                                  {...props}
+                                  icon='pencil'
+                                  style={{ margin: 0 }}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => handleDeleteMenuItem(menuItem)}
+                              >
+                                <List.Icon
+                                  {...props}
+                                  icon='delete'
+                                  style={{ margin: 0 }}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          )}
+                        />
+                      )
+                    }
+                  })}
+                </Card>
+              )
             )
-          )
-        })}
+          })}
+        </View>
       </ScrollView>
     </View>
   )
