@@ -8,15 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {
-  Checkbox,
-  Title,
-  Modal,
-  Portal,
-  List,
-  Text,
-  useTheme,
-} from 'react-native-paper'
+import { Checkbox, Modal, Portal, List, useTheme } from 'react-native-paper'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { format } from 'date-fns'
@@ -25,6 +17,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 
 import {
   Button,
+  Text,
   DismissKeyboard,
   TextInput,
   FormInputError,
@@ -164,7 +157,7 @@ export default function VendorAddEvent() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Text style={styles.header}>{`${
+                  <Text h2 style={styles.header}>{`${
                     isEditing ? 'Edit' : 'Add'
                   } Event`}</Text>
 
@@ -199,7 +192,9 @@ export default function VendorAddEvent() {
                       onDismiss={() => setShowDatePicker(false)}
                       contentContainerStyle={styles.modalContainer}
                     >
-                      <Title style={[styles.modalTitle]}>Event Date</Title>
+                      <Text h2 style={styles.modalTitle}>
+                        Event Date
+                      </Text>
                       <DateTimePicker
                         testID='dateTimePicker'
                         textColor='black'
@@ -276,7 +271,12 @@ export default function VendorAddEvent() {
                       />
                     )
                   )}
-                  {/* <Title style={[fonts.title]}>Menu</Title> */}
+                  <Text
+                    h3
+                    style={{ marginTop: spacing.md, marginLeft: spacing.xs }}
+                  >
+                    Menu
+                  </Text>
                   {menuItemSelections.length === 0 && !isValid && (
                     <FormInputError
                       error={'Please set a menu'}
@@ -360,6 +360,7 @@ export default function VendorAddEvent() {
                 </View>
                 <View style={presets.screenActions}>
                   <Button
+                    dense
                     loading={isSaving}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
@@ -368,6 +369,7 @@ export default function VendorAddEvent() {
                   </Button>
                   {isEditing && (
                     <Button
+                      dense
                       mode='text'
                       loading={isSaving}
                       onPress={handleDeleteEvent}
@@ -376,7 +378,7 @@ export default function VendorAddEvent() {
                       DELETE
                     </Button>
                   )}
-                  <Button mode='text' loading={isSaving} onPress={goBack}>
+                  <Button dense mode='text' loading={isSaving} onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>
@@ -391,7 +393,6 @@ export default function VendorAddEvent() {
 
 const styles = StyleSheet.create({
   header: {
-    ...theme.typography.h1,
     marginTop: theme.spacing.md,
   },
   modalContainer: {
@@ -401,7 +402,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   modalTitle: {
-    ...theme.typography.h1,
     textAlign: 'center',
     marginTop: theme.spacing.sm,
   },

@@ -1,15 +1,11 @@
 import React from 'react'
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native'
+import { SafeAreaView, View, StyleSheet, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { withTheme } from 'react-native-paper'
 
-const Landing = ({ theme }) => {
+import { Text } from '../../components'
+
+const Landing = () => {
   const { navigate } = useNavigation()
 
   return (
@@ -19,13 +15,13 @@ const Landing = ({ theme }) => {
           style={styles.button}
           onPress={() => navigate('PatronSignIn')}
         >
-          <Text style={styles.buttonText}>Find a Pop Up</Text>
+          <Text h1>Find a Pop Up</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigate('VendorSignIn')}
         >
-          <Text style={styles.buttonText}>List a Pop Up</Text>
+          <Text h1>List a Pop Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

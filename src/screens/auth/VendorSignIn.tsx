@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { View, SafeAreaView } from 'react-native'
-import { Title, withTheme, HelperText } from 'react-native-paper'
+import { withTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useAuth, useVendor } from '../../hooks'
-import { Button, TextInput, DismissKeyboard } from '../../components'
+import { Button, TextInput, Text, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
@@ -52,9 +52,7 @@ const VendorSignIn = ({ theme }: any) => {
         <View style={{ ...presets.screenContent, paddingTop: 200 }}>
           {!isVendorInviteValid && (
             <>
-              <Title style={{ marginLeft: spacing.xs }}>
-                Enter Email from Invite
-              </Title>
+              <Text>Enter Email from Invite</Text>
               <TextInput
                 label='Email'
                 value={email}

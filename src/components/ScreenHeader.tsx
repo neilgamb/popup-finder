@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Avatar, IconButton, Title } from 'react-native-paper'
+import { Avatar, IconButton } from 'react-native-paper'
 
+import { Text } from '../components'
 import { useAuth, useVendor } from '../hooks'
 import { theme } from '../style/theme'
 
@@ -28,7 +29,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           onPress={() => goBack()}
         />
       )}
-      <Title style={styles.title}>{route.name}</Title>
+      <Text h2>{route.name}</Text>
       {withAvatar && (
         <TouchableOpacity
           style={styles.avatarContainer}

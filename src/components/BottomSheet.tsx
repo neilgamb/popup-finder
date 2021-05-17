@@ -1,8 +1,8 @@
 import React, { useState, forwardRef, useRef, useEffect } from 'react'
 import { Animated, Dimensions, Keyboard, StyleSheet, View } from 'react-native'
-import { Title } from 'react-native-paper'
 import ReanimatedBottomSheet from 'reanimated-bottom-sheet'
 
+import { Text } from '../components'
 import { theme } from '../style/theme'
 
 type BottomSheetProps = {
@@ -85,7 +85,7 @@ const BottomSheet = forwardRef(
               <View style={styles.handleContainer}>
                 <View style={styles.headerHandle} />
               </View>
-              <Title>{header}</Title>
+              <Text>{header}</Text>
             </View>
           )}
           renderContent={() => (

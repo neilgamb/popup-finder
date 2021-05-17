@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native'
-import { Title, TextInput as PTextInput, useTheme } from 'react-native-paper'
+import { Keyboard, SafeAreaView, View } from 'react-native'
+import { TextInput as PTextInput, useTheme } from 'react-native-paper'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Formik } from 'formik'
 import DropDown from 'react-native-paper-dropdown'
@@ -9,6 +9,7 @@ import {
   Button,
   DismissKeyboard,
   TextInput,
+  Text,
   FormInputError,
 } from '../../components'
 import ModalContainer from '../../navigation/ModalContainer'
@@ -80,9 +81,9 @@ export default function VendorAddMenuItem() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  {/* <Title style={fonts.title}>
-                    {`${isEditing ? 'Edit' : 'Add'} Menu Item`}
-                  </Title> */}
+                  <Text h2 style={{ marginTop: spacing.md }}>{`${
+                    isEditing ? 'Edit' : 'Add'
+                  } Menu Item`}</Text>
                   <TextInput
                     label='Item Name'
                     onChangeText={handleChange('name')}
@@ -141,13 +142,14 @@ export default function VendorAddMenuItem() {
                 </View>
                 <View style={[presets.screenActions]}>
                   <Button
+                    dense
                     loading={isSaving}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >
                     SUBMIT
                   </Button>
-                  <Button mode='text' loading={isSaving} onPress={goBack}>
+                  <Button dense mode='text' loading={isSaving} onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>

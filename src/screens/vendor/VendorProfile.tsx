@@ -4,7 +4,6 @@ import {
   Dimensions,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
 } from 'react-native'
@@ -13,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 import Carousel from 'react-native-snap-carousel'
 import auth from '@react-native-firebase/auth'
 
-import { Button, DismissKeyboard } from '../../components'
+import { Button, DismissKeyboard, Text } from '../../components'
 import { VendorProfileInfo, VendorProfileMenu } from '../../screens'
 import { useVendor, useAuth } from '../../hooks'
 import { theme } from '../../style/theme'
@@ -82,13 +81,13 @@ const VendorProfile = () => {
               style={styles.menuButton}
               onPress={() => setActiveIndex(0)}
             >
-              <Text style={styles.menuButtonText}>PROFILE</Text>
+              <Text h3>PROFILE</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setActiveIndex(1)}
             >
-              <Text style={styles.menuButtonText}>MENU</Text>
+              <Text h3>MENU</Text>
             </TouchableOpacity>
             <Animated.View
               style={[
@@ -129,6 +128,7 @@ const VendorProfile = () => {
             }}
           >
             <Button
+              dense
               mode='text'
               icon='logout'
               style={{ flex: 1, marginRight: spacing.xs }}
@@ -138,6 +138,7 @@ const VendorProfile = () => {
               Log Out
             </Button>
             <Button
+              dense
               mode='text'
               icon='chevron-double-down'
               style={{ flex: 1, marginLeft: spacing.xs }}
@@ -185,11 +186,11 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     paddingBottom: theme.spacing.sm,
   },
-  menuButtonText: {
-    textAlign: 'center',
-    fontSize: 18,
-    color: theme.colors.gray,
-  },
+  // menuButtonText: {
+  //   textAlign: 'center',
+  //   fontSize: 18,
+  //   color: theme.colors.gray,
+  // },
   menuIndicatorContainer: {
     position: 'absolute',
     bottom: 0,

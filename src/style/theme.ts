@@ -104,8 +104,32 @@ export const theme = {
   typography: {
     h1: {
       ...fontConfig.default.medium,
+      fontSize: 32,
+      color: 'black',
+    },
+    h2: {
+      ...fontConfig.default.medium,
       fontSize: 24,
-      lineHeight: 32,
+      color: 'black',
+    },
+    h3: {
+      ...fontConfig.default.medium,
+      fontSize: 18,
+      color: 'black',
+    },
+    body: {
+      ...fontConfig.default.regular,
+      fontSize: 16,
+      color: '#666',
+    },
+    caption: {
+      ...fontConfig.default.light,
+      fontSize: 14,
+      color: '#666',
+    },
+    button: {
+      ...fontConfig.default.regular,
+      fontSize: 18,
     },
   },
   withBorder,

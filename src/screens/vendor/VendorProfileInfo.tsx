@@ -1,21 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Alert, Platform, Keyboard, StyleSheet, View } from 'react-native'
-import {
-  Avatar,
-  List,
-  FAB,
-  IconButton,
-  Text,
-  useTheme,
-} from 'react-native-paper'
+import { Avatar, List, FAB, IconButton, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
-import { useVendor, PopUp } from '../../hooks/useVendor'
-import { TextInput, Button, FormInputError, Card } from '../../components'
+import { useVendor } from '../../hooks/useVendor'
+import { TextInput, Text, Button, FormInputError, Card } from '../../components'
 import { theme } from '../../style/theme'
 import { mapStyle } from '../../style/mapStyle'
 
@@ -185,48 +178,29 @@ const VendorProfileInfo = () => {
                   <>
                     <View style={styles.profileCardRow}>
                       <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
-                        <Text
-                          style={{ ...styles.profileCardText, fontSize: 24 }}
-                        >
-                          {activePopUp?.name}
-                        </Text>
-                        <Text style={styles.profileCardLabel}>POP UP NAME</Text>
+                        <Text h3>{activePopUp?.name}</Text>
+                        <Text caption>POP UP NAME</Text>
                       </View>
                     </View>
                     <View style={styles.profileCardRow}>
                       <View style={styles.profileCardItem}>
-                        <Text style={styles.profileCardText}>
-                          {activePopUp?.foodType}
-                        </Text>
-                        <Text style={styles.profileCardLabel}>FOOD TYPE</Text>
+                        <Text h3>{activePopUp?.foodType}</Text>
+                        <Text caption>FOOD TYPE</Text>
                       </View>
                       <View style={styles.profileCardItem}>
-                        <Text style={styles.profileCardText}>
-                          {activePopUp?.location.split(',')[0]}
-                        </Text>
-                        <Text style={styles.profileCardLabel}>CITY</Text>
+                        <Text h3>{activePopUp?.location.split(',')[0]}</Text>
+                        <Text caption>CITY</Text>
                       </View>
                     </View>
                     <View style={styles.profileCardItem}>
-                      <Text style={styles.profileCardText}>
-                        {activePopUp?.description}
-                      </Text>
-                      <Text style={styles.profileCardLabel}>DESCRIPTION</Text>
+                      <Text h3>{activePopUp?.description}</Text>
+                      <Text caption>DESCRIPTION</Text>
                     </View>
                   </>
                 ) : (
                   <>
                     {!isVendorSetup && (
-                      <Text
-                        style={{
-                          marginTop: spacing.sm,
-                          marginLeft: spacing.xs,
-                          fontSize: 18,
-                          color: colors.gray,
-                        }}
-                      >
-                        Please set up your Pop Up profile
-                      </Text>
+                      <Text>Please set up your Pop Up profile</Text>
                     )}
 
                     <TextInput
@@ -391,9 +365,7 @@ const VendorProfileInfo = () => {
             </Card>
             <Card style={{ marginBottom: spacing.xl, padding: spacing.md }}>
               <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
-                <Text style={{ ...styles.profileCardText, fontSize: 24 }}>
-                  Placeholder for Images section
-                </Text>
+                <Text h3>Placeholder for Images section</Text>
               </View>
             </Card>
           </ScrollView>

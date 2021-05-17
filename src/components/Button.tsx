@@ -5,16 +5,19 @@ type PaperButtonProps = React.ComponentProps<typeof PaperButton>
 
 type ButtonProps = PaperButtonProps & {
   theme: any
+  dense?: boolean
 }
 
 const Button = (props: ButtonProps) => {
-  const { fonts, spacing } = props.theme
-  const { style, ...rest } = { ...props }
+  const { spacing, typography } = props.theme
+  const { style, labelStyle, dense, ...rest } = { ...props }
 
   return (
     <PaperButton
       dark
       mode='contained'
+      labelStyle={[typography.button, labelStyle]}
+      contentStyle={{ paddingVertical: dense ? 0 : spacing.xxs }}
       style={[
         {
           opacity: props.disabled ? 0.5 : 1,
@@ -22,8 +25,6 @@ const Button = (props: ButtonProps) => {
         },
         props.style,
       ]}
-      contentStyle={{ paddingVertical: 4 }}
-      labelStyle={fonts.button}
       {...rest}
     />
   )
