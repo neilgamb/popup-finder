@@ -113,7 +113,10 @@ const VendorProfile = () => {
               activeSlideAlignment='center'
               ref={carouselRef}
               inactiveSlideScale={1}
-              data={[<VendorProfileInfo />, <VendorProfileMenu />]}
+              data={[
+                <VendorProfileInfo setActiveIndex={setActiveIndex} />,
+                <VendorProfileMenu />,
+              ]}
               sliderWidth={sliderWidth}
               itemWidth={itemWidth}
               renderItem={renderItems}

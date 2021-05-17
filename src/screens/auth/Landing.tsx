@@ -15,13 +15,13 @@ const Landing = () => {
           style={styles.button}
           onPress={() => navigate('PatronSignIn')}
         >
-          <Text h1>Find a Pop Up</Text>
+          <Text h2>Find a Pop Up</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigate('VendorSignIn')}
         >
-          <Text h1>List a Pop Up</Text>
+          <Text h2>List a Pop Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: 'black',
-    borderWidth: 1,
+    borderWidth: 1.3,
   },
   buttonText: {
     fontSize: 24,

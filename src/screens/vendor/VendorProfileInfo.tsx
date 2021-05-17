@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Alert, Platform, Keyboard, StyleSheet, View } from 'react-native'
 import { Avatar, List, FAB, IconButton, useTheme } from 'react-native-paper'
-import { useNavigation } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import * as ImagePicker from 'expo-image-picker'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
-import { useVendor } from '../../hooks/useVendor'
+import { useVendor, PopUp } from '../../hooks'
 import { TextInput, Text, Button, FormInputError, Card } from '../../components'
 import { theme } from '../../style/theme'
 import { mapStyle } from '../../style/mapStyle'
@@ -15,9 +14,12 @@ import { mapStyle } from '../../style/mapStyle'
 import { INIT_POP_VALUES, POP_UP_SCHEMA } from '../../utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 
-const VendorProfileInfo = () => {
+const VendorProfileInfo = ({
+  setActiveIndex,
+}: {
+  setActiveIndex: () => void
+}) => {
   const { spacing, colors, roundness } = useTheme()
-  const { goBack } = useNavigation()
   const { addPopUp, editPopUp, deletePopUp, isVendorSetup, activePopUp } =
     useVendor()
 
@@ -36,7 +38,7 @@ const VendorProfileInfo = () => {
       .then(({ predictions }) => setLocationResults(predictions))
   }
 
-  const handleAddPopUp = async (values: any) => {
+  const handleAddPopUp = async (values: PopUp) => {
     try {
       setIsSaving(true)
       await addPopUp(values, logoImageUri)
@@ -44,11 +46,11 @@ const VendorProfileInfo = () => {
       console.log(error)
     } finally {
       setIsSaving(false)
-      goBack()
+      setActiveIndex(1)
     }
   }
 
-  const handleEditPopUp = async (values: any) => {
+  const handleEditPopUp = async (values: PopUp) => {
     try {
       setIsSaving(true)
       await editPopUp(values, logoImageUri)
@@ -261,8 +263,8 @@ const VendorProfileInfo = () => {
                                   result: google.maps.places.PlaceResult
                                 }) => {
                                   setValues({
-                                    locationData: result,
                                     ...values,
+                                    locationData: result,
                                     location: locResult.description,
                                   })
                                   setLocationResults([])
@@ -345,24 +347,26 @@ const VendorProfileInfo = () => {
                 )}
               </View>
             </Card>
-            <Card>
-              <View pointerEvents='none'>
-                <MapView
-                  style={{ flex: 1, height: 150, borderRadius: roundness }}
-                  scrollEnabled={false}
-                  zoomTapEnabled={false}
-                  mapType='standard'
-                  provider={PROVIDER_GOOGLE}
-                  customMapStyle={mapStyle}
-                  initialRegion={{
-                    latitude: lat,
-                    longitude: lng,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  }}
-                />
-              </View>
-            </Card>
+            {isVendorSetup && (
+              <Card>
+                <View pointerEvents='none'>
+                  <MapView
+                    style={{ flex: 1, height: 150, borderRadius: roundness }}
+                    scrollEnabled={false}
+                    zoomTapEnabled={false}
+                    mapType='standard'
+                    provider={PROVIDER_GOOGLE}
+                    customMapStyle={mapStyle}
+                    initialRegion={{
+                      latitude: lat,
+                      longitude: lng,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }}
+                  />
+                </View>
+              </Card>
+            )}
             <Card style={{ marginBottom: spacing.xl, padding: spacing.md }}>
               <View style={{ ...styles.profileCardItem, marginTop: 0 }}>
                 <Text h3>Placeholder for Images section</Text>

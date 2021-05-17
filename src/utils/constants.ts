@@ -8,14 +8,14 @@ export const INIT_POP_VALUES = __DEV__
       // description: 'its also good',
       name: '',
       location: '',
-      locationData: null,
+      locationData: {},
       foodType: '',
       description: '',
     }
   : {
       name: '',
       location: '',
-      locationData: null,
+      locationData: {},
       foodType: '',
       description: '',
     }
@@ -77,12 +77,12 @@ export const INIT_EVENT_VALUES = __DEV__
   ? {
       eventDate: '',
       location: '',
-      locationData: null,
+      locationData: {},
       menu: [],
     }
   : {
       eventDate: '',
       location: '',
-      locationData: null,
+      locationData: {},
       menu: [],
     }

@@ -86,6 +86,7 @@ function useVendorProvider() {
         })
         .then(async () => {
           // await addPopUpToVendor(uid)
+          // getPopUps()
           resolve(uid)
         })
         .catch((error) => reject(error))
