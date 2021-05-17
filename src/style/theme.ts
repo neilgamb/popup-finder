@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { DefaultTheme, configureFonts } from 'react-native-paper'
+import { DefaultTheme } from 'react-native-paper'
 
 export const withBorder = {
   borderWidth: 1,
@@ -26,39 +26,31 @@ const SPACING = {
   xxs: 4,
 }
 
-const fontConfig = {
+export const fontConfig = {
   default: {
     regular: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
+      fontFamily: 'Nunito_400Regular',
+      fontWeight: '400' as '400',
     },
     medium: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
+      fontFamily: 'Nunito_600SemiBold',
+      fontWeight: '600' as '600',
     },
     light: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
+      fontFamily: 'Nunito_300Light',
+      fontWeight: '400' as '400',
     },
-    button: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
-      fontSize: 16,
-    },
-    input: {
-      fontFamily: 'Arial',
-      fontWeight: 'normal',
-      fontSize: 18,
-    },
-    title: {
-      fontSize: 24,
-      marginLeft: SPACING.xs,
-      marginTop: SPACING.md,
+    thin: {
+      fontFamily: 'Nunito_300Light',
+      fontWeight: '400' as '400',
     },
   },
 }
 
+// @ts-ignore
 fontConfig.ios = fontConfig.default
+// @ts-ignore
+fontConfig.android = fontConfig.default
 
 declare global {
   namespace ReactNativePaper {
@@ -74,12 +66,7 @@ declare global {
       presets: any
       withBorder: any
       spacing: any
-    }
-
-    interface ThemeFonts {
-      input: any
-      title: any
-      button: any
+      typography: any
     }
   }
 }
@@ -98,7 +85,6 @@ export const theme = {
     extraLightGray: '#f0f0f0',
     offWhite: '#f7f7f7',
   },
-  fonts: configureFonts(fontConfig),
   spacing: {
     ...SPACING,
   },
@@ -115,6 +101,13 @@ export const theme = {
       paddingBottom: SPACING.xs,
     },
   }),
+  typography: {
+    h1: {
+      ...fontConfig.default.medium,
+      fontSize: 24,
+      lineHeight: 32,
+    },
+  },
   withBorder,
   boxShadow,
 }

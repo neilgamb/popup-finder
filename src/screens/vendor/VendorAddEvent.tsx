@@ -11,10 +11,10 @@ import {
 import {
   Checkbox,
   Title,
-  TextInput as PTextInput,
   Modal,
   Portal,
   List,
+  Text,
   useTheme,
 } from 'react-native-paper'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -42,7 +42,7 @@ import {
 import { theme } from '../../style/theme'
 
 export default function VendorAddEvent() {
-  const { fonts, spacing, presets, colors, withBorder } = useTheme()
+  const { spacing, presets, colors, typography, withBorder } = useTheme()
   const { goBack, navigate } = useNavigation()
   const { params } = useRoute()
   const { menuItems, activePopUp } = useVendor()
@@ -152,7 +152,6 @@ export default function VendorAddEvent() {
             }}
           >
             {({
-              handleChange,
               handleBlur,
               handleSubmit,
               setTouched,
@@ -165,9 +164,9 @@ export default function VendorAddEvent() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Title style={fonts.title}>
-                    {`${isEditing ? 'Edit' : 'Add'} Event`}
-                  </Title>
+                  <Text style={styles.header}>{`${
+                    isEditing ? 'Edit' : 'Add'
+                  } Event`}</Text>
 
                   <TouchableWithoutFeedback
                     onPress={() => {
@@ -200,9 +199,7 @@ export default function VendorAddEvent() {
                       onDismiss={() => setShowDatePicker(false)}
                       contentContainerStyle={styles.modalContainer}
                     >
-                      <Title style={[fonts.title, styles.modalTitle]}>
-                        Event Date
-                      </Title>
+                      <Title style={[styles.modalTitle]}>Event Date</Title>
                       <DateTimePicker
                         testID='dateTimePicker'
                         textColor='black'
@@ -279,7 +276,7 @@ export default function VendorAddEvent() {
                       />
                     )
                   )}
-                  <Title style={[fonts.title]}>Menu</Title>
+                  {/* <Title style={[fonts.title]}>Menu</Title> */}
                   {menuItemSelections.length === 0 && !isValid && (
                     <FormInputError
                       error={'Please set a menu'}
@@ -374,7 +371,7 @@ export default function VendorAddEvent() {
                       mode='text'
                       loading={isSaving}
                       onPress={handleDeleteEvent}
-                      labelStyle={{ ...fonts.button, color: colors.accent }}
+                      labelStyle={{ color: colors.accent }}
                     >
                       DELETE
                     </Button>
@@ -393,6 +390,10 @@ export default function VendorAddEvent() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    ...theme.typography.h1,
+    marginTop: theme.spacing.md,
+  },
   modalContainer: {
     marginHorizontal: 32,
     backgroundColor: 'white',
@@ -400,8 +401,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   modalTitle: {
+    ...theme.typography.h1,
     textAlign: 'center',
-    fontSize: 24,
-    marginBottom: theme.spacing.md,
+    marginTop: theme.spacing.sm,
   },
 })

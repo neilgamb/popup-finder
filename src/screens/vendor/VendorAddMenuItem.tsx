@@ -80,9 +80,9 @@ export default function VendorAddMenuItem() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Title style={fonts.title}>
+                  {/* <Title style={fonts.title}>
                     {`${isEditing ? 'Edit' : 'Add'} Menu Item`}
-                  </Title>
+                  </Title> */}
                   <TextInput
                     label='Item Name'
                     onChangeText={handleChange('name')}
@@ -159,5 +159,3 @@ export default function VendorAddMenuItem() {
     </DismissKeyboard>
   )
 }
-
-const styles = StyleSheet.create({})
