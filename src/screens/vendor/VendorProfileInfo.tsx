@@ -372,19 +372,22 @@ const VendorProfileInfo = () => {
               </View>
             </Card>
             <Card>
-              <MapView
-                style={{ flex: 1, height: 200, borderRadius: roundness }}
-                scrollEnabled={false}
-                mapType='standard'
-                provider={PROVIDER_GOOGLE}
-                customMapStyle={mapStyle}
-                initialRegion={{
-                  latitude: lat,
-                  longitude: lng,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-              />
+              <View pointerEvents='none'>
+                <MapView
+                  style={{ flex: 1, height: 150, borderRadius: roundness }}
+                  scrollEnabled={false}
+                  zoomTapEnabled={false}
+                  mapType='standard'
+                  provider={PROVIDER_GOOGLE}
+                  customMapStyle={mapStyle}
+                  initialRegion={{
+                    latitude: lat,
+                    longitude: lng,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                />
+              </View>
             </Card>
             <Card style={{ marginBottom: spacing.xl, padding: spacing.md }}>
               <View style={{ ...styles.profileCardItem, marginTop: 0 }}>

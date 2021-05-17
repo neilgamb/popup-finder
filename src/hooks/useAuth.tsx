@@ -55,6 +55,7 @@ function useAuthProvider() {
   const onAuthStateChanged = (result: FirebaseAuthTypes.User | null) => {
     setUserInfo(result)
     setUserIsAuthenticated(!!result)
+    if (!result) setIsVendor(false)
   }
 
   const signInAnonymously = async (isVendor: boolean) => {
