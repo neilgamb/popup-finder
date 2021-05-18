@@ -2,6 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { List, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { useVendor, MenuItem } from '../../hooks/useVendor'
 import { Text, Button, Card } from '../../components'
@@ -66,6 +67,7 @@ const VendorProfileMenu = () => {
                           right={(props) => (
                             <View style={{ flexDirection: 'row' }}>
                               <TouchableOpacity
+                                style={{ paddingHorizontal: spacing.xs }}
                                 onPress={() =>
                                   navigate('VendorAddMenuItem', {
                                     isEditing: true,
@@ -73,20 +75,13 @@ const VendorProfileMenu = () => {
                                   })
                                 }
                               >
-                                <List.Icon
-                                  {...props}
-                                  icon='pencil'
-                                  style={{ margin: 0 }}
-                                />
+                                <Icon {...props} size={22} name='edit' />
                               </TouchableOpacity>
                               <TouchableOpacity
+                                style={{ paddingHorizontal: spacing.xs }}
                                 onPress={() => handleDeleteMenuItem(menuItem)}
                               >
-                                <List.Icon
-                                  {...props}
-                                  icon='delete'
-                                  style={{ margin: 0 }}
-                                />
+                                <Icon {...props} size={22} name='delete' />
                               </TouchableOpacity>
                             </View>
                           )}
