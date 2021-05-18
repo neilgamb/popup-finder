@@ -27,7 +27,7 @@ export default function VendorAddMenuItem() {
   const { goBack } = useNavigation()
   const { params } = useRoute()
   const { addMenuItem, editMenuItem } = useVendor()
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, setIsSaving] = useState<boolean>(false)
   const [showDropDown, setShowDropDown] = useState(false)
 
   const isEditing = params?.isEditing ? true : false
@@ -149,7 +149,7 @@ export default function VendorAddMenuItem() {
                   >
                     SUBMIT
                   </Button>
-                  <Button dense mode='text' loading={isSaving} onPress={goBack}>
+                  <Button dense mode='text' onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>

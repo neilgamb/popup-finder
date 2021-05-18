@@ -62,6 +62,7 @@ export const MENU_ITEM_SCHEMA = Yup.object().shape({
 export const MENU_ITEM_CATEGORIES = [
   { label: 'Appetizers', value: 'apps' },
   { label: 'Main Courses', value: 'main' },
+  { label: 'Sides', value: 'sides' },
   { label: 'Specials', value: 'specials' },
   { label: 'Dessert', value: 'dessert' },
   { label: 'Drinks', value: 'drinks' },

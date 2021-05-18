@@ -42,7 +42,7 @@ export default function VendorAddEvent() {
   const { addEvent, editEvent, deleteEvent } = useEvents()
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
-  const [isSaving, setIsSaving] = useState<boolean>(false)
+  const [isSaving, setIsSaving] = useState<string>('')
   const [locationQuery, setLocationQuery] = useState<string>('')
   const [locationResults, setLocationResults] = useState([])
   const [menuItemSelections, setMenuItemSelections] = useState<Array<MenuItem>>(
@@ -53,7 +53,7 @@ export default function VendorAddEvent() {
 
   const handleAddEvent = async (values: Event) => {
     try {
-      setIsSaving(true)
+      setIsSaving('submit')
       Keyboard.dismiss()
       await addEvent({
         ...values,
@@ -64,19 +64,19 @@ export default function VendorAddEvent() {
     } catch (error) {
       console.log(error)
     } finally {
-      setIsSaving(false)
+      setIsSaving('')
       goBack()
     }
   }
 
   const handleEditEvent = async (values: Event) => {
     try {
-      setIsSaving(true)
+      setIsSaving('submit')
       await editEvent(values)
     } catch (error) {
       console.log(error)
     } finally {
-      setIsSaving(false)
+      setIsSaving('')
       goBack()
     }
   }
@@ -87,12 +87,12 @@ export default function VendorAddEvent() {
         text: 'OK',
         onPress: async () => {
           try {
-            setIsSaving(true)
+            setIsSaving('delete')
             await deleteEvent(params.event.eventUid)
           } catch (error) {
             console.log(error)
           } finally {
-            setIsSaving(false)
+            setIsSaving('')
             goBack()
           }
         },
@@ -206,7 +206,6 @@ export default function VendorAddEvent() {
                         }}
                       />
                       <Button
-                        loading={isSaving}
                         onPress={() => {
                           setValues({
                             ...values,
@@ -361,7 +360,7 @@ export default function VendorAddEvent() {
                 <View style={presets.screenActions}>
                   <Button
                     dense
-                    loading={isSaving}
+                    loading={isSaving === 'submit'}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >
@@ -371,14 +370,14 @@ export default function VendorAddEvent() {
                     <Button
                       dense
                       mode='text'
-                      loading={isSaving}
+                      loading={isSaving === 'delete'}
                       onPress={handleDeleteEvent}
                       labelStyle={{ color: colors.accent }}
                     >
                       DELETE
                     </Button>
                   )}
-                  <Button dense mode='text' loading={isSaving} onPress={goBack}>
+                  <Button dense mode='text' onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>

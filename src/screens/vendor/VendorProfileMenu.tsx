@@ -12,7 +12,7 @@ import { MENU_ITEM_CATEGORIES } from '../../utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const VendorProfileMenu = () => {
-  const { spacing, colors } = useTheme()
+  const { spacing } = useTheme()
   const { navigate } = useNavigation()
   const { menuItems, deleteMenuItem } = useVendor()
 
