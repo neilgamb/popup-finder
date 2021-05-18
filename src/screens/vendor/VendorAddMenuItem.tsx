@@ -144,6 +144,7 @@ export default function VendorAddMenuItem() {
                   <Button
                     dense
                     loading={isSaving}
+                    disabled={!(isValid && dirty)}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >

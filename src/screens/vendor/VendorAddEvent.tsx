@@ -276,12 +276,13 @@ export default function VendorAddEvent() {
                   >
                     Menu
                   </Text>
-                  {menuItemSelections.length === 0 && !isValid && (
-                    <FormInputError
-                      error={'Please set a menu'}
-                      touched={true}
-                    />
-                  )}
+                  {!(isValid && dirty) ||
+                    (values.menu.length < 1 && (
+                      <FormInputError
+                        error={'Please set a menu'}
+                        touched={true}
+                      />
+                    ))}
                   <ScrollView>
                     <View style={{ marginBottom: 50 }}>
                       <List.Item
@@ -361,6 +362,7 @@ export default function VendorAddEvent() {
                   <Button
                     dense
                     loading={isSaving === 'submit'}
+                    disabled={!(isValid && dirty) || values.menu.length < 1}
                     onPress={handleSubmit}
                     style={{ marginTop: spacing.sm }}
                   >
