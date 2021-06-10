@@ -34,7 +34,7 @@ interface EventsContextProps {
   events: Array<Event>
 }
 
-export const EventsContext = createContext<EventsContextProps>(null)
+export const EventsContext = createContext<EventsContextProps | null>(null)
 
 export function EventsProvider({ children }: EventsProps) {
   const events = useEventsProvider()

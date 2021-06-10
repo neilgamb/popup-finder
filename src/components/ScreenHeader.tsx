@@ -53,6 +53,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
             <Avatar.Image
               style={{ backgroundColor: theme.colors.extraLightGray }}
               size={50}
+              //@ts-ignore
               source={{
                 uri: userInfo?.photoURL,
               }}

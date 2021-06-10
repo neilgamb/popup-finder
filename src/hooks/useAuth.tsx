@@ -21,20 +21,21 @@ interface AuthProps {
 interface AuthContextProps {
   userInfo: FirebaseAuthTypes.User | null
   userIsAuthenticated: boolean
-  isVendor: boolean
+  isVendor: boolean | null
   isVendorInviteValid: boolean
   signingIn: string | null
   signInAnonymously: (isVendor: boolean) => void
   signInWithGoogle: (
     isVendor: boolean,
-    setActiveUserUid: (userUid: string) => void
+    setActiveUserUid?: (userUid: string) => void
   ) => void
   verifyVendorInvite: (email: String) => boolean
   setIsVendorInviteValid: (isVendorInviteValid: boolean) => void
   setSigningIn: (signingIn: string | null) => void
 }
 
-export const AuthContext = createContext<AuthContextProps>(null)
+export const AuthContext =
+  createContext<AuthContextProps | undefined>(undefined)
 
 export function AuthProvider({ children }: AuthProps) {
   const auth = useAuthProvider()
@@ -72,14 +73,14 @@ function useAuthProvider() {
 
   const signInWithGoogle = async (
     isVendor: boolean,
-    setActiveUserUid: (userUid: string) => void
+    setActiveUserUid?: (userUid: string) => void
   ) => {
     try {
       setSigningIn('goog')
       const { idToken } = await GoogleSignin.signIn()
       const googleCredential = auth.GoogleAuthProvider.credential(idToken)
       const { user } = await auth().signInWithCredential(googleCredential)
-      setActiveUserUid(user.uid)
+      setActiveUserUid && setActiveUserUid(user.uid)
       syncUserWithFirestoreUsers(user, isVendor)
       setIsVendor(isVendor)
     } catch (e) {

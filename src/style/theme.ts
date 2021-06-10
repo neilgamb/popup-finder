@@ -147,3 +147,7 @@ export const theme = {
   withBorder,
   boxShadow,
 }
+
+export interface ThemeProps {
+  theme: ReactNativePaper.Theme
+}
