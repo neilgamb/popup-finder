@@ -1,5 +1,16 @@
 import { StyleSheet } from 'react-native'
-import { DefaultTheme } from 'react-native-paper'
+import { DefaultTheme, configureFonts } from 'react-native-paper'
+import {
+  Nunito_300Light,
+  Nunito_400Regular,
+  Nunito_600SemiBold,
+} from '@expo-google-fonts/nunito'
+
+export const appFonts = {
+  Nunito_300Light,
+  Nunito_400Regular,
+  Nunito_600SemiBold,
+}
 
 export const withBorder = {
   borderWidth: 1,
@@ -132,6 +143,7 @@ export const theme = {
       fontSize: 18,
     },
   },
+  fonts: configureFonts(fontConfig),
   withBorder,
   boxShadow,
 }
