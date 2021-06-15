@@ -33,12 +33,12 @@ const VendorProfileMenu = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ paddingHorizontal: spacing.md }}>
         <View style={{ marginBottom: 100 }}>
           <Button
             icon='plus'
             onPress={() => navigate('VendorAddMenuItem')}
-            style={{ marginHorizontal: spacing.md, marginTop: spacing.md }}
+            style={{ marginTop: spacing.md }}
           >
             Add Menu Item
           </Button>
@@ -48,12 +48,15 @@ const VendorProfileMenu = () => {
                 <Card
                   key={catI}
                   style={{
-                    marginTop: spacing.sm,
+                    marginTop: spacing.md,
                     paddingTop: spacing.sm,
                     paddingBottom: spacing.xxs,
                   }}
                 >
-                  <Text h3 style={{ marginLeft: spacing.sm }}>
+                  <Text
+                    h4
+                    style={{ marginLeft: spacing.md, marginTop: spacing.sm }}
+                  >
                     {category.charAt(0).toUpperCase() + category.slice(1)}
                   </Text>
                   {menuItems.map((menuItem, mII) => {
@@ -108,10 +111,10 @@ const styles = StyleSheet.create({
   },
   addButtonContainer: {
     padding: theme.spacing.md,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.palette.neutral[70],
   },
   addButtonText: {
-    color: theme.colors.darkGray,
+    color: theme.palette.neutral[140],
     fontSize: 22,
     textAlign: 'center',
   },

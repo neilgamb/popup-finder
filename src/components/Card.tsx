@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    marginHorizontal: theme.spacing.md,
     borderRadius: theme.roundness,
     marginTop: theme.spacing.md,
     position: 'relative',

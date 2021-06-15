@@ -23,19 +23,15 @@ const screenWidth = Dimensions.get('window').width
 const sliderWidth = screenWidth
 const itemWidth = screenWidth
 
-interface Item {
-  title: string
-}
-
 const VendorProfile = () => {
   const { presets, spacing, colors } = useTheme()
   const { goBack } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
 
   const { activePopUp, isVendorSetup, resetVendor } = useVendor()
-  const { userInfo } = useAuth()
+  const { userInfo } = useAuth()!
 
-  const carouselRef = useRef<Carousel<Item>>(null)
+  const carouselRef = useRef<Carousel<React.ReactNode>>(null)
   const menuIndicatorAnim = useRef(new Animated.Value(0)).current
 
   const signOut = async () => {
@@ -50,7 +46,9 @@ const VendorProfile = () => {
     }
   }
 
-  const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item}</View>
+  const renderItems = ({ item }: { item: React.ReactNode }) => (
+    <View style={{ flex: 1 }}>{item}</View>
+  )
 
   useEffect(() => {
     carouselRef.current?.snapToItem(activeIndex)
@@ -69,6 +67,7 @@ const VendorProfile = () => {
             <Avatar.Image
               style={styles.avatar}
               size={90}
+              //@ts-ignore
               source={{
                 uri: activePopUp
                   ? activePopUp.logoImageUrl
@@ -81,13 +80,13 @@ const VendorProfile = () => {
               style={styles.menuButton}
               onPress={() => setActiveIndex(0)}
             >
-              <Text h3>PROFILE</Text>
+              <Text h4>PROFILE</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setActiveIndex(1)}
             >
-              <Text h3>MENU</Text>
+              <Text h4>MENU</Text>
             </TouchableOpacity>
             <Animated.View
               style={[
@@ -131,21 +130,19 @@ const VendorProfile = () => {
             }}
           >
             <Button
-              dense
               mode='text'
               icon='logout'
               style={{ flex: 1, marginRight: spacing.xs }}
-              labelStyle={{ fontSize: 18, color: colors.gray }}
+              labelStyle={{ fontSize: 18 }}
               onPress={signOut}
             >
               Log Out
             </Button>
             <Button
-              dense
               mode='text'
               icon='chevron-double-down'
               style={{ flex: 1, marginLeft: spacing.xs }}
-              labelStyle={{ fontSize: 18, color: colors.gray }}
+              labelStyle={{ fontSize: 18 }}
               onPress={goBack}
               disabled={!isVendorSetup}
             >

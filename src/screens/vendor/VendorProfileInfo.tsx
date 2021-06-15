@@ -17,7 +17,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 const VendorProfileInfo = ({
   setActiveIndex,
 }: {
-  setActiveIndex: () => void
+  setActiveIndex: (index: number) => void
 }) => {
   const { spacing, colors, roundness } = useTheme()
   const { addPopUp, editPopUp, deletePopUp, isVendorSetup, activePopUp } =
@@ -141,8 +141,8 @@ const VendorProfileInfo = ({
         dirty,
       }) => (
         <View style={[styles.container]}>
-          <ScrollView ref={scrollRef}>
-            <Card style={{ marginTop: spacing.md }}>
+          <ScrollView ref={scrollRef} style={{ paddingHorizontal: spacing.md }}>
+            <Card style={{ marginTop: spacing.md, padding: spacing.xs }}>
               <View style={{ padding: spacing.sm }}>
                 {isVendorSetup && (
                   <IconButton
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   },
   profileCardText: {
     fontSize: 18,
-    color: theme.colors.darkGray,
+    color: theme.colors.gray,
   },
   profileCardLabel: {
     color: theme.colors.gray,

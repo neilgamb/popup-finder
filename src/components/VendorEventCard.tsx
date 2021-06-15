@@ -99,7 +99,7 @@ const EventInfo = ({ event }: Props) => {
   return (
     <>
       <View style={{ padding: spacing.md }}>
-        <Text h3>{format(event.eventDate.toDate(), 'eeee, LLLL do yyyy')}</Text>
+        <Text h4>{format(event.eventDate.toDate(), 'eeee, LLLL do yyyy')}</Text>
         <Text>{event.locationData.name}</Text>
         <Text>{event.locationData.formatted_address}</Text>
       </View>
@@ -148,7 +148,7 @@ const EventMenu = ({ event }: Props) => {
                 marginRight: spacing.sm,
               }}
             >
-              <Text h3>{cat.label}</Text>
+              <Text h4>{cat.label}</Text>
               {event.menu
                 .filter((menuItem) => menuItem.category === cat.value)
                 .map((menuItem, menuItemIndex) => (

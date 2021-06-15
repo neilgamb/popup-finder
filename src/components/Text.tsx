@@ -10,8 +10,10 @@ type TextProps = RNTextProps & {
   h1?: boolean
   h2?: boolean
   h3?: boolean
+  h4?: boolean
   body?: boolean
   caption?: boolean
+  link?: boolean
 }
 
 const Text = (props: TextProps) => {
@@ -26,7 +28,9 @@ const Text = (props: TextProps) => {
         props.h1 && typography.h1,
         props.h2 && typography.h2,
         props.h3 && typography.h3,
+        props.h4 && typography.h4,
         props.caption && typography.caption,
+        props.link && typography.link,
         styleOverrides,
         // withBorder,
       ]}

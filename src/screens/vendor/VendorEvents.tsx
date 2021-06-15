@@ -7,7 +7,7 @@ import { FAB, ScreenHeader, VendorEventCard } from '../../components'
 import { useVendor, useEvents } from '../../hooks'
 
 const VendorEvents = () => {
-  const { presets } = useTheme()
+  const { presets, spacing } = useTheme()
   const { navigate } = useNavigation()
   const { activePopUp, isVendorSetup } = useVendor()
   const { getEvents, events } = useEvents()!
@@ -34,7 +34,7 @@ const VendorEvents = () => {
   return (
     <SafeAreaView style={presets.screenContainer}>
       <ScreenHeader withAvatar />
-      <ScrollView>
+      <ScrollView style={{ paddingHorizontal: spacing.md }}>
         {events.map((event, i) => (
           <VendorEventCard key={i} event={event} />
         ))}
