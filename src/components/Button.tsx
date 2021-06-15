@@ -8,13 +8,12 @@ type PaperButtonProps = React.ComponentProps<typeof PaperButton>
 
 type ButtonProps = ThemeProps &
   PaperButtonProps & {
-    dense?: boolean
     children: React.ReactNode
   }
 
 const Button = (props: ButtonProps) => {
   const { spacing, typography, colors } = props.theme
-  const { style, labelStyle, dense, children, ...rest } = { ...props }
+  const { style, labelStyle, children, ...rest } = { ...props }
 
   let mode = props.mode || 'contained'
 

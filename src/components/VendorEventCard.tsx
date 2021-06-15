@@ -19,18 +19,16 @@ interface Props {
   event: Event
 }
 
-interface Item {
-  title: string
-}
-
 const VendorEventCard = ({ event }: Props) => {
-  const { spacing, colors } = useTheme()
+  const { spacing, colors, palette } = useTheme()
   const { navigate } = useNavigation()
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const carouselRef = useRef<Carousel<Item>>(null)
+  const carouselRef = useRef<Carousel<React.ReactNode>>(null)
 
-  const renderItems = ({ item }) => <View style={{ flex: 1 }}>{item}</View>
+  const renderItems = ({ item }: { item: React.ReactNode }) => (
+    <View style={{ flex: 1 }}>{item}</View>
+  )
 
   useEffect(() => {
     carouselRef.current?.snapToItem(activeIndex)
@@ -71,8 +69,7 @@ const VendorEventCard = ({ event }: Props) => {
           onPress={() => setActiveIndex(0)}
           style={{
             ...styles.cardNavButton,
-            backgroundColor:
-              activeIndex === 0 ? colors.extraLightGray : 'white',
+            backgroundColor: activeIndex === 0 ? palette.neutral[70] : 'white',
           }}
         >
           <Text>DETAILS</Text>
@@ -82,8 +79,7 @@ const VendorEventCard = ({ event }: Props) => {
           onPress={() => setActiveIndex(1)}
           style={{
             ...styles.cardNavButton,
-            backgroundColor:
-              activeIndex === 1 ? colors.extraLightGray : 'white',
+            backgroundColor: activeIndex === 1 ? palette.neutral[70] : 'white',
           }}
         >
           <Text>MENU</Text>
@@ -102,7 +98,7 @@ const EventInfo = ({ event }: Props) => {
 
   return (
     <>
-      <View style={{ padding: spacing.sm }}>
+      <View style={{ padding: spacing.md }}>
         <Text h3>{format(event.eventDate.toDate(), 'eeee, LLLL do yyyy')}</Text>
         <Text>{event.locationData.name}</Text>
         <Text>{event.locationData.formatted_address}</Text>
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
   },
   menuContainer: {
-    padding: theme.spacing.sm,
+    padding: theme.spacing.md,
     width: '90%',
     flexWrap: 'wrap',
     flexDirection: 'column',

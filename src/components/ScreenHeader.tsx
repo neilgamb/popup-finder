@@ -29,7 +29,9 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           onPress={() => goBack()}
         />
       )}
-      <Text h2>{route.name}</Text>
+      <Text h3 style={{ marginLeft: theme.spacing.sm }}>
+        {route.name}
+      </Text>
       {withAvatar && (
         <TouchableOpacity
           style={styles.avatarContainer}
@@ -38,12 +40,12 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
           {userInfo?.isAnonymous ? (
             <Avatar.Icon
               icon='account'
-              style={{ backgroundColor: theme.colors.extraLightGray }}
+              style={{ backgroundColor: theme.palette.neutral[70] }}
               size={50}
             />
           ) : activePopUp !== null ? (
             <Avatar.Image
-              style={{ backgroundColor: theme.colors.extraLightGray }}
+              style={{ backgroundColor: theme.palette.neutral[70] }}
               size={50}
               source={{
                 uri: activePopUp.logoImageUrl,
@@ -51,7 +53,7 @@ const ScreenHeader = ({ withAvatar, withBackButton }: ScreenHeaderProps) => {
             />
           ) : (
             <Avatar.Image
-              style={{ backgroundColor: theme.colors.extraLightGray }}
+              style={{ backgroundColor: theme.palette.neutral[70] }}
               size={50}
               //@ts-ignore
               source={{

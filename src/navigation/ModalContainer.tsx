@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   containerInner: {
     height: '85%',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.neutral[70],
     justifyContent: 'center',
     borderTopRightRadius: theme.roundness * 1.5,
     borderTopLeftRadius: theme.roundness * 1.5,

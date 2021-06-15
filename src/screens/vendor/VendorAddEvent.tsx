@@ -9,11 +9,12 @@ import {
   View,
 } from 'react-native'
 import { Checkbox, Modal, Portal, List, useTheme } from 'react-native-paper'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import { Formik } from 'formik'
 import { format } from 'date-fns'
-import { GOOGLE_PLACES_API_KEY } from '@env'
+//@ts-ignore
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { GOOGLE_PLACES_API_KEY } from '@env'
 
 import {
   Button,
@@ -34,12 +35,18 @@ import {
 
 import { theme } from '../../style/theme'
 
+type RootStackParamList = {
+  VendorAddEvent: { isEditing: boolean; event: Event }
+}
+
+type VendorAddEventRouteProp = RouteProp<RootStackParamList, 'VendorAddEvent'>
+
 export default function VendorAddEvent() {
   const { spacing, presets, colors, typography, withBorder } = useTheme()
   const { goBack, navigate } = useNavigation()
-  const { params } = useRoute()
+  const { params } = useRoute<VendorAddEventRouteProp>()
   const { menuItems, activePopUp } = useVendor()
-  const { addEvent, editEvent, deleteEvent } = useEvents()
+  const { addEvent, editEvent, deleteEvent } = useEvents()!
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
   const [isSaving, setIsSaving] = useState<string>('')
@@ -51,7 +58,7 @@ export default function VendorAddEvent() {
 
   const isEditing = params?.isEditing ? true : false
 
-  const handleAddEvent = async (values: Event) => {
+  const handleAddEvent = async (values: any) => {
     try {
       setIsSaving('submit')
       Keyboard.dismiss()
@@ -69,7 +76,7 @@ export default function VendorAddEvent() {
     }
   }
 
-  const handleEditEvent = async (values: Event) => {
+  const handleEditEvent = async (values: any) => {
     try {
       setIsSaving('submit')
       await editEvent(values)
@@ -157,7 +164,7 @@ export default function VendorAddEvent() {
             }) => (
               <>
                 <View style={presets.screenContent}>
-                  <Text h2 style={styles.header}>{`${
+                  <Text h3 style={styles.header}>{`${
                     isEditing ? 'Edit' : 'Add'
                   } Event`}</Text>
 
@@ -313,7 +320,7 @@ export default function VendorAddEvent() {
                                       title={`${menuItem.name} $${menuItem.price}`}
                                       left={() => (
                                         <Checkbox.Android
-                                          uncheckedColor={colors.lightGray}
+                                          uncheckedColor={colors.accent}
                                           status={
                                             menuItemSelections.some(
                                               (e) => e.name === menuItem.name
@@ -360,7 +367,6 @@ export default function VendorAddEvent() {
                 </View>
                 <View style={presets.screenActions}>
                   <Button
-                    dense
                     loading={isSaving === 'submit'}
                     disabled={!(isValid && dirty) || values.menu.length < 1}
                     onPress={handleSubmit}
@@ -370,7 +376,6 @@ export default function VendorAddEvent() {
                   </Button>
                   {isEditing && (
                     <Button
-                      dense
                       mode='text'
                       loading={isSaving === 'delete'}
                       onPress={handleDeleteEvent}
@@ -379,7 +384,7 @@ export default function VendorAddEvent() {
                       DELETE
                     </Button>
                   )}
-                  <Button dense mode='text' onPress={goBack}>
+                  <Button mode='text' onPress={goBack}>
                     DISMISS
                   </Button>
                 </View>
@@ -394,7 +399,8 @@ export default function VendorAddEvent() {
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: theme.spacing.md,
+    marginTop: theme.spacing.lg,
+    marginLeft: theme.spacing.xs,
   },
   modalContainer: {
     marginHorizontal: 32,

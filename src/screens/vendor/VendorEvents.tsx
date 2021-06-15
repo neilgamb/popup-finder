@@ -10,7 +10,7 @@ const VendorEvents = () => {
   const { presets } = useTheme()
   const { navigate } = useNavigation()
   const { activePopUp, isVendorSetup } = useVendor()
-  const { getEvents, events } = useEvents()
+  const { getEvents, events } = useEvents()!
 
   useEffect(() => {
     !isVendorSetup && navigate('VendorProfile')

@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  StackCardInterpolationProps,
+} from '@react-navigation/stack'
 
 import {
   VendorProfile,
@@ -15,7 +18,12 @@ const Stack = createStackNavigator()
 
 const modalOptions = {
   cardStyle: { backgroundColor: 'transparent' },
-  cardStyleInterpolator: ({ current, layouts }) => {
+  cardOverlayEnabled: true,
+  detachPreviousScreen: false,
+  cardStyleInterpolator: ({
+    current,
+    layouts,
+  }: StackCardInterpolationProps) => {
     return {
       cardStyle: {
         transform: [
@@ -31,6 +39,7 @@ const modalOptions = {
         opacity: current.progress.interpolate({
           inputRange: [0, 1],
           outputRange: [0, 0.5],
+          extrapolate: 'clamp',
         }),
       },
     }
