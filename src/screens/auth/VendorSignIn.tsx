@@ -18,7 +18,7 @@ const VendorSignIn = ({ theme }: any) => {
     setIsVendorInviteValid,
     signInWithGoogle,
     verifyVendorInvite,
-  } = useAuth()
+  } = useAuth()!
 
   const { setActiveUserUid } = useVendor()
 
@@ -84,7 +84,7 @@ const VendorSignIn = ({ theme }: any) => {
           ) : (
             <>
               <Button
-                loading={signingIn}
+                loading={signingIn === "goog"}
                 onPress={() => signInWithGoogle(true, setActiveUserUid)}
               >
                 Login

@@ -17,6 +17,8 @@ export default function App() {
 
   let [fontsLoaded] = useFonts(appFonts)
 
+  console.log(fontsLoaded)
+
   return !fontsLoaded ? (
     <AppLoading />
   ) : (

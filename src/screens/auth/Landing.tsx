@@ -22,6 +22,7 @@ const Landing = () => {
           onPress={() => navigate('VendorSignIn')}
         >
           <Text h2>List a Pop Up</Text>
+          
         </TouchableOpacity>
       </View>
     </SafeAreaView>

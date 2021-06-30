@@ -8,7 +8,7 @@ import { Button, DismissKeyboard } from '../../components'
 
 const VendorSignIn = ({ theme }: any) => {
   const { goBack } = useNavigation()
-  const { signingIn, signInAnonymously, signInWithGoogle } = useAuth()
+  const { signingIn, signInAnonymously, signInWithGoogle } = useAuth()!
 
   const { presets } = theme
 
