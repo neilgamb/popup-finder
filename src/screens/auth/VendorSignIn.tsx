@@ -24,6 +24,7 @@ const VendorSignIn = ({ theme }: any) => {
 
   const handleEmailSubmit = async (email: String) => {
     try {
+      
       setIsVerifying(true)
       validateEmail(email)
       const vendorInviteVerified = await verifyVendorInvite(email)
@@ -32,6 +33,7 @@ const VendorSignIn = ({ theme }: any) => {
         await AsyncStorage.setItem('@isVendorInviteValid', JSON.stringify(true))
       }
     } catch (error) {
+      console.log(error)
       setError(error)
     } finally {
       setIsVerifying(false)

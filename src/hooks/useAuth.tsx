@@ -121,9 +121,11 @@ function useAuthProvider() {
       invitedVendors
         .get()
         .then((querySnapshot) => {
+          if (querySnapshot.size === 0) {
+            reject('You are not yet invited')
+          }
           querySnapshot.forEach((doc) => {
-            const result = doc.data()
-            if (email.toLowerCase() === result.email) {
+            if (email.toLowerCase() === doc.id) {
               resolve(true)
             } else {
               reject('You are not yet invited')
